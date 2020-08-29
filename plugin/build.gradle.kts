@@ -4,12 +4,12 @@ import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-//    id("java")
-//    id("org.jetbrains.kotlin.jvm") version "1.4.0"
+    id("java")
+    id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.intellij") version "0.4.21"
     id("org.jetbrains.changelog") version "0.4.0"
-    id("io.gitlab.arturbosch.detekt") version "1.11.0"
-    id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
+//    id("io.gitlab.arturbosch.detekt") version "1.11.0"
+//    id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
 }
 
 // Import variables from gradle.properties file
@@ -26,14 +26,6 @@ val platformDownloadSources: String by project
 group = pluginGroup
 version = pluginVersion
 
-repositories {
-    mavenCentral()
-    jcenter()
-}
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.11.0")
-}
-
 intellij {
     pluginName = pluginName
     version = platformVersion
@@ -47,16 +39,16 @@ intellij {
 //  setPlugins("java")
 }
 
-detekt {
-    config = files("./detekt-config.yml")
-    buildUponDefaultConfig = true
-
-    reports {
-        html.enabled = false
-        xml.enabled = false
-        txt.enabled = false
-    }
-}
+//detekt {
+//    config = files("./detekt-config.yml")
+//    buildUponDefaultConfig = true
+//
+//    reports {
+//        html.enabled = false
+//        xml.enabled = false
+//        txt.enabled = false
+//    }
+//}
 
 tasks {
     withType<JavaCompile> {
