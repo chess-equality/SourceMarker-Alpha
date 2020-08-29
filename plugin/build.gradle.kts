@@ -27,7 +27,7 @@ group = pluginGroup
 version = pluginVersion
 
 intellij {
-    pluginName = pluginName
+    pluginName = "SourceMarker"
     version = platformVersion
     type = platformType
     downloadSources = platformDownloadSources.toBoolean()

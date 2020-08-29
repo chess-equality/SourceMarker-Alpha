@@ -191,7 +191,6 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: plugin-artifact
-          path: plugin 
 
       # Upload artifact as a release asset
       - name: Upload Release Asset
