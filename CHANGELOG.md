@@ -1,6 +1,6 @@
 <!-- Keep a Changelog guide -> https://keepachangelog.com -->
 
-# SourceMarker-Plugin Changelog
+# SourceMarker Changelog
 
 ## [Unreleased]
 ### Added

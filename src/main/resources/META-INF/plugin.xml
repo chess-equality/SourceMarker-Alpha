@@ -1,19 +1,18 @@
 <idea-plugin>
-    <id>com.github.bfergerson.sourcemarkerplugin</id>
-    <name>SourceMarker-Plugin</name>
-    <vendor>bfergerson</vendor>
+    <id>com.sourceplusplus.sourcemarker</id>
+    <name>SourceMarker</name>
+    <vendor>Source++</vendor>
 
     <!-- Product and plugin compatibility requirements -->
-    <!-- https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html -->
     <depends>com.intellij.modules.platform</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <applicationService serviceImplementation="com.github.bfergerson.sourcemarkerplugin.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.github.bfergerson.sourcemarkerplugin.services.MyProjectService"/>
+        <applicationService serviceImplementation="com.sourceplusplus.sourcemarker.services.MyApplicationService"/>
+        <projectService serviceImplementation="com.sourceplusplus.sourcemarker.services.MyProjectService"/>
     </extensions>
 
     <projectListeners>
-        <listener class="com.github.bfergerson.sourcemarkerplugin.listeners.MyProjectManagerListener"
+        <listener class="com.sourceplusplus.sourcemarker.listeners.MyProjectManagerListener"
                   topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </projectListeners>
 </idea-plugin>

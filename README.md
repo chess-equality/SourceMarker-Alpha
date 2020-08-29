@@ -1,4 +1,4 @@
-# SourceMarker-Plugin
+# SourceMarker
 
 ![Build](https://github.com/sourceplusplus/SourceMarker-Plugin/workflows/Build/badge.svg)
 [![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
@@ -26,7 +26,7 @@ To keep everything working, do not remove `<!-- ... -->` sections.
 
 - Using IDE built-in plugin system:
   
-  <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "SourceMarker-Plugin"</kbd> >
+  <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>Marketplace</kbd> > <kbd>Search for "SourceMarker"</kbd> >
   <kbd>Install Plugin</kbd>
   
 - Manually:

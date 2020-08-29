@@ -1,8 +1,8 @@
-package com.github.bfergerson.sourcemarkerplugin.listeners
+package com.sourceplusplus.sourcemarker.listeners
 
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManagerListener
-import com.github.bfergerson.sourcemarkerplugin.services.MyProjectService
+import com.sourceplusplus.sourcemarker.services.MyProjectService
 
 internal class MyProjectManagerListener : ProjectManagerListener {
 

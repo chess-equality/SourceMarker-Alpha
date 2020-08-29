@@ -1,1 +1,1 @@
-rootProject.name = "SourceMarker-Plugin"
+rootProject.name = "SourceMarker"
