@@ -22,7 +22,7 @@ val platformDownloadSources: String by project
 group = pluginGroup
 version = pluginVersion
 
-allprojects {
+subprojects {
     repositories {
         mavenCentral()
         jcenter()
