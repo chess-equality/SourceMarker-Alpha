@@ -13,8 +13,8 @@ plugins {
 }
 
 // Import variables from gradle.properties file
-//val pluginGroup: String by project
-//val pluginName: String by project
+val pluginGroup: String by project
+val pluginName: String by project
 val pluginVersion: String by project
 val pluginSinceBuild: String by project
 val pluginUntilBuild: String by project
