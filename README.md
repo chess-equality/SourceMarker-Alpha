@@ -5,7 +5,6 @@
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/com.sourceplusplus.sourcemarker.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
 
 ## Template ToDo list
-- [ ] [Publish a plugin manually](https://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/publishing_plugin.html) for the first time.
 - [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html).
 
 <!-- Plugin description -->
