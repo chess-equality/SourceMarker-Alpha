@@ -1,8 +1,8 @@
 # SourceMarker
 
 ![Build](https://github.com/sourceplusplus/SourceMarker-Plugin/workflows/Build/badge.svg)
-[![Version](https://img.shields.io/jetbrains/plugin/v/com.sourceplusplus.sourcemarker.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
-[![Downloads](https://img.shields.io/jetbrains/plugin/d/com.sourceplusplus.sourcemarker.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
+[![Version](https://img.shields.io/jetbrains/plugin/v/com.sourceplusplus.sourcemarker.svg)](https://plugins.jetbrains.com/plugin/com.sourceplusplus.sourcemarker)
+[![Downloads](https://img.shields.io/jetbrains/plugin/d/com.sourceplusplus.sourcemarker.svg)](https://plugins.jetbrains.com/plugin/com.sourceplusplus.sourcemarker)
 
 ## Template ToDo list
 - [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html).
