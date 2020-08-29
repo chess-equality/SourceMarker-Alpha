@@ -4,17 +4,11 @@ import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    // Java support
     id("java")
-    // Kotlin support
     id("org.jetbrains.kotlin.jvm") version "1.4.0"
-    // gradle-intellij-plugin - read more: https://github.com/JetBrains/gradle-intellij-plugin
     id("org.jetbrains.intellij") version "0.4.21"
-    // gradle-changelog-plugin - read more: https://github.com/JetBrains/gradle-changelog-plugin
     id("org.jetbrains.changelog") version "0.4.0"
-    // detekt linter - read more: https://detekt.github.io/detekt/kotlindsl.html
     id("io.gitlab.arturbosch.detekt") version "1.11.0"
-    // ktlint linter - read more: https://github.com/JLLeitschuh/ktlint-gradle
     id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
 }
 
@@ -32,7 +26,6 @@ val platformDownloadSources: String by project
 group = pluginGroup
 version = pluginVersion
 
-// Configure project's dependencies
 repositories {
     mavenCentral()
     jcenter()
@@ -41,8 +34,6 @@ dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.11.0")
 }
 
-// Configure gradle-intellij-plugin plugin.
-// Read more: https://github.com/JetBrains/gradle-intellij-plugin
 intellij {
     pluginName = pluginName
     version = platformVersion
@@ -56,8 +47,6 @@ intellij {
 //  setPlugins("java")
 }
 
-// Configure detekt plugin.
-// Read more: https://detekt.github.io/detekt/kotlindsl.html
 detekt {
     config = files("./detekt-config.yml")
     buildUponDefaultConfig = true
@@ -70,7 +59,6 @@ detekt {
 }
 
 tasks {
-    // Set the compatibility versions to 1.8
     withType<JavaCompile> {
         sourceCompatibility = "1.8"
         targetCompatibility = "1.8"
