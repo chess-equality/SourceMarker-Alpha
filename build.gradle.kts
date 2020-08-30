@@ -44,6 +44,10 @@ detekt {
     }
 }
 
+gradle.buildFinished {
+    project.buildDir.deleteRecursively()
+}
+
 //
 //subprojects {
 //    group = "com.sourceplusplus"
