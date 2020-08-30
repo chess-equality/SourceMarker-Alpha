@@ -117,7 +117,7 @@ jobs:
         uses: actions/upload-artifact@v1
         with:
           name: plugin-artifact
-          path: ./build/distributions/${{ needs.build.outputs.artifact }}
+          path: ./plugin/build/distributions/${{ needs.build.outputs.artifact }}
 
   # Verify built plugin using IntelliJ Plugin Verifier tool
   # Requires build job to be passed
@@ -140,8 +140,6 @@ jobs:
         with:
           plugin-location: plugin-artifact/*.zip
           ide-versions: |
-            ideaIC:2019.3
-            ideaIC:2020.1
             ideaIC:2020.2
 
       # Print the output of the verify step

@@ -1,13 +1,9 @@
-import io.gitlab.arturbosch.detekt.Detekt
-import org.jetbrains.changelog.closure
-import org.jetbrains.changelog.markdownToHTML
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id("java")
-    id("org.jetbrains.kotlin.jvm") version "1.4.0"
-    id("org.jetbrains.intellij") version "0.4.21"
-    id("org.jetbrains.changelog") version "0.4.0"
+    val kotlinVersion = "1.4.0"
+    kotlin("jvm") version kotlinVersion apply false
+    kotlin("multiplatform") version kotlinVersion apply false
+    kotlin("js") version kotlinVersion apply false
+
     id("io.gitlab.arturbosch.detekt") version "1.11.0"
     id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
 }
@@ -26,25 +22,15 @@ val platformDownloadSources: String by project
 group = pluginGroup
 version = pluginVersion
 
-repositories {
-    mavenCentral()
-    jcenter()
+subprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
 }
+
 dependencies {
     detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.11.0")
-}
-
-intellij {
-    pluginName = pluginName
-    version = platformVersion
-    type = platformType
-    downloadSources = platformDownloadSources.toBoolean()
-    updateSinceUntilBuild = true
-
-//  Plugin Dependencies:
-//  https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_dependencies.html
-//
-//  setPlugins("java")
 }
 
 detekt {
@@ -58,52 +44,18 @@ detekt {
     }
 }
 
-tasks {
-    withType<JavaCompile> {
-        sourceCompatibility = "1.8"
-        targetCompatibility = "1.8"
-    }
-    listOf("compileKotlin", "compileTestKotlin").forEach {
-        getByName<KotlinCompile>(it) {
-            kotlinOptions.jvmTarget = "1.8"
-        }
-    }
-
-    withType<Detekt> {
-        jvmTarget = "1.8"
-    }
-
-    patchPluginXml {
-        version(pluginVersion)
-        sinceBuild(pluginSinceBuild)
-        untilBuild(pluginUntilBuild)
-
-        // Extract the <!-- Plugin description --> section from README.md and provide for the plugin's manifest
-        pluginDescription(
-            closure {
-                File("./README.md").readText().lines().run {
-                    val start = "<!-- Plugin description -->"
-                    val end = "<!-- Plugin description end -->"
-
-                    if (!containsAll(listOf(start, end))) {
-                        throw GradleException("Plugin description section not found in README.md file:\n$start ... $end")
-                    }
-                    subList(indexOf(start) + 1, indexOf(end))
-                }.joinToString("\n").run { markdownToHTML(this) }
-            }
-        )
-
-        // Get the latest available change notes from the changelog file
-        changeNotes(
-            closure {
-                changelog.getLatest().toHTML()
-            }
-        )
-    }
-
-    publishPlugin {
-        dependsOn("patchChangelog")
-        token(System.getenv("PUBLISH_TOKEN"))
-        channels(pluginVersion.split('-').getOrElse(1) { "default" }.split('.').first())
-    }
+gradle.buildFinished {
+    project.buildDir.deleteRecursively()
 }
+
+//
+//subprojects {
+//    group = "com.sourceplusplus"
+//    version = "1.0-SNAPSHOT"
+//
+//    repositories {
+//        mavenCentral()
+//        maven(url = "https://jitpack.io") { name = "jitpack" }
+//        maven(url = "https://jcenter.bintray.com") { name = "jcenter" }
+//    }
+//}
