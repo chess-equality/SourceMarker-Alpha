@@ -3,12 +3,13 @@ plugins {
 }
 
 repositories {
-    maven(url = "https://www.jetbrains.com/intellij-repository/snapshots") { name = "intellij-snapshots" }
+    maven(url = "https://www.jetbrains.com/intellij-repository/releases") { name = "intellij-releases" }
+//    maven(url = "https://www.jetbrains.com/intellij-repository/snapshots") { name = "intellij-snapshots" }
     maven(url = "https://jetbrains.bintray.com/intellij-third-party-dependencies/") { name = "intellij-dependencies" }
 }
 
 dependencies {
-    val intellijVersion = "202.5103-EAP-CANDIDATE-SNAPSHOT"
+    val intellijVersion = "202.6948.69"
     val kotlinVersion = "1.4.0"
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
