@@ -34,13 +34,14 @@ dependencies {
 }
 
 detekt {
-    config = files("./detekt-config.yml")
+    failFast = true
+    config = files("config/detekt/detekt.yml")
     buildUponDefaultConfig = true
 
     reports {
         html.enabled = false
         xml.enabled = false
-        txt.enabled = false
+        txt.enabled = true
     }
 }
 
