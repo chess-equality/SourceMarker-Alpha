@@ -2,6 +2,10 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
+dependencies {
+    implementation(project(":protocol"))
+}
+
 //todo: should be able to move to root project
 tasks {
     withType<JavaCompile> {
@@ -14,7 +18,7 @@ tasks {
         }
     }
 
-    withType<io.gitlab.arturbosch.detekt.Detekt> {
-        jvmTarget = "1.8"
-    }
+//    withType<io.gitlab.arturbosch.detekt.Detekt> {
+//        jvmTarget = "1.8"
+//    }
 }

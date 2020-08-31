@@ -4,8 +4,8 @@ plugins {
     kotlin("multiplatform") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
 
-    id("io.gitlab.arturbosch.detekt") version "1.11.0"
-    id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
+//    id("io.gitlab.arturbosch.detekt") version "1.11.0"
+//    id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
 }
 
 // Import variables from gradle.properties file
@@ -30,20 +30,20 @@ subprojects {
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.11.0")
+//    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.11.0")
 }
 
-detekt {
-    failFast = true
-    config = files("config/detekt/detekt.yml")
-    buildUponDefaultConfig = true
-
-    reports {
-        html.enabled = false
-        xml.enabled = false
-        txt.enabled = true
-    }
-}
+//detekt {
+//    failFast = true
+//    config = files("config/detekt/detekt.yml")
+//    buildUponDefaultConfig = true
+//
+//    reports {
+//        html.enabled = false
+//        xml.enabled = false
+//        txt.enabled = true
+//    }
+//}
 
 gradle.buildFinished {
     project.buildDir.deleteRecursively()

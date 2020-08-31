@@ -1,4 +1,4 @@
-import io.gitlab.arturbosch.detekt.Detekt
+//import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.changelog.closure
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -61,9 +61,9 @@ tasks {
         }
     }
 
-    withType<Detekt> {
-        jvmTarget = "1.8"
-    }
+//    withType<Detekt> {
+//        jvmTarget = "1.8"
+//    }
 
     patchPluginXml {
         version(pluginVersion)
