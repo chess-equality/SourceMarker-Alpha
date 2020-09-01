@@ -36,7 +36,7 @@ intellij {
 //  Plugin Dependencies:
 //  https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_dependencies.html
 //
-  setPlugins("java", "Groovy", "Kotlin")
+    setPlugins("java", "Groovy", "Kotlin")
 }
 
 repositories {
@@ -109,5 +109,15 @@ tasks {
         dependsOn("patchChangelog")
         token(System.getenv("PUBLISH_TOKEN"))
         channels(pluginVersion.split('-').getOrElse(1) { "default" }.split('.').first())
+    }
+
+    test {
+        testLogging {
+            events("passed", "skipped", "failed")
+            setExceptionFormat("full")
+
+            outputs.upToDateWhen { false }
+            showStandardStreams = true
+        }
     }
 }
