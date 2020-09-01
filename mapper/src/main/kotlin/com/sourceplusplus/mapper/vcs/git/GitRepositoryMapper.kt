@@ -6,7 +6,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
-import com.intellij.psi.PsiJavaToken
+import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.sourceplusplus.marker.MarkerUtils
 import jp.ac.titech.c.se.stein.core.Context
 import jp.ac.titech.c.se.stein.core.EntrySet
@@ -15,7 +15,7 @@ import jp.ac.titech.c.se.stein.core.EntrySet.EntryList
 import jp.ac.titech.c.se.stein.core.RepositoryRewriter
 import org.jetbrains.kotlin.idea.KotlinFileType
 import org.jetbrains.plugins.groovy.GroovyFileType
-import org.jetbrains.uast.java.JavaUFile
+import org.jetbrains.uast.UFile
 import org.jetbrains.uast.toUElement
 import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
@@ -50,13 +50,13 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
         )
 
         val result = EntryList()
-        val uFile = psiFile.toUElement() as JavaUFile
+        val uFile = psiFile.toUElement() as UFile
         uFile.classes.forEach { uClass ->
             uClass.methods.forEach {
                 val tokenStr = StringBuilder()
                 it.javaPsi.accept(object : JavaRecursiveElementVisitor() {
                     override fun visitElement(element: PsiElement) {
-                        if (element is PsiJavaToken) {
+                        if (element is LeafPsiElement && element.text.isNotBlank()) {
                             tokenStr.append(element.text).append("\n")
                         }
                         super.visitElement(element)
@@ -64,7 +64,8 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
                 })
 
                 val newId = target.writeBlob(tokenStr.toString().toByteArray(StandardCharsets.UTF_8), c)
-                val name: String = MarkerUtils.getFullyQualifiedName(it) + ".mjava"
+                val name =
+                    "${MarkerUtils.getFullyQualifiedName(it)}.m${uFile.lang.associatedFileType!!.defaultExtension}"
                 result.add(Entry(entry.mode, name, newId, entry.directory))
             }
         }
