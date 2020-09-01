@@ -39,6 +39,18 @@ intellij {
   setPlugins("java", "Groovy", "Kotlin")
 }
 
+repositories {
+    maven(url = "https://jitpack.io") { name = "jitpack" }
+}
+
+dependencies {
+    implementation(project(":mapper"))
+    implementation(project(":marker"))
+    implementation(project(":protocol"))
+
+    implementation("com.github.sh5i:git-stein:v0.5.0")
+}
+
 //detekt {
 //    config = files("./detekt-config.yml")
 //    buildUponDefaultConfig = true
