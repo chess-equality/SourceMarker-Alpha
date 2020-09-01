@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory
 import java.nio.charset.StandardCharsets
 
 /**
- * Based of FinerGit
+ * Based off FinerGit
  */
 class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
     //todo: ability to add to existing mapped repo
