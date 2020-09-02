@@ -8,7 +8,7 @@ import com.sourceplusplus.mentor.api.impl.SourceMentorImpl
 
 class PluginSourceMarkEventListener : SourceMarkEventListener {
 
-    private val sourceMentor = SourceMentorImpl()
+    //private val sourceMentor = SourceMentorImpl()
 
     override fun handleEvent(event: SourceMarkEvent) {
         if (event.eventCode == SourceMarkEventCode.MARK_ADDED) {
