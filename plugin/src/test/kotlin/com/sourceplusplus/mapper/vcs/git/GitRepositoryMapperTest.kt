@@ -1,5 +1,6 @@
+package com.sourceplusplus.mapper.vcs.git
+
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixture4TestCase
-import com.sourceplusplus.mapper.vcs.git.GitRepositoryMapper
 import jp.ac.titech.c.se.stein.PorcelainAPI
 import jp.ac.titech.c.se.stein.core.Context
 import org.eclipse.jgit.api.Git
@@ -8,7 +9,7 @@ import org.intellij.lang.annotations.Language
 import org.junit.Test
 import java.io.File
 
-class Tester : LightPlatformCodeInsightFixture4TestCase() {
+class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
 
     @Test
     fun `tokenized java getter method`() {
