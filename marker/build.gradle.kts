@@ -26,6 +26,7 @@ dependencies {
     compileOnly("com.jetbrains.intellij.platform:core-ui:$intellijVersion") { isTransitive = false }
     compileOnly("com.jetbrains.intellij.platform:editor:$intellijVersion") { isTransitive = false }
     compileOnly("com.jetbrains.intellij.platform:lang:$intellijVersion") { isTransitive = false }
+    compileOnly("com.jetbrains.intellij.platform:lang-impl:$intellijVersion") { isTransitive = false }
     compileOnly("com.jetbrains.intellij.platform:project-model:$intellijVersion") { isTransitive = false }
     compileOnly("com.jetbrains.intellij.groovy:groovy-psi:$intellijVersion") { isTransitive = false }
     compileOnly("com.jetbrains.intellij.platform:uast:$intellijVersion") { isTransitive = false }
@@ -48,6 +49,7 @@ tasks {
     listOf("compileKotlin", "compileTestKotlin").forEach {
         getByName<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>(it) {
             kotlinOptions.jvmTarget = "1.8"
+            kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=compatibility")
         }
     }
 

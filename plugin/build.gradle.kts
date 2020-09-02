@@ -33,22 +33,23 @@ intellij {
     downloadSources = platformDownloadSources.toBoolean()
     updateSinceUntilBuild = true
 
-//  Plugin Dependencies:
-//  https://www.jetbrains.org/intellij/sdk/docs/basics/plugin_structure/plugin_dependencies.html
-//
     setPlugins("java", "Groovy", "Kotlin")
 }
 
 repositories {
     maven(url = "https://jitpack.io") { name = "jitpack" }
+//    maven(url = "https://www.jetbrains.com/intellij-repository/releases") { name = "intellij-releases" }
 }
 
 dependencies {
+//    val kotlinVersion = "1.4.0"
+
     implementation(project(":mapper"))
     implementation(project(":marker"))
     implementation(project(":protocol"))
 
     implementation("com.github.sh5i:git-stein:v0.5.0")
+//    testImplementation("org.jetbrains.kotlin:kotlin-compiler:$kotlinVersion")
 }
 
 //detekt {
