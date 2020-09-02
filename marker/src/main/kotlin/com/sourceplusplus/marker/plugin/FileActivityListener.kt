@@ -13,14 +13,14 @@ import com.intellij.openapi.vfs.VirtualFile
 import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiManager
 import com.sourceplusplus.marker.MarkerUtils
-import com.sourceplusplus.marker.SourceFileMarker
+import com.sourceplusplus.marker.source.SourceFileMarker
 import com.sourceplusplus.marker.source.mark.gutter.GutterMark
 import org.slf4j.LoggerFactory
 
 /**
  * todo: description
  *
- * @version 0.1.4
+ * @version 0.2.2
  * @since 0.1.0
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */

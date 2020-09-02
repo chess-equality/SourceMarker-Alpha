@@ -1,4 +1,4 @@
-package com.sourceplusplus.marker.source.mark.gutter.event
+package com.sourceplusplus.marker.source.mark.inlay.event
 
 import com.sourceplusplus.marker.source.mark.api.event.IEventCode
 
@@ -6,12 +6,11 @@ import com.sourceplusplus.marker.source.mark.api.event.IEventCode
  * todo: description
  *
  * @version 0.2.2
- * @since 0.1.0
+ * @since 0.2.0
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
-enum class GutterMarkEventCode(private val code: Int) : IEventCode {
-    GUTTER_MARK_VISIBLE(2000),
-    GUTTER_MARK_HIDDEN(2001);
+enum class InlayMarkEventCode(private val code: Int) : IEventCode {
+    VIRTUAL_TEXT_UPDATED(3000);
 
     /**
      * {@inheritDoc}

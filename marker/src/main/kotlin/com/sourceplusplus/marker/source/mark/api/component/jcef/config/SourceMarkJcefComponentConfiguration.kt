@@ -1,16 +1,16 @@
-package com.sourceplusplus.marker.source.mark.gutter.component.jcef.config
+package com.sourceplusplus.marker.source.mark.api.component.jcef.config
 
-import com.sourceplusplus.marker.source.mark.gutter.component.api.config.GutterMarkComponentConfiguration
+import com.sourceplusplus.marker.source.mark.api.component.api.config.SourceMarkComponentConfiguration
 import java.awt.Dimension
 
 /**
  * todo: description
  *
- * @version 0.1.4
+ * @version 0.2.2
  * @since 0.1.0
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
-class GutterMarkJcefComponentConfiguration : GutterMarkComponentConfiguration() {
+class SourceMarkJcefComponentConfiguration : SourceMarkComponentConfiguration() {
 
     var preloadJcefBrowser: Boolean = true
     var initialUrl: String = "about:blank"
@@ -27,13 +27,14 @@ class GutterMarkJcefComponentConfiguration : GutterMarkComponentConfiguration() 
     /**
      * {@inheritDoc}
      */
-    override fun copy(): GutterMarkJcefComponentConfiguration {
-        val copy = GutterMarkJcefComponentConfiguration()
+    override fun copy(): SourceMarkJcefComponentConfiguration {
+        val copy = SourceMarkJcefComponentConfiguration()
         copy.useHeavyPopup = useHeavyPopup
         copy.hideOnMouseMotion = hideOnMouseMotion
         copy.hideOnScroll = hideOnScroll
         copy.showAboveClass = showAboveClass
         copy.showAboveMethod = showAboveMethod
+        copy.showAboveExpression = showAboveExpression
         copy.componentSizeEvaluator = componentSizeEvaluator
 
         copy.preloadJcefBrowser = preloadJcefBrowser

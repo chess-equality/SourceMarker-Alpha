@@ -5,23 +5,197 @@ import com.intellij.openapi.editor.Document
 import com.intellij.openapi.editor.ex.util.EditorUtil
 import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.Project
-import com.intellij.psi.PsiElement
-import com.intellij.psi.PsiNameIdentifierOwner
+import com.intellij.psi.*
 import com.intellij.psi.util.PsiUtil
+import com.sourceplusplus.marker.source.SourceFileMarker
+import com.sourceplusplus.marker.source.mark.api.SourceMark
+import com.sourceplusplus.marker.source.mark.api.key.SourceKey
+import com.sourceplusplus.marker.source.mark.gutter.MethodGutterMark
+import com.sourceplusplus.marker.source.mark.inlay.ExpressionInlayMark
+import com.sourceplusplus.marker.source.mark.inlay.MethodInlayMark
 import org.jetbrains.kotlin.psi.KtNamedFunction
 import org.jetbrains.plugins.groovy.lang.psi.api.statements.typedef.members.GrMethod
-import org.jetbrains.uast.UMethod
+import org.jetbrains.uast.*
+import org.slf4j.LoggerFactory
 import java.awt.Point
+import java.util.*
 
 /**
  * todo: description
  *
- * @version 0.1.4
+ * @version 0.2.2
  * @since 0.1.0
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
 class MarkerUtils private constructor() {
     companion object {
+        private val log = LoggerFactory.getLogger(MarkerUtils::class.java)
+
+        @JvmStatic
+        fun getElementAtLine(file: PsiFile, line: Int): PsiElement? {
+            val document: Document = PsiDocumentManager.getInstance(file.project).getDocument(file)!!
+            val offset = document.getLineStartOffset(line - 1)
+            var element: PsiElement = file.viewProvider.findElementAt(offset)!!
+            if (document.getLineNumber(element.textOffset) != line - 1) {
+                element = element.nextSibling
+            }
+            return element
+        }
+
+        @JvmStatic
+        @JvmOverloads
+        fun getOrCreateExpressionInlayMark(fileMarker: SourceFileMarker, lineNumber: Int,
+                                           autoApply: Boolean = false): ExpressionInlayMark? {
+            val element = getElementAtLine(fileMarker.psiFile, lineNumber)
+            return if (element is PsiStatement) {
+                getOrCreateExpressionInlayMark(fileMarker, element, autoApply = autoApply)
+            } else null
+        }
+
+        @JvmStatic
+        @JvmOverloads
+        @Synchronized
+        fun getOrCreateExpressionInlayMark(fileMarker: SourceFileMarker, element: PsiStatement,
+                                           autoApply: Boolean = false): ExpressionInlayMark? {
+            log.trace("getOrCreateExpressionInlayMark: $element")
+            val statementExpression: PsiElement = getUniversalExpression(element)
+            var lookupExpression: PsiElement = statementExpression
+            if (lookupExpression is PsiDeclarationStatement) {
+                //todo: support for multi-declaration statements
+                lookupExpression = lookupExpression.firstChild
+            }
+
+            var inlayMark = lookupExpression.getUserData(SourceKey.InlayMark) as ExpressionInlayMark?
+            if (inlayMark == null) {
+                inlayMark = fileMarker.getExpressionSourceMark(lookupExpression, SourceMark.Type.INLAY) as ExpressionInlayMark?
+                if (inlayMark != null) {
+                    if (inlayMark.updatePsiExpression(statementExpression.toUElement() as UExpression)) {
+                        statementExpression.putUserData(SourceKey.InlayMark, inlayMark)
+                    } else {
+                        inlayMark = null
+                    }
+                }
+            }
+
+            return if (inlayMark == null) {
+                inlayMark = fileMarker.createSourceMark(
+                        statementExpression.toUElement() as UExpression, SourceMark.Type.INLAY) as ExpressionInlayMark
+                return if (autoApply) {
+                    if (inlayMark.canApply()) {
+                        inlayMark.apply(true)
+                        inlayMark
+                    } else {
+                        null
+                    }
+                } else {
+                    inlayMark
+                }
+            } else {
+                if (fileMarker.removeIfInvalid(inlayMark)) {
+                    statementExpression.putUserData(SourceKey.InlayMark, null)
+                    null
+                } else {
+                    inlayMark
+                }
+            }
+        }
+
+        @JvmStatic
+        fun getUniversalExpression(element: PsiStatement): PsiElement {
+            var statementExpression: PsiElement = element
+            if (statementExpression is PsiExpressionStatement) {
+                statementExpression = statementExpression.firstChild
+            }
+            return statementExpression
+        }
+
+        @JvmStatic
+        @JvmOverloads
+        @Synchronized
+        fun getOrCreateMethodInlayMark(fileMarker: SourceFileMarker, element: PsiElement,
+                                       autoApply: Boolean = false): MethodInlayMark? {
+            var inlayMark = element.getUserData(SourceKey.InlayMark) as MethodInlayMark?
+            if (inlayMark == null) {
+                inlayMark = fileMarker.getMethodSourceMark(element.parent, SourceMark.Type.INLAY) as MethodInlayMark?
+                if (inlayMark != null) {
+                    if (inlayMark.updatePsiMethod(element.parent.toUElement() as UMethod)) {
+                        element.putUserData(SourceKey.InlayMark, inlayMark)
+                    } else {
+                        inlayMark = null
+                    }
+                }
+            }
+
+            return if (inlayMark == null) {
+                inlayMark = fileMarker.createSourceMark(
+                        element.parent.toUElement() as UMethod, SourceMark.Type.INLAY) as MethodInlayMark
+                return if (autoApply) {
+                    if (inlayMark.canApply()) {
+                        inlayMark.apply(true)
+                        inlayMark
+                    } else {
+                        null
+                    }
+                } else {
+                    inlayMark
+                }
+            } else {
+                if (fileMarker.removeIfInvalid(inlayMark)) {
+                    element.putUserData(SourceKey.InlayMark, null)
+                    null
+                } else {
+                    inlayMark
+                }
+            }
+        }
+
+        @JvmStatic
+        @JvmOverloads
+        @Synchronized
+        fun getOrCreateMethodGutterMark(fileMarker: SourceFileMarker, element: PsiElement,
+                                        autoApply: Boolean = true): MethodGutterMark? {
+            var gutterMark = element.getUserData(SourceKey.GutterMark) as MethodGutterMark?
+            if (gutterMark == null) {
+                gutterMark = fileMarker.getMethodSourceMark(element.parent, SourceMark.Type.GUTTER) as MethodGutterMark?
+                if (gutterMark != null) {
+                    if (gutterMark.updatePsiMethod(element.parent.toUElement() as UMethod)) {
+                        element.putUserData(SourceKey.GutterMark, gutterMark)
+                    } else {
+                        gutterMark = null
+                    }
+                }
+            }
+
+            if (gutterMark == null) {
+                gutterMark = fileMarker.createSourceMark(
+                        element.parent.toUElement() as UMethod, SourceMark.Type.GUTTER) as MethodGutterMark
+                return if (autoApply) {
+                    if (gutterMark.canApply()) {
+                        gutterMark.apply(true)
+                        gutterMark
+                    } else {
+                        null
+                    }
+                } else {
+                    gutterMark
+                }
+            } else {
+                return when {
+                    fileMarker.removeIfInvalid(gutterMark) -> {
+                        element.putUserData(SourceKey.GutterMark, null)
+                        null
+                    }
+                    gutterMark.configuration.icon != null -> {
+                        gutterMark.setVisible(true)
+                        gutterMark
+                    }
+                    else -> {
+                        gutterMark.setVisible(false)
+                        gutterMark
+                    }
+                }
+            }
+        }
 
         @JvmStatic
         fun getNameIdentifier(nameIdentifierOwner: PsiNameIdentifierOwner): PsiElement? {
@@ -48,6 +222,25 @@ class MarkerUtils private constructor() {
             } else {
                 withoutArgs.substring(withoutArgs.lastIndexOf("?") + 1, withoutArgs.lastIndexOf("."))
             }
+        }
+
+        @JvmStatic
+        fun getFullyQualifiedName(expression: UExpression): String {
+            val qualifiedMethodName = expression.getContainingUMethod()?.let { getFullyQualifiedName(it) }
+            val psiFile = expression.getContainingUFile()!!.sourcePsi
+            val document: Document = PsiDocumentManager.getInstance(psiFile.project).getDocument(psiFile)!!
+
+            if (expression is UDeclarationsExpression) {
+                //todo: support for multi-declaration statements
+                return """$qualifiedMethodName#${document.getLineNumber(expression.declarations[0].sourcePsi!!.textOffset)}#${Base64.getEncoder().encodeToString(expression.toString().toByteArray())}"""
+            } else {
+                return """$qualifiedMethodName#${document.getLineNumber(expression.sourcePsi!!.textOffset)}#${Base64.getEncoder().encodeToString(expression.toString().toByteArray())}"""
+            }
+        }
+
+        @JvmStatic
+        fun getFullyQualifiedName(method: PsiMethod): String {
+            return getFullyQualifiedName(method.toUElement() as UMethod)
         }
 
         @JvmStatic

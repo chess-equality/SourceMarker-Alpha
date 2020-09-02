@@ -2,14 +2,17 @@ package com.sourceplusplus.marker.source.mark.api
 
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.editor.Editor
-import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiInvalidElementAccessException
+import com.sourceplusplus.marker.MarkerUtils
 import com.sourceplusplus.marker.source.SourceFileMarker
 import com.sourceplusplus.marker.source.mark.api.component.api.SourceMarkComponent
+import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEvent
+import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventCode
 import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventListener
 import com.sourceplusplus.marker.source.mark.api.key.SourceKey
-import org.jetbrains.uast.UClass
+import org.jetbrains.uast.UDeclarationsExpression
+import org.jetbrains.uast.UExpression
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -18,53 +21,41 @@ import kotlin.collections.HashMap
  * todo: description
  *
  * @version 0.2.2
- * @since 0.1.0
+ * @since 0.2.0
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
-abstract class ClassSourceMark(
+abstract class ExpressionSourceMark(
         override val sourceFileMarker: SourceFileMarker,
-        internal open val psiClass: UClass,
-        override val artifactQualifiedName: String = psiClass.qualifiedName!!
+        internal open var psiExpression: UExpression,
+        override var artifactQualifiedName: String = MarkerUtils.getFullyQualifiedName(psiExpression)
 ) : SourceMark {
 
     override var editor: Editor? = null
     override lateinit var sourceMarkComponent: SourceMarkComponent
     override var visiblePopup: Disposable? = null
-    override val isClassMark: Boolean = true
-    override val isMethodMark: Boolean = false
+    override val isClassMark: Boolean = false
+    override val isMethodMark: Boolean = true
     override val valid: Boolean; get() {
         return try {
-            psiClass.isPsiValid && artifactQualifiedName == psiClass.qualifiedName!!
+            psiExpression.isPsiValid && artifactQualifiedName == MarkerUtils.getFullyQualifiedName(psiExpression)
         } catch (ex: PsiInvalidElementAccessException) {
             false
         }
     }
 
     override val moduleName: String
-        get() = ProjectRootManager.getInstance(sourceFileMarker.project).fileIndex
-                .getModuleForFile(psiClass.containingFile.virtualFile)!!.name
+        get() = TODO("moduleName")
 
-    /**
-     * Line number of the gutter mark.
-     * One above the method name identifier.
-     * First line for class (maybe? might want to make that for package level stats in the future)
-     *
-     * @return gutter mark line number
-     */
     override val lineNumber: Int
         get() {
-            val document = psiClass.nameIdentifier!!.containingFile.viewProvider.document
-            return document!!.getLineNumber(psiClass.nameIdentifier!!.textRange.startOffset)
+            val document = getPsiElement().containingFile.viewProvider.document
+            return document!!.getLineNumber(getPsiElement().textRange.startOffset) + 1
         }
 
     override val viewProviderBound: Boolean
-        get() = try {
-            psiClass.nameIdentifier!!.containingFile.viewProvider.document
-            true
-        } catch (ignore: PsiInvalidElementAccessException) {
-            false
-        }
+        get() = TODO("viewProviderBound")
 
+    @Synchronized
     override fun apply(sourceMarkComponent: SourceMarkComponent, addToMarker: Boolean) {
         this.sourceMarkComponent = sourceMarkComponent
         super.apply(addToMarker)
@@ -72,6 +63,15 @@ abstract class ClassSourceMark(
 
     override fun apply(addToMarker: Boolean) {
         apply(configuration.componentProvider.getComponent(this), addToMarker)
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    override fun dispose(removeFromMarker: Boolean) {
+        getPsiElement().putUserData(SourceKey.GutterMark, null)
+        getPsiElement().putUserData(SourceKey.InlayMark, null)
+        super.dispose(removeFromMarker)
     }
 
     private val userData = HashMap<Any, Any>()
@@ -84,12 +84,32 @@ abstract class ClassSourceMark(
         }
     }
 
-    fun getPsiClass(): UClass {
-        return psiClass
+    fun getPsiExpresion(): UExpression {
+        return psiExpression
     }
 
     override fun getPsiElement(): PsiElement {
-        return psiClass.sourcePsi!!
+        if (psiExpression is UDeclarationsExpression) {
+            //todo: support for multi-declaration statements
+            return (psiExpression as UDeclarationsExpression).declarations[0].sourcePsi!!
+        } else {
+            return psiExpression.sourcePsi!!
+        }
+    }
+
+    fun updatePsiExpression(psiExpression: UExpression): Boolean {
+        this.psiExpression = psiExpression
+        val newArtifactQualifiedName = MarkerUtils.getFullyQualifiedName(psiExpression)
+        if (artifactQualifiedName != newArtifactQualifiedName) {
+            check(sourceFileMarker.removeSourceMark(this, autoRefresh = false))
+            val oldArtifactQualifiedName = artifactQualifiedName
+            artifactQualifiedName = newArtifactQualifiedName
+            return if (sourceFileMarker.applySourceMark(this, autoRefresh = false)) {
+                triggerEvent(SourceMarkEvent(this, SourceMarkEventCode.NAME_CHANGED, oldArtifactQualifiedName))
+                true
+            } else false
+        }
+        return true
     }
 
     private val eventListeners = ArrayList<SourceMarkEventListener>()

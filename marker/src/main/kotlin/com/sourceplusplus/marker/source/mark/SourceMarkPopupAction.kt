@@ -6,15 +6,15 @@ import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
-import com.sourceplusplus.marker.SourceFileMarker
-import com.sourceplusplus.marker.source.mark.gutter.GutterMark
-import com.sourceplusplus.marker.source.mark.gutter.MethodGutterMark
+import com.sourceplusplus.marker.source.SourceFileMarker
+import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
+import com.sourceplusplus.marker.source.mark.api.SourceMark
 import org.jetbrains.annotations.NotNull
 
 /**
  * todo: description
  *
- * @version 0.1.4
+ * @version 0.2.2
  * @since 0.1.4
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
@@ -30,11 +30,11 @@ open class SourceMarkPopupAction : AnAction() {
         val editor = e.getData(CommonDataKeys.EDITOR)
         val psiFile = e.getData(CommonDataKeys.PSI_FILE)
         if (project != null && editor != null && psiFile != null) {
-            var gutterMark: GutterMark? = null
+            var sourceMark: SourceMark? = null
             val fileMarker = psiFile.getUserData(SourceFileMarker.KEY)
             if (fileMarker != null) {
-                gutterMark = fileMarker.getSourceMarks().find {
-                    if (it is MethodGutterMark) {
+                sourceMark = fileMarker.getSourceMarks().find {
+                    if (it is MethodSourceMark) {
                         if (it.configuration.activateOnKeyboardShortcut) {
                             //+1 on end offset so match is made even right after method end
                             val incTextRange = TextRange(it.psiMethod.sourcePsi!!.textRange.startOffset,
@@ -44,18 +44,18 @@ open class SourceMarkPopupAction : AnAction() {
                             false
                         }
                     } else {
-                        throw IllegalStateException("Source mark not yet implemented: $it")
+                        false
                     }
-                } as GutterMark?
+                }
             }
 
-            if (gutterMark != null) {
-                performPopupAction(gutterMark, editor)
+            if (sourceMark != null) {
+                performPopupAction(sourceMark, editor)
             }
         }
     }
 
-    open fun performPopupAction(gutterMark: GutterMark, editor: Editor) {
-        gutterMark.displayPopup(editor)
+    open fun performPopupAction(sourceMark: SourceMark, editor: Editor) {
+        sourceMark.displayPopup(editor)
     }
 }

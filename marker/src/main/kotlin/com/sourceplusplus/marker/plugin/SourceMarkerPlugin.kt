@@ -1,19 +1,21 @@
 package com.sourceplusplus.marker.plugin
 
 import com.google.common.collect.ImmutableList
+import com.google.common.collect.Lists
+import com.google.common.collect.Maps
 import com.intellij.psi.PsiFile
-import com.sourceplusplus.marker.SourceFileMarker
-import com.sourceplusplus.marker.SourceFileMarkerProvider
 import com.sourceplusplus.marker.plugin.config.SourceMarkerConfiguration
+import com.sourceplusplus.marker.source.SourceFileMarker
+import com.sourceplusplus.marker.source.SourceFileMarkerProvider
 import com.sourceplusplus.marker.source.mark.api.SourceMark
+import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventListener
 import com.sourceplusplus.marker.source.navigate.ArtifactNavigator
 import org.slf4j.LoggerFactory
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * todo: description
  *
- * @version 0.1.4
+ * @version 0.2.2
  * @since 0.1.0
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
@@ -25,7 +27,8 @@ object SourceMarkerPlugin : SourceFileMarkerProvider {
     val configuration: SourceMarkerConfiguration = SourceMarkerConfiguration()
     val artifactNavigator = ArtifactNavigator()
     private val log = LoggerFactory.getLogger(javaClass)
-    private val availableSourceFileMarkers = ConcurrentHashMap<Int, SourceFileMarker>()
+    private val availableSourceFileMarkers = Maps.newConcurrentMap<Int, SourceFileMarker>()
+    private val globalSourceMarkEventListeners = Lists.newArrayList<SourceMarkEventListener>()
 
     fun clearAvailableSourceFileMarkers() {
         check(enabled) { "SourceMarkerPlugin disabled" }
@@ -98,15 +101,35 @@ object SourceMarkerPlugin : SourceFileMarkerProvider {
         return ImmutableList.copyOf(availableSourceFileMarkers.values)
     }
 
-    fun getSourceMark(artifactQualifiedName: String): SourceMark? {
+    fun addGlobalSourceMarkEventListener(sourceMarkEventListener: SourceMarkEventListener) {
+        globalSourceMarkEventListeners.add(sourceMarkEventListener)
+    }
+
+    fun getGlobalSourceMarkEventListeners(): List<SourceMarkEventListener> {
+        return ImmutableList.copyOf(globalSourceMarkEventListeners)
+    }
+
+    fun getSourceMark(artifactQualifiedName: String, type: SourceMark.Type): SourceMark? {
         check(enabled) { "SourceMarkerPlugin disabled" }
 
         availableSourceFileMarkers.values.forEach {
-            val sourceMark = it.getSourceMark(artifactQualifiedName)
+            val sourceMark = it.getSourceMark(artifactQualifiedName, type)
             if (sourceMark != null) {
                 return sourceMark
             }
         }
         return null
+    }
+
+    fun getSourceMarks(artifactQualifiedName: String): List<SourceMark> {
+        check(enabled) { "SourceMarkerPlugin disabled" }
+
+        availableSourceFileMarkers.values.forEach {
+            val sourceMarks = it.getSourceMarks(artifactQualifiedName)
+            if (sourceMarks.isNotEmpty()) {
+                return sourceMarks
+            }
+        }
+        return emptyList()
     }
 }

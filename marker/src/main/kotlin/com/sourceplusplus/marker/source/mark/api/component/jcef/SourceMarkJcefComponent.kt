@@ -1,12 +1,12 @@
-package com.sourceplusplus.marker.source.mark.gutter.component.jcef
+package com.sourceplusplus.marker.source.mark.api.component.jcef
 
 import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.util.Disposer
 import com.intellij.ui.jcef.JBCefApp
 import com.intellij.ui.jcef.JBCefBrowser
 import com.intellij.ui.jcef.JBCefClient
-import com.sourceplusplus.marker.source.mark.gutter.component.api.GutterMarkComponent
-import com.sourceplusplus.marker.source.mark.gutter.component.jcef.config.GutterMarkJcefComponentConfiguration
+import com.sourceplusplus.marker.source.mark.api.component.api.SourceMarkComponent
+import com.sourceplusplus.marker.source.mark.api.component.jcef.config.SourceMarkJcefComponentConfiguration
 import org.slf4j.LoggerFactory
 import java.awt.Dimension
 import java.util.concurrent.atomic.AtomicBoolean
@@ -15,16 +15,16 @@ import javax.swing.JComponent
 /**
  * todo: description
  *
- * @version 0.1.4
+ * @version 0.2.2
  * @since 0.1.0
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
-class GutterMarkJcefComponent(
-        override val configuration: GutterMarkJcefComponentConfiguration
-) : GutterMarkComponent {
+class SourceMarkJcefComponent(
+        override val configuration: SourceMarkJcefComponentConfiguration
+) : SourceMarkComponent {
 
     companion object {
-        private val log = LoggerFactory.getLogger(GutterMarkJcefComponent::class.java)
+        private val log = LoggerFactory.getLogger(SourceMarkJcefComponent::class.java)
         private val client: JBCefClient by lazy { JBCefApp.getInstance().createClient() }
 
         init {
