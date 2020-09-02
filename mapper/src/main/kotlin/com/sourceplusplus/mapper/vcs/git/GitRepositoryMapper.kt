@@ -7,7 +7,7 @@ import com.intellij.psi.JavaRecursiveElementVisitor
 import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.impl.source.tree.LeafPsiElement
-import com.sourceplusplus.marker.MarkerUtils
+import com.sourceplusplus.marker.MarkerUtils.Companion.getFullyQualifiedName
 import jp.ac.titech.c.se.stein.core.Context
 import jp.ac.titech.c.se.stein.core.EntrySet
 import jp.ac.titech.c.se.stein.core.EntrySet.Entry
@@ -44,10 +44,9 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
             return Entry.EMPTY //unsupported file type
         }
 
-        val psiFile = PsiFileFactory.getInstance(project).createFileFromText(
-            entry.name, fileType,
-            String(source.readBlob(entry.id, c), StandardCharsets.UTF_8)
-        )
+        val fileSource = String(source.readBlob(entry.id, c), StandardCharsets.UTF_8)
+        val psiFile = PsiFileFactory.getInstance(project).createFileFromText(entry.name, fileType, fileSource)
+        log.debug("Parsing file: $psiFile")
 
         val result = EntryList()
         val uFile = psiFile.toUElement() as UFile
@@ -64,8 +63,7 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
                 })
 
                 val newId = target.writeBlob(tokenStr.toString().toByteArray(StandardCharsets.UTF_8), c)
-                val name =
-                    "${MarkerUtils.getFullyQualifiedName(it)}.m${uFile.lang.associatedFileType!!.defaultExtension}"
+                val name = "${getFullyQualifiedName(it)}.m${uFile.lang.associatedFileType!!.defaultExtension}"
                 result.add(Entry(entry.mode, name, newId, entry.directory))
             }
         }
