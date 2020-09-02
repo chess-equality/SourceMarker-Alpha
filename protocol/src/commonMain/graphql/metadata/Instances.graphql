@@ -15,7 +15,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-
 query getServiceInstances($serviceId: ID!, $duration: Duration!) {
     result: getServiceInstances(duration: $duration, serviceId: $serviceId) {
         id
