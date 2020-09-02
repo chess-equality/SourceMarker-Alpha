@@ -28,3 +28,14 @@ To keep everything working, do not remove `<!-- ... -->` sections.
 
   Download the [latest release](https://github.com/sourceplusplus/SourceMarker-Plugin/releases/latest) and install it manually using
   <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
+
+## Project Structure
+
+| Internal Module               | Description                                                |
+| ----------------------------- | ---------------------------------------------------------- |
+| :mapper                       | todo                                                       |
+| :marker                       | Used to tie visual marks & popups to source code artifacts |
+| :mentor                       | todo                                                       |
+| :plugin                       | JetBrains plugin implementation                            |
+| :portal                       | Used to visually display contextualized artifact data      |
+| :protocol                     | Holds common data models and communication clients         |
