@@ -2,6 +2,13 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
+dependencies {
+    implementation(project(":protocol"))
+    implementation("org.slf4j:slf4j-api:1.7.30")
+    implementation("com.apollographql.apollo:apollo-runtime:2.3.0")
+    implementation("com.apollographql.apollo:apollo-coroutines-support:2.3.0")
+}
+
 //todo: should be able to move to root project
 tasks {
     withType<JavaCompile> {

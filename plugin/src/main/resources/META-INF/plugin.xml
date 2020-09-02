@@ -14,9 +14,6 @@
     <extensions defaultExtensionNs="com.intellij">
         <postStartupActivity implementation="com.sourceplusplus.sourcemarker.activities.PluginStartupActivity"/>
 
-        <applicationService serviceImplementation="com.sourceplusplus.sourcemarker.services.MyApplicationService"/>
-        <projectService serviceImplementation="com.sourceplusplus.sourcemarker.services.MyProjectService"/>
-
         <codeInsight.lineMarkerProvider language="Groovy"
                                         implementationClass="com.sourceplusplus.marker.plugin.SourceLineMarkerProvider$GroovyDescriptor"/>
         <codeInsight.lineMarkerProvider language="JAVA"
@@ -24,11 +21,6 @@
         <codeInsight.lineMarkerProvider language="kotlin"
                                         implementationClass="com.sourceplusplus.marker.plugin.SourceLineMarkerProvider$KotlinDescriptor"/>
     </extensions>
-
-    <projectListeners>
-        <listener class="com.sourceplusplus.sourcemarker.listeners.MyProjectManagerListener"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
-    </projectListeners>
 
     <projectListeners>
         <listener class="com.sourceplusplus.marker.plugin.FileActivityListener"

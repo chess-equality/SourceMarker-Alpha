@@ -46,6 +46,7 @@ dependencies {
 
     implementation(project(":mapper"))
     implementation(project(":marker"))
+    implementation(project(":mentor"))
     implementation(project(":protocol"))
 
     implementation("com.github.sh5i:git-stein:v0.5.0")
