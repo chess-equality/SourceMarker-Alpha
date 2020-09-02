@@ -1,0 +1,17 @@
+version: '3.3'
+services:
+  skywalking-oap:
+    container_name: skywalking-oap
+    hostname: skywalking-oap
+    build:
+      context: .
+      dockerfile: Dockerfile-skywalking-oap
+#    ports:
+#      - "11800:11800"
+#      - "12800:12800"
+  spp-example-webapp:
+    container_name: spp-example-webapp
+    hostname: spp-example-webapp
+    build:
+      context: .
+      dockerfile: Dockerfile-spp-example-webapp
