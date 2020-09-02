@@ -7,10 +7,7 @@ RUN tar -xzf ./apache-skywalking-apm-es7-8.1.0.tar.gz
 #ADD ./agent.config /apache-skywalking-apm-bin/agent/config/agent.config
 #ADD ./customize_enhance.xml /apache-skywalking-apm-bin/agent/config/customize_enhance.xml
 
-#ENV SOURCE_CONFIG=docker-core.json
 ENV JAVA_OPTS="-javaagent:/apache-skywalking-apm-bin-es7/agent/skywalking-agent.jar"
-
-#ENV SW_OAP_ADDRESS=skywalking-oap:12800
 ENV SW_AGENT_COLLECTOR_BACKEND_SERVICES=skywalking-oap:11800
 
 RUN unzip *.zip
