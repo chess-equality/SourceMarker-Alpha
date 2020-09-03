@@ -67,7 +67,7 @@ tasks {
     register("downloadSkywalking") {
         doLast {
             println("Downloading Apache SkyWalking")
-            val f = File(projectDir, "test/apache-skywalking-apm-es7-8.1.0.tar.gz")
+            val f = File(projectDir, "test/e2e/apache-skywalking-apm-es7-8.1.0.tar.gz")
             if (!f.exists()) {
                 java.net.URL("https://downloads.apache.org/skywalking/8.1.0/apache-skywalking-apm-es7-8.1.0.tar.gz")
                     .openStream().use { input ->
@@ -82,7 +82,7 @@ tasks {
 }
 
 dockerCompose {
-    dockerComposeWorkingDirectory = "./test"
+    dockerComposeWorkingDirectory = "./test/e2e"
     useComposeFiles = listOf("./docker-compose.yml")
     captureContainersOutput = true
 }
