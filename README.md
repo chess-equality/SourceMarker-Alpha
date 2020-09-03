@@ -31,11 +31,11 @@ To keep everything working, do not remove `<!-- ... -->` sections.
 
 ## Project Structure
 
-| Internal Module               | Description                                                |
-| ----------------------------- | ---------------------------------------------------------- |
-| :mapper                       | todo                                                       |
-| :marker                       | Used to tie visual marks & popups to source code artifacts |
-| :mentor                       | todo                                                       |
-| :plugin                       | JetBrains plugin implementation                            |
-| :portal                       | Used to visually display contextualized artifact data      |
-| :protocol                     | Holds common data models and communication clients         |
+| Internal Module               | Description                                                   |
+| ----------------------------- | ------------------------------------------------------------- |
+| :mapper                       | Correlates source code artifact refactoring via VCS activity  |
+| :marker                       | Used to tie visual marks & popups to source code artifacts    |
+| :mentor                       | Produces source code artifact informative/cautionary advice   |
+| :plugin                       | JetBrains plugin implementation                               |
+| :portal                       | Used to visually display contextualized artifact data/advice  |
+| :protocol                     | Holds common data models and communication clients            |
