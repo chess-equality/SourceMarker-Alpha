@@ -12,10 +12,9 @@ class PluginSourceMarkEventListener : SourceMarkEventListener {
 
     override fun handleEvent(event: SourceMarkEvent) {
         if (event.eventCode == SourceMarkEventCode.MARK_ADDED) {
-            //todo: query apache skywalking
             if (event.sourceMark is MethodSourceMark) {
-                println("here")
-//                sourceMentor.getAllMethodAdvice(event.sourceMark.)
+                //todo: gather and display markings
+                //todo: gather and display advice
             }
         }
     }
