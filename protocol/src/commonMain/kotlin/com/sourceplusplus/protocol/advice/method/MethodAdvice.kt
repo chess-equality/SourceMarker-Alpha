@@ -1,4 +1,6 @@
-package com.sourceplusplus.protocol.advice
+package com.sourceplusplus.protocol.advice.method
+
+import com.sourceplusplus.protocol.advice.AdviceType
 
 data class MethodAdvice(
     val adviceType: AdviceType,

@@ -1,6 +1,6 @@
 package com.sourceplusplus.mapper.api
 
-import com.sourceplusplus.protocol.ArtifactQualifiedName
+import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
 
 interface SourceMapper {
 

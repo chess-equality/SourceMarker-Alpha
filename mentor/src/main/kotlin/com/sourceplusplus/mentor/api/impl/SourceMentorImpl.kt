@@ -3,8 +3,8 @@ package com.sourceplusplus.mentor.api.impl
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.toDeferred
 import com.sourceplusplus.mentor.api.SourceMentor
-import com.sourceplusplus.protocol.ArtifactQualifiedName
-import com.sourceplusplus.protocol.advice.MethodAdvice
+import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
+import com.sourceplusplus.protocol.advice.method.MethodAdvice
 import com.sourceplusplus.protocol.skywalking.metadata.GetTimeInfoQuery
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking

@@ -1,7 +1,7 @@
 package com.sourceplusplus.mentor.api
 
-import com.sourceplusplus.protocol.ArtifactQualifiedName
-import com.sourceplusplus.protocol.advice.MethodAdvice
+import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
+import com.sourceplusplus.protocol.advice.method.MethodAdvice
 
 interface SourceMentor {
 
