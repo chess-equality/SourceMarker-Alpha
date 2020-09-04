@@ -104,7 +104,8 @@ class OverviewPage {
                     }
                     div("pusher") {
                         div("ui menu fixed asd marginlefting middle aligned content menu_style") {
-                            div("ui sidebar horizontal top menu fixed overlay visible very thin icon background_color webkit_transition overflow_visible") {
+                            div("ui sidebar horizontal top menu fixed overlay visible very thin icon background_color webkit_transition") {
+                                style = "overflow: visible !important;"
                                 div("marginlefting align_content_center") {
                                     div("ui icon top left pointing dropdown") {
                                         i("clock outline icon spp_red_color spp_font_margin") {
