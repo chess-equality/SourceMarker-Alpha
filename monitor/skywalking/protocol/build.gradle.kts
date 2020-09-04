@@ -1,5 +1,6 @@
 plugins {
     kotlin("multiplatform")
+    id("com.apollographql.apollo").version("2.3.0")
 }
 
 kotlin {
@@ -14,6 +15,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(kotlin("stdlib-common"))
+                api("com.apollographql.apollo:apollo-api:2.3.0")
             }
         }
         val commonTest by getting {
@@ -35,6 +37,11 @@ kotlin {
             }
         }
     }
+}
+
+apollo {
+    generateKotlinModels.set(true)
+    rootPackageName.set("monitor.skywalking.protocol")
 }
 
 ////todo: should be able to move to root project

@@ -3,8 +3,11 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":protocol"))
+    //implementation(project(":protocol"))
+    implementation(project(":monitor:skywalking:protocol"))
     implementation("org.slf4j:slf4j-api:1.7.30")
+    implementation("com.apollographql.apollo:apollo-runtime:2.3.0")
+    implementation("com.apollographql.apollo:apollo-coroutines-support:2.3.0")
 }
 
 //todo: should be able to move to root project

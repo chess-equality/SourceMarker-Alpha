@@ -4,6 +4,11 @@ rootProject.name = 'SourceMarker'
 include 'mapper'
 include 'marker'
 include 'mentor'
+include 'monitor'
 include 'plugin'
 include 'portal'
 include 'protocol'
+
+include ":monitor:skywalking"
+include ':monitor:skywalking:protocol'
+include ':monitor:skywalking:provider'
