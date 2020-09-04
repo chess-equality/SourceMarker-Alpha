@@ -54,7 +54,6 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         }
         configuration.componentProvider = componentProvider
 
-        componentProvider.defaultConfiguration.setComponentSize(Dimension(400, 340))
         componentProvider.defaultConfiguration.initialUrl = "http://localhost:8080/overview"
         SourceMarkerPlugin.configuration.defaultGutterMarkConfiguration = configuration
     }
