@@ -35,10 +35,9 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         val configuration = GutterMarkConfiguration()
         configuration.activateOnMouseHover = false
         configuration.activateOnKeyboardShortcut = true
-        val componentProvider = SourceMarkSingleJcefComponentProvider()
-        componentProvider.let {
-            it.defaultConfiguration.preloadJcefBrowser = false
-            it.defaultConfiguration.componentSizeEvaluator = object : ComponentSizeEvaluator() {
+        val componentProvider = SourceMarkSingleJcefComponentProvider().apply {
+            defaultConfiguration.preloadJcefBrowser = false
+            defaultConfiguration.componentSizeEvaluator = object : ComponentSizeEvaluator() {
                 override fun getDynamicSize(
                     editor: Editor,
                     configuration: SourceMarkComponentConfiguration
