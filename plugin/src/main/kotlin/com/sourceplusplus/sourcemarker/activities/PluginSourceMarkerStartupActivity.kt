@@ -21,11 +21,22 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
     override fun runActivity(project: Project) {
         initPortal()
         initMarker()
+        initMapper()
+        initMentor()
 
         super.runActivity(project)
     }
 
+    private fun initMapper() {
+        //todo: this
+    }
+
+    private fun initMentor() {
+        //todo: this
+    }
+
     private fun initPortal() {
+        //todo: load portal config (custom themes, etc)
         vertx.deployVerticle(PortalServer())
     }
 
