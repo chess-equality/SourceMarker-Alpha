@@ -17,8 +17,6 @@ import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okio.ByteString.Companion.toByteString
-import java.nio.charset.StandardCharsets
 
 @Suppress("unused")
 class PortalServer : CoroutineVerticle() {
@@ -38,16 +36,15 @@ class PortalServer : CoroutineVerticle() {
         router.route().handler(ResponseTimeHandler.create())
 
         // Static handler
-//        router.route("/*").handler(StaticHandler.create(StaticHandler.DEFAULT_WEB_ROOT, PortalServer::class.java.classLoader))
+        router.get("/*").handler {
+            val fileStream = PortalServer::class.java.classLoader.getResourceAsStream("webroot" + it.request().path())
+            it.response().setStatusCode(200).end(Buffer.buffer(Unpooled.copiedBuffer(fileStream.readAllBytes())))
+        }
+
         // Routes
         router.get("/overview").coroutineHandler { ctx -> getOverview(ctx) }
         router.get("/traces").coroutineHandler { ctx -> getTraces(ctx) }
         router.get("/configuration").coroutineHandler { ctx -> getConfiguration(ctx) }
-
-        router.get("/*").handler {
-            val t = PortalServer::class.java.classLoader.getResourceAsStream("webroot" + it.request().path())
-            it.response().setStatusCode(200).end(Buffer.buffer(Unpooled.copiedBuffer(t.readAllBytes())))
-        }
 
         // Start the server
         vertx.createHttpServer()
