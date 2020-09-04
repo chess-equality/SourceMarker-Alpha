@@ -16,6 +16,8 @@ import java.awt.Dimension
 
 class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposable {
 
+    private val vertx: Vertx = Vertx.vertx()
+
     override fun runActivity(project: Project) {
         initPortal()
         initMarker()
@@ -24,7 +26,6 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
     }
 
     private fun initPortal() {
-        val vertx: Vertx = Vertx.vertx()
         vertx.deployVerticle(PortalServer())
     }
 
@@ -37,8 +38,6 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         val componentProvider = SourceMarkSingleJcefComponentProvider()
         componentProvider.let {
             it.defaultConfiguration.preloadJcefBrowser = false
-            it.defaultConfiguration.autoDisposeBrowser =
-                false //todo: should be able to dispose, see IntelliJPortalUI.close()
             it.defaultConfiguration.componentSizeEvaluator = object : ComponentSizeEvaluator() {
                 override fun getDynamicSize(
                     editor: Editor,
@@ -62,5 +61,6 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         if (SourceMarkerPlugin.enabled) {
             SourceMarkerPlugin.clearAvailableSourceFileMarkers()
         }
+        vertx.close()
     }
 }
