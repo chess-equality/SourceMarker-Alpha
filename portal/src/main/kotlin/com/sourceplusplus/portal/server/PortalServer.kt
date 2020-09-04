@@ -43,7 +43,7 @@ class PortalServer : CoroutineVerticle() {
         // Static handler
         router.get("/*").handler {
             val fileStream = PortalServer::class.java.classLoader.getResourceAsStream("webroot" + it.request().path())
-            it.response().setStatusCode(200).end(Buffer.buffer(Unpooled.copiedBuffer(fileStream.readAllBytes())))
+            it.response().setStatusCode(200).end(Buffer.buffer(Unpooled.copiedBuffer(fileStream!!.readAllBytes())))
         }
 
         // Start the server
