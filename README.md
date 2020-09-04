@@ -4,7 +4,7 @@
 [![Version](https://img.shields.io/jetbrains/plugin/v/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
 [![Downloads](https://img.shields.io/jetbrains/plugin/d/PLUGIN_ID.svg)](https://plugins.jetbrains.com/plugin/PLUGIN_ID)
 
-## Template ToDo list
+## Description
 - [ ] Set the Plugin ID in the above README badges.
 - [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html).
 
@@ -31,11 +31,11 @@ To keep everything working, do not remove `<!-- ... -->` sections.
 
 ## Project Structure
 
-| Internal Module               | Description                                                   |
-| ----------------------------- | ------------------------------------------------------------- |
-| :mapper                       | Correlates source code artifact refactoring via VCS activity  |
-| :marker                       | Used to tie visual marks & popups to source code artifacts    |
-| :mentor                       | Produces source code artifact informative/cautionary advice   |
-| :plugin                       | JetBrains plugin implementation                               |
-| :portal                       | Used to visually display contextualized artifact data/advice  |
-| :protocol                     | Holds common data models and communication clients            |
+| Internal Module               | Description                                                   | Version |
+| ----------------------------- | ------------------------------------------------------------- | ------- |
+| :mapper                       | Correlates source code artifact refactoring via VCS activity  | 0.0.1   |
+| :marker                       | Used to tie visual marks & popups to source code artifacts    | 0.0.1   |
+| :mentor                       | Produces source code artifact informative/cautionary advice   | 0.0.1   |
+| :plugin                       | JetBrains plugin implementation                               | 0.0.1   |
+| :portal                       | Used to visually display contextualized artifact data/advice  | 0.0.1   |
+| :protocol                     | Holds common data models and communication clients            | 0.0.1   |
