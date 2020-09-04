@@ -38,19 +38,21 @@ intellij {
 
 repositories {
     maven(url = "https://jitpack.io") { name = "jitpack" }
-//    maven(url = "https://www.jetbrains.com/intellij-repository/releases") { name = "intellij-releases" }
 }
 
 dependencies {
-//    val kotlinVersion = "1.4.0"
-
     implementation(project(":mapper"))
     implementation(project(":marker"))
     implementation(project(":mentor"))
     implementation(project(":protocol"))
+    implementation(project(":portal"))
 
+    val vertxVersion = "3.9.2"
     implementation("com.github.sh5i:git-stein:v0.5.0")
-//    testImplementation("org.jetbrains.kotlin:kotlin-compiler:$kotlinVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+    implementation("io.vertx:vertx-core:$vertxVersion")
+    implementation("io.vertx:vertx-lang-kotlin:$vertxVersion")
+    implementation("io.vertx:vertx-lang-kotlin-coroutines:$vertxVersion")
 }
 
 //detekt {
