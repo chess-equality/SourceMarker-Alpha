@@ -2,41 +2,40 @@ package com.sourceplusplus.monitor.skywalking
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.toDeferred
-import io.vertx.core.AbstractVerticle
-import io.vertx.core.Promise
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import com.sourceplusplus.monitor.skywalking.track.ServiceInstanceTracker
+import com.sourceplusplus.monitor.skywalking.track.ServiceTracker
+import io.vertx.kotlin.core.deployVerticleAwait
+import io.vertx.kotlin.coroutines.CoroutineVerticle
 import monitor.skywalking.protocol.metadata.GetTimeInfoQuery
 import org.slf4j.LoggerFactory
 
-class SkywalkingMonitor : AbstractVerticle() {
+class SkywalkingMonitor : CoroutineVerticle() {
 
     companion object {
         private val log = LoggerFactory.getLogger(SkywalkingMonitor::class.java)
     }
 
-    private lateinit var skywalkingClient: ApolloClient
-    private var timezone: Int = 0
-
-    override fun start(startPromise: Promise<Void>) {
+    override suspend fun start() {
+        log.debug("Setting up Apache SkyWalking monitor")
         setup()
-        startPromise.complete()
+        log.info("Successfully setup Apache SkyWalking monitor")
     }
 
-    private fun setup() = runBlocking {
-        skywalkingClient = ApolloClient.builder()
-            .serverUrl(config().getString("graphql_endpoint"))
+    private suspend fun setup() {
+        val client = ApolloClient.builder()
+            .serverUrl(config.getString("graphql_endpoint"))
             .build()
 
-        val query = launch {
-            val response = skywalkingClient.query(GetTimeInfoQuery()).toDeferred().await()
-            if (response.hasErrors()) {
-                log.error("Failed to get Apache SkyWalking time info. Response: $response")
-                return@launch //todo: throw error
-            } else {
-                timezone = Integer.parseInt(response.data!!.result!!.timezone)
-            }
+        val response = client.query(GetTimeInfoQuery()).toDeferred().await()
+        if (response.hasErrors()) {
+            log.error("Failed to get Apache SkyWalking time info. Response: $response")
+            throw RuntimeException("Failed to get time info") //todo: throw more appropriate error
+        } else {
+            val timezone = Integer.parseInt(response.data!!.result!!.timezone)
+            val skywalkingClient = SkywalkingClient(vertx, client, timezone)
+
+            vertx.deployVerticleAwait(ServiceTracker(skywalkingClient))
+            vertx.deployVerticleAwait(ServiceInstanceTracker(skywalkingClient))
         }
-        query.join()
     }
 }

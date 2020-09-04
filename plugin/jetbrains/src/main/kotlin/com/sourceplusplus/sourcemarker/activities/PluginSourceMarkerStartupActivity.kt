@@ -36,7 +36,7 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         val config = JsonObject().apply {
             put("graphql_endpoint", "http://localhost:12800/graphql")
         }
-        vertx.deployVerticle(SkywalkingMonitor(), DeploymentOptions().setConfig(config))
+        //vertx.deployVerticle(SkywalkingMonitor(), DeploymentOptions().setConfig(config))
     }
 
     private fun initMapper() {
