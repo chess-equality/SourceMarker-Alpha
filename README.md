@@ -37,11 +37,14 @@ todo
 
 ## Project Structure
 
-| Internal Module               | Description                                                   | Version |
-| ----------------------------- | ------------------------------------------------------------- | ------- |
-| :mapper                       | Correlates source code artifact refactoring via VCS activity  | 0.0.1   |
-| :marker                       | Used to tie visual marks & popups to source code artifacts    | 0.0.1   |
-| :mentor                       | Produces source code artifact informative/cautionary advice   | 0.0.1   |
-| :plugin                       | JetBrains plugin implementation                               | 0.0.1   |
-| :portal                       | Used to visually display contextualized artifact data/advice  | 0.0.1   |
-| :protocol                     | Holds common data models and communication clients            | 0.0.1   |
+| Internal Module               | Description                                                          | Version |
+| ----------------------------- | -------------------------------------------------------------------- | ------- |
+| :mapper                       | Correlates source code artifact refactoring via VCS activity         | 0.0.1   |
+| :marker                       | Used to tie visual marks & popups to source code artifacts           | 0.0.1   |
+| :mentor                       | Produces source code artifact informative/cautionary advice          | 0.0.1   |
+| :monitor                      | APM monitor implementations                                          | 0.0.1   |
+| :monitor:protocol             | Holds common Apache SkyWalking data models and communication clients | 0.0.1   |
+| :monitor:provider             | Apache SkyWalking monitor implementation                             | 0.0.1   |
+| :plugin                       | JetBrains plugin implementation                                      | 0.0.1   |
+| :portal                       | Used to visually display contextualized artifact data/advice         | 0.0.1   |
+| :protocol                     | Holds common data models and communication clients                   | 0.0.1   |
