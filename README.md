@@ -29,6 +29,12 @@ To keep everything working, do not remove `<!-- ... -->` sections.
   Download the [latest release](https://github.com/sourceplusplus/SourceMarker-Plugin/releases/latest) and install it manually using
   <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
+## Usage
+
+todo
+
+# Development
+
 ## Project Structure
 
 | Internal Module               | Description                                                   | Version |
