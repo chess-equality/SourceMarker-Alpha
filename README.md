@@ -41,7 +41,7 @@ todo
 
 | Module                        | Description                                                          | Version |
 | ----------------------------- | -------------------------------------------------------------------- | ------- |
-| :mapper                       | Correlates source code artifact refactoring via VCS activity         | 0.0.1   |
+| :mapper                       | Tracks source code artifact refactoring                              | 0.0.1   |
 | :marker                       | Used to tie visual marks & popups to source code artifacts           | 0.0.1   |
 | :mentor                       | Produces source code artifact informative/cautionary advice          | 0.0.1   |
 | :portal                       | Used to visually display contextualized artifact data/advice         | 0.0.1   |

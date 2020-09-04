@@ -9,9 +9,12 @@ import com.sourceplusplus.marker.source.mark.api.component.api.config.ComponentS
 import com.sourceplusplus.marker.source.mark.api.component.api.config.SourceMarkComponentConfiguration
 import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkSingleJcefComponentProvider
 import com.sourceplusplus.marker.source.mark.gutter.config.GutterMarkConfiguration
+import com.sourceplusplus.monitor.skywalking.SkywalkingMonitor
 import com.sourceplusplus.portal.server.PortalServer
 import com.sourceplusplus.sourcemarker.listeners.PluginSourceMarkEventListener
+import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
+import io.vertx.core.json.JsonObject
 import java.awt.Dimension
 
 class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposable {
@@ -22,9 +25,18 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         initPortal()
         initMarker()
         initMapper()
+        initMonitor()
         initMentor()
 
         super.runActivity(project)
+    }
+
+    private fun initMonitor() {
+        //todo: configurable
+        val config = JsonObject().apply {
+            put("graphql_endpoint", "http://localhost:12800/graphql")
+        }
+        vertx.deployVerticle(SkywalkingMonitor(), DeploymentOptions().setConfig(config))
     }
 
     private fun initMapper() {

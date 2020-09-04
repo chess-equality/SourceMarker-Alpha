@@ -9,6 +9,12 @@ dependencies {
     implementation("com.apollographql.apollo:apollo-runtime:2.3.0")
     implementation("com.apollographql.apollo:apollo-coroutines-support:2.3.0")
     api("com.apollographql.apollo:apollo-api:2.3.0")
+
+    val vertxVersion = "3.9.2"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+    implementation("io.vertx:vertx-core:$vertxVersion")
+    implementation("io.vertx:vertx-lang-kotlin:$vertxVersion")
+    implementation("io.vertx:vertx-lang-kotlin-coroutines:$vertxVersion")
 }
 
 //todo: should be able to move to root project

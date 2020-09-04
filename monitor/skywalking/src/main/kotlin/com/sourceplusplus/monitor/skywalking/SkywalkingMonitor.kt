@@ -1,26 +1,31 @@
+package com.sourceplusplus.monitor.skywalking
+
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.toDeferred
+import io.vertx.core.AbstractVerticle
+import io.vertx.core.Promise
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import monitor.skywalking.protocol.metadata.GetTimeInfoQuery
 import org.slf4j.LoggerFactory
 
-class SourceMentorImpl {
+class SkywalkingMonitor : AbstractVerticle() {
 
     companion object {
-        private val log = LoggerFactory.getLogger(SourceMentorImpl::class.java)
+        private val log = LoggerFactory.getLogger(SkywalkingMonitor::class.java)
     }
 
     private lateinit var skywalkingClient: ApolloClient
     private var timezone: Int = 0
 
-    init {
+    override fun start(startPromise: Promise<Void>) {
         setup()
+        startPromise.complete()
     }
 
     private fun setup() = runBlocking {
         skywalkingClient = ApolloClient.builder()
-            .serverUrl("http://localhost:12800/graphql")
+            .serverUrl(config().getString("graphql_endpoint"))
             .build()
 
         val query = launch {
