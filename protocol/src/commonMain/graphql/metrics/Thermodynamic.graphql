@@ -15,8 +15,16 @@
 # specific language governing permissions and limitations
 # under the License.
 
-query getThermodynamic($metric: MetricCondition!, $duration: Duration!) {
-    result: getThermodynamic(metric: $metric, duration: $duration) {
-        nodes axisYStep
+#todo: this is the same as HeatMap.graphql
+query getThermodynamic($condition: MetricsCondition!, $duration: Duration!) {
+    result: readHeatMap(condition: $condition, duration: $duration) {
+        values {
+            id
+            values
+        }
+        buckets {
+            min
+            max
+        }
     }
 }
