@@ -2,10 +2,10 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
+//todo: remove dependency on intellij
 repositories {
     maven(url = "https://jitpack.io") { name = "jitpack" }
     maven(url = "https://www.jetbrains.com/intellij-repository/releases") { name = "intellij-releases" }
-//    maven(url = "https://dl.bintray.com/kotlin/uast/") { name = "kotlin-uast" }
 }
 
 dependencies {
@@ -18,8 +18,6 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:3.11")
     implementation("org.eclipse.jgit:org.eclipse.jgit:5.8.0.202006091008-r")
 
-//    compileOnly("org.jetbrains.uast:uast:1.0.10")
-//    compileOnly("org.jetbrains.uast:uast-kotlin:1.0.10")
     compileOnly("com.jetbrains.intellij.platform:util-ui:$intellijVersion") { isTransitive = false }
     compileOnly("com.jetbrains.intellij.platform:analysis:$intellijVersion") { isTransitive = false }
     compileOnly("com.jetbrains.intellij.java:java-analysis:$intellijVersion") { isTransitive = false }

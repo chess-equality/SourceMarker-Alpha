@@ -1,6 +1,7 @@
 rootProject.buildFileName = "build.gradle.kts"
 rootProject.name = 'SourceMarker'
 
+//framework
 include 'mapper'
 include 'marker'
 include 'mentor'
@@ -9,6 +10,6 @@ include 'plugin'
 include 'portal'
 include 'protocol'
 
-include ":monitor:skywalking"
-include ':monitor:skywalking:protocol'
-include ':monitor:skywalking:provider'
+//implementations
+include 'plugin:jetbrains'
+include "monitor:skywalking"
