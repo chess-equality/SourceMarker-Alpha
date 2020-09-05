@@ -9,13 +9,16 @@ import io.vertx.core.Vertx
 import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
 import monitor.skywalking.protocol.type.Duration
+import monitor.skywalking.protocol.type.Step
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class SkywalkingClient(
     private val vertx: Vertx,
     private val apolloClient: ApolloClient,
-    private val timezone: Int = 0
+    private val timezoneOffset: Int = 0
 ) {
 
     companion object {
@@ -76,11 +79,24 @@ class SkywalkingClient(
         return response.data!!.result
     }
 
-    fun getDuration(since: LocalDateTime): Duration {
-        return getDuration(since, LocalDateTime.now())
+    fun getDuration(since: LocalDateTime, step: DurationStep): Duration {
+        return getDuration(since, LocalDateTime.now(), step)
     }
 
-    fun getDuration(from: LocalDateTime, to: LocalDateTime): Duration {
-        TODO("This")
+    fun getDuration(from: LocalDateTime, to: LocalDateTime, step: DurationStep): Duration {
+        val fromDate = from.atZone(ZoneOffset.ofHours(timezoneOffset))
+        val toDate = to.atZone(ZoneOffset.ofHours(timezoneOffset))
+        return Duration(
+            fromDate.format(step.dateTimeFormatter),
+            toDate.format(step.dateTimeFormatter),
+            Step.valueOf(step.name)
+        )
+    }
+
+    enum class DurationStep(val dateTimeFormatter: DateTimeFormatter) {
+        DAY(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+        HOUR(DateTimeFormatter.ofPattern("yyyy-MM-dd HH")),
+        MINUTE(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")),
+        SECOND(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmmss"))
     }
 }

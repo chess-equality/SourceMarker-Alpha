@@ -1,6 +1,7 @@
 package com.sourceplusplus.monitor.skywalking.track
 
 import com.sourceplusplus.monitor.skywalking.SkywalkingClient
+import com.sourceplusplus.monitor.skywalking.SkywalkingClient.*
 import io.vertx.core.Vertx
 import io.vertx.core.eventbus.MessageConsumer
 import io.vertx.kotlin.coroutines.CoroutineVerticle
@@ -25,17 +26,19 @@ class ServiceTracker(private val skywalkingClient: SkywalkingClient) : Coroutine
 
         GlobalScope.launch(vertx.dispatcher()) {
             activeServices = skywalkingClient.run {
-                getServices(getDuration(LocalDateTime.now().minusMinutes(15)))
+                getServices(getDuration(LocalDateTime.now().minusMinutes(15), DurationStep.MINUTE))
             }
             if (activeServices.size == 1) {
                 currentService = activeServices[0]
+
+                vertx.eventBus().publish("$address.currentService-Updated", currentService)
             }
         }
     }
 
     companion object {
         fun currentServiceConsumer(vertx: Vertx): MessageConsumer<String> {
-            return vertx.eventBus().localConsumer("todo")
+            return vertx.eventBus().localConsumer("monitor.skywalking.service.currentService-Updated")
         }
 
         fun activeServicesConsumer(vertx: Vertx): MessageConsumer<String> {
