@@ -15,6 +15,7 @@ import java.time.ZoneOffset.ofHours
 import java.time.ZoneOffset.systemDefault
 import java.time.ZonedDateTime.of
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 class SkywalkingClient(
     val vertx: Vertx,
@@ -26,16 +27,14 @@ class SkywalkingClient(
         private val log = LoggerFactory.getLogger(SkywalkingClient::class.java)
 
         fun registerCodecs(vertx: Vertx) {
+            log.info("Registering Apache SkyWalking codecs")
             registerCodec(vertx, GetAllServicesQuery.Result::class.java)
             registerCodec(vertx, GetServiceInstancesQuery.Result::class.java)
+            registerCodec(vertx, ArrayList::class.java)
         }
 
         private fun <T> registerCodec(vertx: Vertx, type: Class<T>) {
-            if (vertx.sharedData().getLocalMap<Any, Any?>("registered_skywalking_message_codecs")
-                    .putIfAbsent(type.canonicalName, true) == null
-            ) {
-                vertx.eventBus().registerDefaultCodec(type, SkywalkingMessageCodec(type))
-            }
+            vertx.eventBus().registerDefaultCodec(type, SkywalkingMessageCodec(type))
         }
     }
 
@@ -96,7 +95,7 @@ class SkywalkingClient(
         }
 
         override fun name(): String {
-            return type.simpleName
+            return UUID.randomUUID().toString()
         }
 
         override fun systemCodecID(): Byte {

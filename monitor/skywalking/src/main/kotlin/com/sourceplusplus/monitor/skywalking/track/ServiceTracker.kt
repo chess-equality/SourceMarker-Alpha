@@ -1,48 +1,43 @@
 package com.sourceplusplus.monitor.skywalking.track
 
 import com.sourceplusplus.monitor.skywalking.SkywalkingClient
-import com.sourceplusplus.monitor.skywalking.SkywalkingClient.*
+import com.sourceplusplus.monitor.skywalking.SkywalkingClient.DurationStep
 import io.vertx.core.Vertx
 import io.vertx.core.eventbus.MessageConsumer
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.dispatcher
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import java.time.LocalDateTime
 
 class ServiceTracker(private val skywalkingClient: SkywalkingClient) : CoroutineVerticle() {
 
-    private val address = "monitor.skywalking.service"
     var currentService: GetAllServicesQuery.Result? = null
     var activeServices: List<GetAllServicesQuery.Result> = emptyList()
 
     override suspend fun start() {
-        val consumer = vertx.eventBus().localConsumer<String>(address)
-        consumer.handler { message ->
-            // The consumer will get a failure
-            message.fail(0, "it failed!!!")
-        }
-
-        GlobalScope.launch(vertx.dispatcher()) {
+        launch(vertx.dispatcher()) {
             activeServices = skywalkingClient.run {
                 getServices(getDuration(LocalDateTime.now().minusMinutes(15), DurationStep.MINUTE))
             }
-            if (activeServices.size == 1) {
-                currentService = activeServices[0]
+            vertx.eventBus().publish("$address.activeServices-Updated", activeServices)
 
+            if (activeServices.isNotEmpty()) {
+                currentService = activeServices[0]
                 vertx.eventBus().publish("$address.currentService-Updated", currentService)
             }
         }
     }
 
     companion object {
+        private const val address = "monitor.skywalking.service"
+
         fun currentServiceConsumer(vertx: Vertx): MessageConsumer<GetAllServicesQuery.Result> {
-            return vertx.eventBus().localConsumer("monitor.skywalking.service.currentService-Updated")
+            return vertx.eventBus().localConsumer("$address.currentService-Updated")
         }
 
-        fun activeServicesConsumer(vertx: Vertx): MessageConsumer<String> {
-            return vertx.eventBus().localConsumer("todo")
+        fun activeServicesConsumer(vertx: Vertx): MessageConsumer<List<GetAllServicesQuery.Result>> {
+            return vertx.eventBus().localConsumer("$address.activeServices-Updated")
         }
 
         suspend fun getCurrentService(vertx: Vertx): GetAllServicesQuery.Result? {
