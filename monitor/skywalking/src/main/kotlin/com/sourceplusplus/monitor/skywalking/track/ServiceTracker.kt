@@ -37,7 +37,7 @@ class ServiceTracker(private val skywalkingClient: SkywalkingClient) : Coroutine
     }
 
     companion object {
-        fun currentServiceConsumer(vertx: Vertx): MessageConsumer<String> {
+        fun currentServiceConsumer(vertx: Vertx): MessageConsumer<GetAllServicesQuery.Result> {
             return vertx.eventBus().localConsumer("monitor.skywalking.service.currentService-Updated")
         }
 
