@@ -2,8 +2,11 @@ package com.sourceplusplus.sourcemarker.actions
 
 import com.intellij.openapi.editor.Editor
 import com.sourceplusplus.marker.source.mark.SourceMarkPopupAction
+import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
 import com.sourceplusplus.marker.source.mark.api.SourceMark
 import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkJcefComponent
+import org.jetbrains.uast.expressions.UInjectionHost
+import org.jetbrains.uast.java.JavaUQualifiedReferenceExpression
 import java.util.concurrent.ThreadLocalRandom
 
 class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
@@ -15,6 +18,17 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         //todo: save endpoint keys to sourcemark
 
         //context = endpoint
+        if (sourceMark is MethodSourceMark) {
+            val requestMappingAnnotation =
+                sourceMark.getPsiMethod().findAnnotation("org.springframework.web.bind.annotation.RequestMapping")
+            if (requestMappingAnnotation != null) {
+                val value = (requestMappingAnnotation.findAttributeValue("value") as UInjectionHost).evaluateToString()
+                val method =
+                    (requestMappingAnnotation.findAttributeValue("method") as JavaUQualifiedReferenceExpression).selector
+                val endpoint = "{${method}}$value"
+                println(endpoint)
+            }
+        }
         //todo: determine endpoint key
         //todo: save endpoint key to sourcemark
 
