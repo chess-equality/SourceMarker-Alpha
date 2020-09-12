@@ -19,7 +19,9 @@ import java.awt.Dimension
 
 class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposable {
 
-    private val vertx: Vertx = Vertx.vertx()
+    companion object {
+        val vertx: Vertx = Vertx.vertx()
+    }
 
     override fun runActivity(project: Project) {
         initPortal()

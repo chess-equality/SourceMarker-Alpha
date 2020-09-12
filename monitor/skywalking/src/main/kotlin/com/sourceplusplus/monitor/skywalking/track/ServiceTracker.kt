@@ -4,6 +4,7 @@ import com.sourceplusplus.monitor.skywalking.SkywalkingClient
 import com.sourceplusplus.monitor.skywalking.SkywalkingClient.DurationStep
 import io.vertx.core.Vertx
 import io.vertx.core.eventbus.MessageConsumer
+import io.vertx.kotlin.core.eventbus.requestAwait
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.launch
@@ -27,6 +28,10 @@ class ServiceTracker(private val skywalkingClient: SkywalkingClient) : Coroutine
                 vertx.eventBus().publish("$address.currentService-Updated", currentService)
             }
         }
+
+        vertx.eventBus().localConsumer<Void>("$address.currentService") {
+            it.reply(currentService)
+        }
     }
 
     companion object {
@@ -41,7 +46,9 @@ class ServiceTracker(private val skywalkingClient: SkywalkingClient) : Coroutine
         }
 
         suspend fun getCurrentService(vertx: Vertx): GetAllServicesQuery.Result? {
-            TODO("this")
+            return vertx.eventBus()
+                .requestAwait<GetAllServicesQuery.Result?>("$address.currentService", null)
+                .body()
         }
 
         suspend fun getActiveServices(vertx: Vertx): GetAllServicesQuery.Result? {

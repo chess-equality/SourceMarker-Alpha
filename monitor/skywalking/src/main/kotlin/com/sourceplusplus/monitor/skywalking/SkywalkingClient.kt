@@ -7,6 +7,7 @@ import io.vertx.core.buffer.Buffer
 import io.vertx.core.eventbus.MessageCodec
 import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
+import monitor.skywalking.protocol.metadata.SearchEndpointQuery
 import monitor.skywalking.protocol.type.Duration
 import monitor.skywalking.protocol.type.Step
 import org.slf4j.LoggerFactory
@@ -30,6 +31,7 @@ class SkywalkingClient(
             log.info("Registering Apache SkyWalking codecs")
             registerCodec(vertx, GetAllServicesQuery.Result::class.java)
             registerCodec(vertx, GetServiceInstancesQuery.Result::class.java)
+            registerCodec(vertx, SearchEndpointQuery.Result::class.java)
             registerCodec(vertx, ArrayList::class.java)
         }
 
@@ -40,6 +42,15 @@ class SkywalkingClient(
 
     init {
         registerCodecs(vertx)
+    }
+
+    suspend fun searchEndpoint(keyword: String, serviceId: String, limit: Int): List<SearchEndpointQuery.Result> {
+        val response = apolloClient.query(
+            SearchEndpointQuery(keyword, serviceId, limit)
+        ).toDeferred().await()
+
+        //todo: throw error if failed
+        return response.data!!.result
     }
 
     suspend fun getServices(duration: Duration): List<GetAllServicesQuery.Result> {

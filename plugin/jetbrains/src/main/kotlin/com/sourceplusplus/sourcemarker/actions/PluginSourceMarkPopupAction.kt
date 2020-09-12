@@ -5,6 +5,11 @@ import com.sourceplusplus.marker.source.mark.SourceMarkPopupAction
 import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
 import com.sourceplusplus.marker.source.mark.api.SourceMark
 import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkJcefComponent
+import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
+import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity
+import io.vertx.kotlin.coroutines.dispatcher
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.jetbrains.uast.expressions.UInjectionHost
 import org.jetbrains.uast.java.JavaUQualifiedReferenceExpression
 import java.util.concurrent.ThreadLocalRandom
@@ -25,10 +30,16 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                 val value = (requestMappingAnnotation.findAttributeValue("value") as UInjectionHost).evaluateToString()
                 val method =
                     (requestMappingAnnotation.findAttributeValue("method") as JavaUQualifiedReferenceExpression).selector
-                val endpoint = "{${method}}$value"
-                println(endpoint)
+                val endpointName = "{${method}}$value"
+
+                GlobalScope.launch(PluginSourceMarkerStartupActivity.vertx.dispatcher()) {
+                    val endpoint =
+                        EndpointTracker.searchExactEndpoint(endpointName, PluginSourceMarkerStartupActivity.vertx)
+                    println(endpoint)
+                }
             }
         }
+
         //todo: determine endpoint key
         //todo: save endpoint key to sourcemark
 
