@@ -103,6 +103,7 @@ function clearOverview() {
     overviewChart.setOption({
         series: []
     })
+    overviewChart.resize();
 }
 
 function displayCard(card) {
