@@ -13,7 +13,6 @@ jobs:
     name: Publish Plugin
     runs-on: ubuntu-latest
     container: gradle:jdk11
-    if: github.repository != 'JetBrains/intellij-platform-plugin-template'
     steps:
 
       # Check out current repository
