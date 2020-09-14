@@ -3,7 +3,9 @@ package com.sourceplusplus.portal.server
 import com.sourceplusplus.portal.server.page.ConfigurationPage
 import com.sourceplusplus.portal.server.page.OverviewPage
 import com.sourceplusplus.portal.server.page.TracesPage
+import io.netty.buffer.Unpooled
 import io.vertx.core.Vertx
+import io.vertx.core.buffer.Buffer
 import io.vertx.ext.web.Route
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
