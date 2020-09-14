@@ -1,6 +1,7 @@
 package com.sourceplusplus.monitor.skywalking
 
 import com.apollographql.apollo.ApolloClient
+import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.toDeferred
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
@@ -8,7 +9,9 @@ import io.vertx.core.eventbus.MessageCodec
 import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
 import monitor.skywalking.protocol.metadata.SearchEndpointQuery
+import monitor.skywalking.protocol.metrics.GetLinearIntValuesQuery
 import monitor.skywalking.protocol.type.Duration
+import monitor.skywalking.protocol.type.MetricCondition
 import monitor.skywalking.protocol.type.Step
 import org.slf4j.LoggerFactory
 import java.time.LocalDateTime
@@ -42,6 +45,19 @@ class SkywalkingClient(
 
     init {
         registerCodecs(vertx)
+    }
+
+    suspend fun getEndpointMetrics(
+        metricName: String,
+        endpointId: String,
+        duration: Duration
+    ): GetLinearIntValuesQuery.Result? {
+        val response = apolloClient.query(
+            GetLinearIntValuesQuery(MetricCondition(metricName, Input.optional(endpointId)), duration)
+        ).toDeferred().await()
+
+        //todo: throw error if failed
+        return response.data!!.result
     }
 
     suspend fun searchEndpoint(keyword: String, serviceId: String, limit: Int): List<SearchEndpointQuery.Result> {

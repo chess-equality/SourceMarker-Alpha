@@ -23,20 +23,17 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         //todo: save endpoint keys to sourcemark
 
         //context = endpoint
-        if (sourceMark is MethodSourceMark) {
-            val requestMappingAnnotation =
-                sourceMark.getPsiMethod().findAnnotation("org.springframework.web.bind.annotation.RequestMapping")
-            if (requestMappingAnnotation != null) {
-                val value = (requestMappingAnnotation.findAttributeValue("value") as UInjectionHost).evaluateToString()
-                val method =
-                    (requestMappingAnnotation.findAttributeValue("method") as JavaUQualifiedReferenceExpression).selector
-                val endpointName = "{${method}}$value"
+        val endpointName = determineEndpointName(sourceMark)
+        if (endpointName != null) {
+            GlobalScope.launch(PluginSourceMarkerStartupActivity.vertx.dispatcher()) {
+                val endpoint =
+                    EndpointTracker.searchExactEndpoint(endpointName, PluginSourceMarkerStartupActivity.vertx)
+                println(endpoint)
 
-                GlobalScope.launch(PluginSourceMarkerStartupActivity.vertx.dispatcher()) {
-                    val endpoint =
-                        EndpointTracker.searchExactEndpoint(endpointName, PluginSourceMarkerStartupActivity.vertx)
-                    println(endpoint)
-                }
+//                EndpointMetricsTracker.getMetrics(endpoint.id)
+//                val card = JsonObject().put("meta", "throughput_average")
+//                    .put("header", "again-" + System.currentTimeMillis())
+//                PluginSourceMarkerStartupActivity.vertx.eventBus().publish("DisplayCard", card)
             }
         }
 
@@ -60,5 +57,19 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         }
 
         super.performPopupAction(sourceMark, editor)
+    }
+
+    private fun determineEndpointName(sourceMark: SourceMark): String? {
+        if (sourceMark is MethodSourceMark) {
+            val requestMappingAnnotation =
+                sourceMark.getPsiMethod().findAnnotation("org.springframework.web.bind.annotation.RequestMapping")
+            if (requestMappingAnnotation != null) {
+                val value = (requestMappingAnnotation.findAttributeValue("value") as UInjectionHost).evaluateToString()
+                val method =
+                    (requestMappingAnnotation.findAttributeValue("method") as JavaUQualifiedReferenceExpression).selector
+                return "{${method}}$value"
+            }
+        }
+        return null
     }
 }

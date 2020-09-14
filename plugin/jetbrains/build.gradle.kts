@@ -54,6 +54,7 @@ dependencies {
     implementation("io.vertx:vertx-core:$vertxVersion")
     implementation("io.vertx:vertx-lang-kotlin:$vertxVersion")
     implementation("io.vertx:vertx-lang-kotlin-coroutines:$vertxVersion")
+    implementation("io.vertx:vertx-web:$vertxVersion") //todo: remove after sockjs bridge removed
 }
 
 //detekt {

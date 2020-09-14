@@ -15,6 +15,10 @@ import com.sourceplusplus.sourcemarker.listeners.PluginSourceMarkEventListener
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.core.json.JsonObject
+import io.vertx.ext.bridge.PermittedOptions
+import io.vertx.ext.web.Router
+import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions
+import io.vertx.ext.web.handler.sockjs.SockJSHandler
 import java.awt.Dimension
 
 class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposable {
@@ -52,6 +56,18 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
     private fun initPortal() {
         //todo: load portal config (custom themes, etc)
         vertx.deployVerticle(PortalServer())
+
+        //todo: portal should be connected to event bus without bridge
+        val sockJSHandler = SockJSHandler.create(vertx)
+        val portalBridgeOptions = SockJSBridgeOptions()
+            .addInboundPermitted(PermittedOptions().setAddressRegex(".+"))
+            .addOutboundPermitted(PermittedOptions().setAddressRegex(".+"))
+        sockJSHandler.bridge(portalBridgeOptions)
+
+        val router = Router.router(vertx)
+        router.route("/eventbus/*").handler(sockJSHandler)
+
+        vertx.createHttpServer().requestHandler(router).listen(8888, "localhost")
     }
 
     private fun initMarker() {
