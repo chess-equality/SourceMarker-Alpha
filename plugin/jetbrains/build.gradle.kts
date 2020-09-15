@@ -6,9 +6,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("java")
     id("org.jetbrains.kotlin.jvm")
-    id("org.jetbrains.intellij") version "0.4.21"
-    id("org.jetbrains.changelog") version "0.4.0"
-//    id("io.gitlab.arturbosch.detekt") version "1.11.0"
+    id("org.jetbrains.intellij") version "0.4.22"
+    id("org.jetbrains.changelog") version "0.5.0"
+//    id("io.gitlab.arturbosch.detekt") version "1.13.1"
 //    id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
 }
 
@@ -54,6 +54,7 @@ dependencies {
     implementation("io.vertx:vertx-core:$vertxVersion")
     implementation("io.vertx:vertx-lang-kotlin:$vertxVersion")
     implementation("io.vertx:vertx-lang-kotlin-coroutines:$vertxVersion")
+    implementation("io.vertx:vertx-web:$vertxVersion") //todo: remove after sockjs bridge removed
 }
 
 //detekt {

@@ -17,6 +17,9 @@ import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.html.HTML
+import kotlinx.html.TagConsumer
+import kotlinx.html.visitAndFinalize
 
 @Suppress("unused")
 class PortalServer : CoroutineVerticle() {
@@ -35,6 +38,8 @@ class PortalServer : CoroutineVerticle() {
         router.route().handler(LoggerHandler.create())
         router.route().handler(ResponseTimeHandler.create())
 
+//        // Static handler
+//        router.route("/*").handler(StaticHandler.create())
         // Routes
         router.get("/overview").coroutineHandler { ctx -> getOverview(ctx) }
         router.get("/traces").coroutineHandler { ctx -> getTraces(ctx) }
@@ -89,3 +94,6 @@ class PortalServer : CoroutineVerticle() {
         }
     }
 }
+
+fun <T, C : TagConsumer<T>> C.portal(namespace : String? = null, block : HTML.() -> Unit = {}) :
+        T = HTML(kotlinx.html.emptyMap, this, namespace).visitAndFinalize(this, block)
