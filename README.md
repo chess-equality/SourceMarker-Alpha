@@ -66,4 +66,4 @@ that made this possible.
 
 ## License
 
-[Apache License 2.0](blob/master/LICENSE)
+[Apache License 2.0](LICENSE)
