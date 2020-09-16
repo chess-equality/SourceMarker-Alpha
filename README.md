@@ -9,12 +9,17 @@
 ## Description
 
 <!-- Plugin description -->
-SourceMarker is a JetBrains-based plugin which implements Feedback-Driven Development (continuous feedback) technology via integration with [Apache SkyWalking](https://github.com/apache/skywalking). SourceMarker can be used to help debug and prevent runtime issues by providing contextualized behavior about your source code throughout development.
+SourceMarker is a JetBrains-based plugin which implements Feedback-Driven Development (continuous feedback) technology via integration with [Apache SkyWalking](https://github.com/apache/skywalking). SourceMarker can be used to help debug and prevent production runtime issues by providing contextualized behavior about your source code throughout development.
 <!-- Plugin description end -->
 
 ## Features
 
-todo
+- Source code contextual user interface
+- Service, service instance, endpoint metrics
+- Database access metrics
+- Integrated distributed trace mapping
+- Performance anti-pattern detection
+  - Performance Ramp
 
 ## Installation
 
@@ -28,7 +33,7 @@ todo
   Download the [latest release](https://github.com/sourceplusplus/SourceMarker/releases/latest) and install it manually using
   <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
-## Usage
+## Getting Started
 
 todo
 
@@ -57,7 +62,6 @@ todo
 
 - [ ] Set the Plugin ID in the above README badges.
 - [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html).
-- [ ] https://github.com/apollographql/apollo-android
 
 ## Attribution
 
