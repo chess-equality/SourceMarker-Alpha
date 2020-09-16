@@ -33,7 +33,7 @@ SourceMarker is a JetBrains-based plugin which implements Feedback-Driven Develo
   Download the [latest release](https://github.com/sourceplusplus/SourceMarker/releases/latest) and install it manually using
   <kbd>Preferences</kbd> > <kbd>Plugins</kbd> > <kbd>⚙️</kbd> > <kbd>Install plugin from disk...</kbd>
 
-## Usage
+## Getting Started
 
 todo
 
@@ -62,7 +62,6 @@ todo
 
 - [ ] Set the Plugin ID in the above README badges.
 - [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html).
-- [ ] https://github.com/apollographql/apollo-android
 
 ## Attribution
 
