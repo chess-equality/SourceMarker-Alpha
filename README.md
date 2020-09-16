@@ -58,3 +58,12 @@ todo
 - [ ] Set the Plugin ID in the above README badges.
 - [ ] Set the [Deployment Token](https://plugins.jetbrains.com/docs/marketplace/plugin-upload.html).
 - [ ] https://github.com/apollographql/apollo-android
+
+# Attribution
+
+This project was highly influenced by [PerformanceHat](https://github.com/sealuzh/PerformanceHat). Thanks for the insights
+that made this possible.
+
+# License
+
+[Apache License 2.0](blob/master/LICENSE)
