@@ -14,6 +14,7 @@ SourceMarker is a JetBrains-based plugin which implements Feedback-Driven Develo
 
 ## Features
 
+- Source code contextual user interface
 - Service, service instance, endpoint metrics
 - Database access metrics
 - Integrated distributed trace mapping
