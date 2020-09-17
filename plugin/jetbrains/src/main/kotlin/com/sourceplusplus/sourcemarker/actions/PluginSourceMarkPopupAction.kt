@@ -4,6 +4,7 @@ import com.codahale.metrics.Histogram
 import com.codahale.metrics.UniformReservoir
 import com.intellij.openapi.editor.Editor
 import com.sourceplusplus.marker.source.mark.SourceMarkPopupAction
+import com.sourceplusplus.marker.source.mark.api.ClassSourceMark
 import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
 import com.sourceplusplus.marker.source.mark.api.SourceMark
 import com.sourceplusplus.marker.source.mark.api.key.SourceKey
@@ -14,7 +15,7 @@ import com.sourceplusplus.monitor.skywalking.track.EndpointMetricsTracker
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
 import com.sourceplusplus.monitor.skywalking.track.toDoubleArray
 import com.sourceplusplus.portal.server.model.*
-import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity
+import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity.Companion.vertx
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
 import io.vertx.kotlin.coroutines.dispatcher
@@ -30,47 +31,17 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
 
     companion object {
         private val log = LoggerFactory.getLogger(PluginSourceMarkPopupAction::class.java)
-        val ARTIFACT_ENDPOINT = SourceKey<String>("ARTIFACT_ENDPOINT")
+        val ENDPOINT_ID = SourceKey<String>("ARTIFACT_ENDPOINT")
     }
 
     private val decimalFormat = DecimalFormat(".#")
 
     override fun performPopupAction(sourceMark: SourceMark, editor: Editor) {
         //todo: determine sourceportal context
-        //context = controller
-        //todo: get all endpoint keys for current file
-        //todo: save endpoint keys to sourcemark
-
-        //context = endpoint
-        val cachedEndpointId = sourceMark.getUserData(ARTIFACT_ENDPOINT)
-        if (cachedEndpointId != null) {
-            log.debug("Found cached endpoint id: $cachedEndpointId")
-            updateOverview(cachedEndpointId)
-        } else {
-            log.debug("Determining endpoint name")
-            val endpointName = determineEndpointName(sourceMark)
-
-            if (endpointName != null) {
-                log.debug("Detected endpoint name: $endpointName")
-
-                GlobalScope.launch(PluginSourceMarkerStartupActivity.vertx.dispatcher()) {
-                    log.debug("Determining endpoint id")
-                    val endpoint =
-                        EndpointTracker.searchExactEndpoint(endpointName, PluginSourceMarkerStartupActivity.vertx)
-                    if (endpoint != null) {
-                        sourceMark.putUserData(ARTIFACT_ENDPOINT, endpoint.id)
-                        log.debug("Detected endpoint id: ${endpoint.id}")
-
-                        updateOverview(endpoint.id)
-                    } else {
-                        log.debug("Could not find endpoint id for: $endpointName")
-                    }
-                }
-            }
+        when (sourceMark) {
+            is ClassSourceMark -> performClassPopup(sourceMark)
+            is MethodSourceMark -> performMethodPopup(sourceMark)
         }
-
-        //todo: determine endpoint key
-        //todo: save endpoint key to sourcemark
 
         //todo: use SourcePortalAPI to ensure correct view is showing
 //        val jcefComponent = sourceMark.sourceMarkComponent as SourceMarkJcefComponent
@@ -91,9 +62,42 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         super.performPopupAction(sourceMark, editor)
     }
 
+    private fun performClassPopup(sourceMark: ClassSourceMark) {
+        //todo: get all endpoint keys for current file
+    }
+
+    private fun performMethodPopup(sourceMark: MethodSourceMark) {
+        val cachedEndpointId = sourceMark.getUserData(ENDPOINT_ID)
+        if (cachedEndpointId != null) {
+            log.debug("Found cached endpoint id: $cachedEndpointId")
+            updateOverview(cachedEndpointId)
+        } else {
+            log.debug("Determining endpoint name")
+            val endpointName = determineEndpointName(sourceMark)
+
+            if (endpointName != null) {
+                log.debug("Detected endpoint name: $endpointName")
+
+                GlobalScope.launch(vertx.dispatcher()) {
+                    log.debug("Determining endpoint id")
+                    val endpoint =
+                        EndpointTracker.searchExactEndpoint(endpointName, vertx)
+                    if (endpoint != null) {
+                        sourceMark.putUserData(ENDPOINT_ID, endpoint.id)
+                        log.debug("Detected endpoint id: ${endpoint.id}")
+
+                        updateOverview(endpoint.id)
+                    } else {
+                        log.debug("Could not find endpoint id for: $endpointName")
+                    }
+                }
+            }
+        }
+    }
+
+    //todo: portal should request chart/card/etc
     private fun updateOverview(endpointId: String) {
-        //todo: portal should request chart/card/etc
-        GlobalScope.launch(PluginSourceMarkerStartupActivity.vertx.dispatcher()) {
+        GlobalScope.launch(vertx.dispatcher()) {
             val metricsRequest = GetEndpointMetrics(
                 listOf("endpoint_cpm", "endpoint_avg", "endpoint_sla", "endpoint_percentile"),
                 endpointId,
@@ -103,9 +107,7 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                     SkywalkingClient.DurationStep.MINUTE
                 )
             )
-            val metrics = EndpointMetricsTracker.getMetrics(
-                metricsRequest, PluginSourceMarkerStartupActivity.vertx
-            )
+            val metrics = EndpointMetricsTracker.getMetrics(metricsRequest, vertx)
 
             val seriesData =
                 SplineSeriesData(0, metricsRequest.toInstantTimes(), metrics[0].toDoubleArray())
@@ -115,24 +117,21 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                     QueryTimeFrame.LAST_15_MINUTES,
                     listOf(seriesData)
                 )
-            PluginSourceMarkerStartupActivity.vertx.eventBus()
-                .publish("null-UpdateChart", JsonObject(Json.encode(splineChart)))
+            vertx.eventBus().publish("null-UpdateChart", JsonObject(Json.encode(splineChart)))
 
             val throughputAverageCard =
                 BarTrendCard(
                     meta = "throughput_average",
                     header = toPrettyFrequency(calculateAverage(metrics[0].toDoubleArray()) / 60.0)
                 )
-            PluginSourceMarkerStartupActivity.vertx.eventBus()
-                .publish("null-DisplayCard", JsonObject(Json.encode(throughputAverageCard)))
+            vertx.eventBus().publish("null-DisplayCard", JsonObject(Json.encode(throughputAverageCard)))
 
             val responseTimeAverageCard =
                 BarTrendCard(
                     meta = "responsetime_average",
                     header = toPrettyDuration(calculateAverage(metrics[1].toDoubleArray()).toInt())
                 )
-            PluginSourceMarkerStartupActivity.vertx.eventBus()
-                .publish("null-DisplayCard", JsonObject(Json.encode(responseTimeAverageCard)))
+            vertx.eventBus().publish("null-DisplayCard", JsonObject(Json.encode(responseTimeAverageCard)))
 
             val slaAvg = calculateAverage(metrics[2].toDoubleArray())
             val slaAverageCard =
@@ -144,8 +143,7 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                         decimalFormat.format(slaAvg / 100.0) + "%"
                     }
                 )
-            PluginSourceMarkerStartupActivity.vertx.eventBus()
-                .publish("null-DisplayCard", JsonObject(Json.encode(slaAverageCard)))
+            vertx.eventBus().publish("null-DisplayCard", JsonObject(Json.encode(slaAverageCard)))
         }
     }
 
