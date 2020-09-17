@@ -15,9 +15,15 @@ class EndpointTracker(private val skywalkingClient: SkywalkingClient) : Coroutin
             launch(vertx.dispatcher()) {
                 val service = ServiceTracker.getCurrentService(vertx)
                 if (service != null) {
-                    val endpoints = skywalkingClient.searchEndpoint(it.body(), service.id, 1)
+                    val endpointName = it.body()
+                    val endpoints = skywalkingClient.searchEndpoint(endpointName, service.id, 10)
                     if (endpoints.isNotEmpty()) {
-                        it.reply(endpoints[0])
+                        val exactEndpoint = endpoints.find { it.name == endpointName }
+                        if (exactEndpoint != null) {
+                            it.reply(exactEndpoint)
+                        } else {
+                            it.reply(null)
+                        }
                     } else {
                         it.reply(null)
                     }

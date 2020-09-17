@@ -1,5 +1,7 @@
 package com.sourceplusplus.sourcemarker.actions
 
+import com.codahale.metrics.Histogram
+import com.codahale.metrics.UniformReservoir
 import com.intellij.openapi.editor.Editor
 import com.sourceplusplus.marker.source.mark.SourceMarkPopupAction
 import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
@@ -11,10 +13,7 @@ import com.sourceplusplus.monitor.skywalking.model.ZonedDuration
 import com.sourceplusplus.monitor.skywalking.track.EndpointMetricsTracker
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
 import com.sourceplusplus.monitor.skywalking.track.toDoubleArray
-import com.sourceplusplus.portal.server.model.MetricType
-import com.sourceplusplus.portal.server.model.QueryTimeFrame
-import com.sourceplusplus.portal.server.model.SplineChart
-import com.sourceplusplus.portal.server.model.SplineSeriesData
+import com.sourceplusplus.portal.server.model.*
 import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
@@ -23,10 +22,13 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.uast.expressions.UInjectionHost
 import org.jetbrains.uast.java.JavaUQualifiedReferenceExpression
+import java.text.DecimalFormat
 import java.time.ZonedDateTime
 import java.util.concurrent.ThreadLocalRandom
 
 class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
+
+    val decimalFormat = DecimalFormat(".#")
 
     override fun performPopupAction(sourceMark: SourceMark, editor: Editor) {
         //todo: determine sourceportal context
@@ -61,12 +63,41 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                             SplineSeriesData(0, metricsRequest.toInstantTimes(), metrics[0].toDoubleArray())
                         val splineChart =
                             SplineChart(
-                                MetricType.ResponseTime_Average,
+                                MetricType.Throughput_Average,
                                 QueryTimeFrame.LAST_15_MINUTES,
                                 listOf(seriesData)
                             )
                         PluginSourceMarkerStartupActivity.vertx.eventBus()
                             .publish("null-UpdateChart", JsonObject(Json.encode(splineChart)))
+
+                        val throughputAverageCard =
+                            BarTrendCard(
+                                meta = "throughput_average",
+                                header = toPrettyFrequency(calculateAverage(metrics[0].toDoubleArray()) / 60.0)
+                            )
+                        PluginSourceMarkerStartupActivity.vertx.eventBus()
+                            .publish("null-DisplayCard", JsonObject(Json.encode(throughputAverageCard)))
+
+                        val responseTimeAverageCard =
+                            BarTrendCard(
+                                meta = "responsetime_average",
+                                header = toPrettyDuration(calculateAverage(metrics[1].toDoubleArray()).toInt())
+                            )
+                        PluginSourceMarkerStartupActivity.vertx.eventBus()
+                            .publish("null-DisplayCard", JsonObject(Json.encode(responseTimeAverageCard)))
+
+                        val slaAvg = calculateAverage(metrics[2].toDoubleArray())
+                        val slaAverageCard =
+                            BarTrendCard(
+                                meta = "servicelevelagreement_average",
+                                header = if (slaAvg == 0.0) {
+                                    "0%"
+                                } else {
+                                    decimalFormat.format(slaAvg / 100.0) + "%"
+                                }
+                            )
+                        PluginSourceMarkerStartupActivity.vertx.eventBus()
+                            .publish("null-DisplayCard", JsonObject(Json.encode(slaAverageCard)))
                     }
                 }
             }
@@ -106,5 +137,42 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
             }
         }
         return null
+    }
+
+    private fun calculateAverage(values: DoubleArray): Double {
+        val histogram = Histogram(UniformReservoir(values.size))
+        values.forEach {
+            histogram.update(it.toInt())
+        }
+        return histogram.snapshot.mean
+    }
+
+    fun toPrettyDuration(millis: Int): String {
+        val days = millis / 86400000.0
+        if (days > 1) {
+            return "${days.toInt()}dys"
+        }
+        val hours = millis / 3600000.0
+        if (hours > 1) {
+            return "${hours.toInt()}hrs"
+        }
+        val minutes = millis / 60000.0
+        if (minutes > 1) {
+            return "${minutes.toInt()}mins"
+        }
+        val seconds = millis / 1000.0
+        if (seconds > 1) {
+            return "${seconds.toInt()}secs"
+        }
+        return "${millis}ms"
+    }
+
+    fun toPrettyFrequency(perSecond: Double): String {
+        return when {
+            perSecond > 1000000.0 -> "${perSecond / 1000000.0.toInt()}M/sec"
+            perSecond > 1000.0 -> "${perSecond / 1000.0.toInt()}K/sec"
+            perSecond > 1.0 -> "${perSecond.toInt()}/sec"
+            else -> "${(perSecond * 60.0).toInt()}/min"
+        }
     }
 }

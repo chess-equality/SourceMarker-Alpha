@@ -58,6 +58,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.1")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.1")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-guava:2.11.1")
+    implementation("io.dropwizard.metrics:metrics-core:4.1.10.1")
 }
 
 //detekt {
