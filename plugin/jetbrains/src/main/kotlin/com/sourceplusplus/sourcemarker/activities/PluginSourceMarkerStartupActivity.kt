@@ -1,5 +1,11 @@
 package com.sourceplusplus.sourcemarker.activities
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.guava.GuavaModule
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
@@ -15,6 +21,7 @@ import com.sourceplusplus.sourcemarker.listeners.PluginSourceMarkEventListener
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.core.json.JsonObject
+import io.vertx.core.json.jackson.DatabindCodec
 import io.vertx.ext.bridge.PermittedOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions
@@ -28,12 +35,18 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
     }
 
     override fun runActivity(project: Project) {
+        DatabindCodec.mapper().registerModule(GuavaModule())
+        DatabindCodec.mapper().registerModule(Jdk8Module())
+        DatabindCodec.mapper().registerModule(JavaTimeModule())
+        DatabindCodec.mapper().propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
+        DatabindCodec.mapper().enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+        DatabindCodec.mapper().enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+
         initPortal()
         initMarker()
         initMapper()
         initMonitor()
         initMentor()
-
         super.runActivity(project)
     }
 

@@ -8,7 +8,7 @@ import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.launch
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 class ServiceInstanceTracker(private val skywalkingClient: SkywalkingClient) : CoroutineVerticle() {
 
@@ -22,7 +22,7 @@ class ServiceInstanceTracker(private val skywalkingClient: SkywalkingClient) : C
                 activeServicesInstances = skywalkingClient.run {
                     getServiceInstances(
                         it.body().id,
-                        getDuration(LocalDateTime.now().minusMinutes(15), DurationStep.MINUTE)
+                        getDuration(ZonedDateTime.now().minusMinutes(15), DurationStep.MINUTE)
                     )
                 }
                 vertx.eventBus().publish("$address.activeServiceInstances-Updated", activeServicesInstances)

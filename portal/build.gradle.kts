@@ -14,6 +14,9 @@ dependencies {
     implementation("io.vertx:vertx-web:$vertxVersion")
     implementation("io.vertx:vertx-lang-kotlin:$vertxVersion")
     implementation("io.vertx:vertx-lang-kotlin-coroutines:$vertxVersion")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.1")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.1")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-guava:2.11.1")
 }
 
 tasks {

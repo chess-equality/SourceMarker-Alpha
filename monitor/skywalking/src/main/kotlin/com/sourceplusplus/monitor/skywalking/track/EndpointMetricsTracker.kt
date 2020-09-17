@@ -8,6 +8,7 @@ import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.launch
 import monitor.skywalking.protocol.metrics.GetLinearIntValuesQuery
+import java.math.BigDecimal
 
 class EndpointMetricsTracker(private val skywalkingClient: SkywalkingClient) : CoroutineVerticle() {
 
@@ -21,7 +22,7 @@ class EndpointMetricsTracker(private val skywalkingClient: SkywalkingClient) : C
                         skywalkingClient.getEndpointMetrics(
                             it,
                             request.endpointId,
-                            request.localDuration.toDuration(skywalkingClient)
+                            request.zonedDuration.toDuration(skywalkingClient)
                         )
                     if (metric != null) response.add(metric)
                 }
@@ -39,4 +40,8 @@ class EndpointMetricsTracker(private val skywalkingClient: SkywalkingClient) : C
                 .body()
         }
     }
+}
+
+fun GetLinearIntValuesQuery.Result.toDoubleArray(): DoubleArray {
+    return values.map { (it.value as BigDecimal).toDouble() }.toDoubleArray()
 }

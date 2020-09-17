@@ -15,10 +15,8 @@ import monitor.skywalking.protocol.type.Duration
 import monitor.skywalking.protocol.type.MetricCondition
 import monitor.skywalking.protocol.type.Step
 import org.slf4j.LoggerFactory
-import java.time.LocalDateTime
 import java.time.ZoneOffset.ofHours
-import java.time.ZoneOffset.systemDefault
-import java.time.ZonedDateTime.of
+import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -89,13 +87,13 @@ class SkywalkingClient(
         return response.data!!.result
     }
 
-    fun getDuration(since: LocalDateTime, step: DurationStep): Duration {
-        return getDuration(since, LocalDateTime.now(), step)
+    fun getDuration(since: ZonedDateTime, step: DurationStep): Duration {
+        return getDuration(since, ZonedDateTime.now(), step)
     }
 
-    fun getDuration(from: LocalDateTime, to: LocalDateTime, step: DurationStep): Duration {
-        val fromDate = of(from, systemDefault()).withZoneSameInstant(ofHours(timezoneOffset))
-        val toDate = of(to, systemDefault()).withZoneSameInstant(ofHours(timezoneOffset))
+    fun getDuration(from: ZonedDateTime, to: ZonedDateTime, step: DurationStep): Duration {
+        val fromDate = from.withZoneSameInstant(ofHours(timezoneOffset))
+        val toDate = to.withZoneSameInstant(ofHours(timezoneOffset))
         return Duration(
             fromDate.format(step.dateTimeFormatter),
             toDate.format(step.dateTimeFormatter),

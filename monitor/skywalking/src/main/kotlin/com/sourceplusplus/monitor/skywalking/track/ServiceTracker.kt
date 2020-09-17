@@ -9,7 +9,7 @@ import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.launch
 import monitor.skywalking.protocol.metadata.GetAllServicesQuery
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
 class ServiceTracker(private val skywalkingClient: SkywalkingClient) : CoroutineVerticle() {
 
@@ -19,7 +19,7 @@ class ServiceTracker(private val skywalkingClient: SkywalkingClient) : Coroutine
     override suspend fun start() {
         launch(vertx.dispatcher()) {
             activeServices = skywalkingClient.run {
-                getServices(getDuration(LocalDateTime.now().minusMinutes(15), DurationStep.MINUTE))
+                getServices(getDuration(ZonedDateTime.now().minusMinutes(15), DurationStep.MINUTE))
             }
             vertx.eventBus().publish("$address.activeServices-Updated", activeServices)
 

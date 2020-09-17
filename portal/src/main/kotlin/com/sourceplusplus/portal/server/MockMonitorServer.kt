@@ -1,8 +1,17 @@
 package com.sourceplusplus.portal.server
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.datatype.guava.GuavaModule
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.sourceplusplus.portal.server.model.*
 import io.vertx.core.Vertx
+import io.vertx.core.json.Json
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
+import io.vertx.core.json.jackson.DatabindCodec
 import io.vertx.ext.bridge.PermittedOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions
@@ -12,6 +21,13 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom.current
 
 fun main() {
+    DatabindCodec.mapper().registerModule(GuavaModule())
+    DatabindCodec.mapper().registerModule(Jdk8Module())
+    DatabindCodec.mapper().registerModule(JavaTimeModule())
+    DatabindCodec.mapper().propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
+    DatabindCodec.mapper().enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+    DatabindCodec.mapper().enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+
     val vertx = Vertx.vertx()
     val sockJSHandler = SockJSHandler.create(vertx)
     val portalBridgeOptions = SockJSBridgeOptions()
@@ -112,37 +128,13 @@ fun main() {
 }
 
 fun displayChart(vertx: Vertx) {
-    vertx.eventBus().publish(
-        "1-UpdateChart", JsonObject()
-            .put("metric_type", "throughput_average")
-            .put(
-                "series_data", JsonArray()
-                    .add(
-                        JsonObject()
-                            .put("series_index", 0)
-                            .put(
-                                "times",
-                                JsonArray().add(Instant.now().toEpochMilli()).add(Instant.now().epochSecond)
-                            ).put("values", JsonArray().add(current().nextInt(10)).add(current().nextInt(10)))
-                    )
-                    .add(
-                        JsonObject()
-                            .put("series_index", 1)
-                            .put(
-                                "times",
-                                JsonArray().add(Instant.now().toEpochMilli()).add(Instant.now().epochSecond)
-                            ).put("values", JsonArray().add(current().nextInt(50)).add(current().nextInt(50)))
-                    )
-                    .add(
-                        JsonObject()
-                            .put("series_index", 2)
-                            .put(
-                                "times",
-                                JsonArray().add(Instant.now().toEpochMilli()).add(Instant.now().epochSecond)
-                            ).put("values", JsonArray().add(current().nextInt(100)).add(current().nextInt(100)))
-                    )
-            )
-    )
+    val seriesData =
+        SplineSeriesData(
+            0, listOf(Instant.now(), Instant.now().plusSeconds(10)),
+            doubleArrayOf(current().nextDouble(10.0), current().nextDouble(10.0))
+        )
+    val splineChart = SplineChart(MetricType.ResponseTime_Average, QueryTimeFrame.LAST_15_MINUTES, listOf(seriesData))
+    vertx.eventBus().publish("1-UpdateChart", JsonObject(Json.encode(splineChart)))
 }
 
 fun displayTraces(vertx: Vertx) {
@@ -173,16 +165,13 @@ fun displayTraces(vertx: Vertx) {
 }
 
 fun updateCards(vertx: Vertx) {
-    vertx.eventBus().publish(
-        "1-DisplayCard", JsonObject().put("meta", "throughput_average")
-            .put("header", current().nextInt(100))
-    )
-    vertx.eventBus().publish(
-        "1-DisplayCard", JsonObject().put("meta", "responsetime_average")
-            .put("header", current().nextInt(100))
-    )
-    vertx.eventBus().publish(
-        "1-DisplayCard", JsonObject().put("meta", "servicelevelagreement_average")
-            .put("header", current().nextInt(100))
-    )
+    val throughputAverageCard =
+        BarTrendCard(meta = "throughput_average", header = current().nextInt(100).toString())
+    val responseTimeAverageCard =
+        BarTrendCard(meta = "responsetime_average", header = current().nextInt(100).toString())
+    val slaAverageCard =
+        BarTrendCard(meta = "servicelevelagreement_average", header = current().nextInt(100).toString())
+    vertx.eventBus().publish("1-DisplayCard", JsonObject(Json.encode(throughputAverageCard)))
+    vertx.eventBus().publish("1-DisplayCard", JsonObject(Json.encode(responseTimeAverageCard)))
+    vertx.eventBus().publish("1-DisplayCard", JsonObject(Json.encode(slaAverageCard)))
 }

@@ -2,11 +2,11 @@ package com.sourceplusplus.monitor.skywalking.model
 
 import com.sourceplusplus.monitor.skywalking.SkywalkingClient
 import monitor.skywalking.protocol.type.Duration
-import java.time.LocalDateTime
+import java.time.ZonedDateTime
 
-data class LocalDuration(
-    val start: LocalDateTime,
-    val stop: LocalDateTime,
+data class ZonedDuration(
+    val start: ZonedDateTime,
+    val stop: ZonedDateTime,
     val step: SkywalkingClient.DurationStep
 ) {
     fun toDuration(skywalkingClient: SkywalkingClient): Duration {
