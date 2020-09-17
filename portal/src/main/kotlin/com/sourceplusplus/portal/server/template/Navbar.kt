@@ -1,6 +1,7 @@
 package com.sourceplusplus.portal.server.template
 
 import com.sourceplusplus.portal.server.model.TimeIntervalType
+import com.sourceplusplus.portal.server.model.trace.TraceStackHeaderType
 import kotlinx.html.*
 
 fun FlowContent.overviewNavBar(block: FlowContent.() -> Unit) {
@@ -26,11 +27,10 @@ fun FlowContent.configurationNavBar(block: FlowContent.() -> Unit) {
     }
 }
 
-fun FlowContent.timeDropdown(vararg timeIntervalTypes: TimeIntervalType = arrayOf(), cssClasses: String = "marginlefting align_content_center") {
-    div(cssClasses) {
+fun FlowContent.timeDropdown(vararg timeIntervalTypes: TimeIntervalType = arrayOf()) {
+    div("marginlefting align_content_center") {
         div("ui icon top left pointing dropdown") {
-            i("clock outline icon spp_red_color spp_font_margin") {
-            }
+            i("clock outline icon spp_red_color spp_font_margin")
             div("menu secondary_background_color no_top_margin") {
                 for (timeIntervalType in timeIntervalTypes) {
                     div("item") {
@@ -44,44 +44,13 @@ fun FlowContent.timeDropdown(vararg timeIntervalTypes: TimeIntervalType = arrayO
     }
 }
 
-fun FlowContent.tracesHeader(cssClasses: String = "") {
+fun FlowContent.tracesHeader(vararg traceStackHeaderTypes: TraceStackHeaderType = arrayOf()) {
     a(classes = "ui item dropdown active_sub_tab") {
         id = "latest_traces_header"
         onClick = "clickedBackToTraces()"
         span {
             id = "latest_traces_header_text"
             + "Latest Traces"
-        }
-        div("menu") {
-            id = "latest_traces_menu"
-            div("ui input item") {
-                i("play icon spp_blue_color") {
-                }
-                input {
-                    classes = setOf(cssClasses, "input_width")
-                    id = "traces_start_field"
-                    type = InputType.text
-                    readonly = true
-                }
-            }
-            div("ui input item") {
-                i("stop icon spp_red_color") {
-                }
-                input {
-                    classes = setOf(cssClasses, "input_width")
-                    id = "traces_stop_field"
-                    type = InputType.text
-                    readonly = true
-                }
-            }
-            div("divider") {
-            }
-            div("ui input item align_center") {
-                label {
-                    id = "traces_total_label"
-                    + "Total: 0"
-                }
-            }
         }
     }
     a(classes = "ui item dropdown visibility_hidden") {
@@ -93,24 +62,15 @@ fun FlowContent.tracesHeader(cssClasses: String = "") {
         }
         div("menu") {
             id = "trace_stack_menu"
-            div("ui input item") {
-                i("crosshairs icon no_padding_top") {
-                }
-                input {
-                    classes = setOf("input_width")
-                    id = "trace_id_field"
-                    type = InputType.text
-                    readonly = true
-                }
-            }
-            div("ui input item") {
-                i("clock outline icon no_padding_top") {
-                }
-                input {
-                    classes = setOf("input_width")
-                    id = "time_occurred_field"
-                    type = InputType.text
-                    readonly = true
+            for (traceStackHeaderType in traceStackHeaderTypes) {
+                div("ui input item") {
+                    i("icon no_padding_top ${traceStackHeaderType.icon}")
+                    input {
+                        classes = setOf("input_width")
+                        id = "${traceStackHeaderType.id}_field"
+                        type = InputType.text
+                        readonly = true
+                    }
                 }
             }
         }
@@ -129,18 +89,12 @@ fun FlowContent.externalPortalButton() {
         id = "current_page_external"
         href = "#"
         onClick = "clickedViewAsExternalPortal()"
-        i("external link icon spp_red_color spp_font_margin") {
-        }
+        i("external link icon spp_red_color spp_font_margin")
     }
 }
 
-fun FlowContent.leftAlign(block: FlowContent.() -> Unit) {
-    block()
-}
-
-fun FlowContent.rightAlign(cssClasses: String = "menu align_content_center", block: FlowContent.() -> Unit) {
-    val css = "right $cssClasses".trim()
-    div(css) {
+fun FlowContent.rightAlign(block: FlowContent.() -> Unit) {
+    div("right menu align_content_center") {
         block()
     }
 }

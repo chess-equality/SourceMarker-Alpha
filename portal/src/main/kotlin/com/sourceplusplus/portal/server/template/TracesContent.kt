@@ -1,35 +1,30 @@
 package com.sourceplusplus.portal.server.template
 
+import com.sourceplusplus.portal.server.model.trace.TraceTableType
+import com.sourceplusplus.portal.server.model.trace.TraceSpanInfoType
 import kotlinx.html.*
 
-fun FlowContent.tracesContent(cssClasses: String = "pusher background_color", block: FlowContent.() -> Unit) {
-    div(cssClasses) {
+fun FlowContent.tracesContent(block: FlowContent.() -> Unit) {
+    div("pusher background_color") {
         block()
     }
 }
 
-fun FlowContent.tracesTable(cssClasses: String = "wide column marginlefting", block: FlowContent.() -> Unit) {
-    div(cssClasses) {
+fun FlowContent.tracesTable(block: FlowContent.() -> Unit) {
+    div("wide column marginlefting") {
         block()
     }
 }
 
-fun FlowContent.topTraceTable() {
+fun FlowContent.topTraceTable(vararg traceTableTypes: TraceTableType = arrayOf()) {
     table("ui celled striped table unstackable secondary_background_color no_top_margin") {
         id = "top_trace_table"
         thead {
             tr {
-                th(classes = "secondary_background_color trace_th") {
-                    + "Operation"
-                }
-                th(classes = "secondary_background_color trace_th_center") {
-                    + "Occurred"
-                }
-                th(classes = "secondary_background_color trace_th_center") {
-                    + "Exec"
-                }
-                th(classes = "secondary_background_color trace_th_center") {
-                    + "Status"
+                for (traceTableType in traceTableTypes) {
+                    th(classes = "secondary_background_color ${if (traceTableType.isCentered) "trace_th_center" else "trace_th"}") {
+                        + traceTableType.description
+                    }
                 }
             }
         }
@@ -39,22 +34,15 @@ fun FlowContent.topTraceTable() {
     }
 }
 
-fun FlowContent.traceStackTable() {
+fun FlowContent.traceStackTable(vararg traceTableTypes: TraceTableType = arrayOf()) {
     table("ui celled striped table unstackable trace_stack_table hidden_full_height") {
         id = "trace_stack_table"
         thead("secondary_background_color") {
             tr {
-                th(classes = "secondary_background_color trace_th") {
-                    + "Operation"
-                }
-                th(classes = "secondary_background_color trace_th_center") {
-                    + "Exec"
-                }
-                th(classes = "secondary_background_color trace_th_center") {
-                    + "Exec (%)"
-                }
-                th(classes = "secondary_background_color trace_th_center") {
-                    + "Status"
+                for (traceTableType in traceTableTypes) {
+                    th(classes = "secondary_background_color ${if (traceTableType.isCentered) "trace_th_center" else "trace_th"}") {
+                        + traceTableType.description
+                    }
                 }
             }
         }
@@ -64,32 +52,23 @@ fun FlowContent.traceStackTable() {
     }
 }
 
-fun FlowContent.spanInfoPanel() {
+fun FlowContent.spanInfoPanel(vararg traceSpanInfoTypes: TraceSpanInfoType = arrayOf()) {
     div("visibility_hidden") {
         id = "span_info_panel"
         div("ui segments") {
             div("ui segment span_segment_background") {
-                p {
-                    + "Start time:"
-                    span {
-                        id = "span_info_start_time"
+                for (traceSpanInfoType in traceSpanInfoTypes) {
+                    p {
+                        + "${traceSpanInfoType.description}:"
+                        span {
+                            id = "span_info_${traceSpanInfoType.id1}"
+                        }
+                        + "("
+                        span("trace_time") {
+                            id = "span_info_${traceSpanInfoType.id2}"
+                        }
+                        + ")"
                     }
-                    + "("
-                    span("trace_time") {
-                        id = "span_info_start_trace_time"
-                    }
-                    + ")"
-                }
-                p {
-                    + "Start time:"
-                    span {
-                        id = "span_info_end_time"
-                    }
-                    + "("
-                    span("trace_time") {
-                        id = "span_info_end_trace_time"
-                    }
-                    + ")"
                 }
             }
             div("ui segment displaynone no_padding") {

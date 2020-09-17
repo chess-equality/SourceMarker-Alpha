@@ -3,7 +3,9 @@ package com.sourceplusplus.portal.server.page
 import com.sourceplusplus.portal.server.portal
 import com.sourceplusplus.portal.server.template.*
 import com.sourceplusplus.portal.server.model.PageType.*
-import com.sourceplusplus.portal.server.model.TraceType.*
+import com.sourceplusplus.portal.server.model.trace.TraceType.*
+import com.sourceplusplus.portal.server.model.artifact.ArtifactConfigType.*
+import com.sourceplusplus.portal.server.model.artifact.ArtifactInfoType.*
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 
@@ -12,24 +14,13 @@ class ConfigurationPage {
         return buildString {
             appendLine("<!DOCTYPE html>")
             appendHTML().portal {
-                configurationPage {
-                    leftNav {
-                        menu {
-                            menuItem(OVERVIEW) {}
-                            menuItem(TRACES) {
-                                subMenuItem(LATEST, SLOWEST, FAILED)
-                            }
-                            menuItem(CONFIGURATION, isActive = true) {}
+                configurationPage("Configuration - Source++") {
+                    portalNav {
+                        navItem(OVERVIEW)
+                        navItem(TRACES) {
+                            navSubItem(LATEST, SLOWEST, FAILED)
                         }
-                        sidebar {
-                            tabs {
-                                tabItem(OVERVIEW) {}
-                                tabItem(TRACES) { activeClass ->
-                                    subTabItem(activeClass, LATEST, SLOWEST, FAILED)
-                                }
-                                tabItem(CONFIGURATION, isActive = true) {}
-                            }
-                        }
+                        navItem(CONFIGURATION, isActive = true)
                     }
                     configurationContent {
                         configurationNavBar {
@@ -38,8 +29,8 @@ class ConfigurationPage {
                             }
                         }
                         configurationTable {
-                            artifactConfiguration()
-                            artifactInformation()
+                            artifactConfiguration(ENTRY_METHOD, AUTO_SUBSCRIBE)
+                            artifactInformation(QUALIFIED_NAME, CREATE_DATE, LAST_UPDATED, ENDPOINT)
                         }
                     }
                     configurationScripts()
@@ -49,11 +40,11 @@ class ConfigurationPage {
     }
 }
 
-fun HTML.configurationPage(title: String = "Configuration - Source++", bodyClass: String = "", block: FlowContent.() -> Unit) {
+fun HTML.configurationPage(title: String, block: FlowContent.() -> Unit) {
     head {
-        configurationHead(title) {}
+        configurationHead(title)
     }
-    body(bodyClass) {
+    body {
         block()
     }
 }

@@ -19,20 +19,20 @@ private fun HEAD.commonHead(title: String) {
     }
 }
 
-fun HEAD.overviewHead(title: String, block: HEAD.() -> Unit) {
+fun HEAD.overviewHead(title: String, block: (HEAD.() -> Unit)? = null) {
     commonHead(title)
     script {
         src = "echarts.min.js"
     }
-    block()
+    block?.let { it() }
 }
 
-fun HEAD.tracesHead(title: String, block: HEAD.() -> Unit) {
+fun HEAD.tracesHead(title: String, block: (HEAD.() -> Unit)? = null) {
     commonHead(title)
-    block()
+    block?.let { it() }
 }
 
-fun HEAD.configurationHead(title: String, block: HEAD.() -> Unit) {
+fun HEAD.configurationHead(title: String, block: (HEAD.() -> Unit)? = null) {
     commonHead(title)
-    block()
+    block?.let { it() }
 }
