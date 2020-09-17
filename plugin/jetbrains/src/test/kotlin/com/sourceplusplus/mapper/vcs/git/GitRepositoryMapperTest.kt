@@ -101,15 +101,14 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
 //    fun `tokenized kotlin getter method`() {
 //        if (File("/tmp/git-repo").exists()) File("/tmp/git-repo").deleteRecursively()
 //        Git.init().setDirectory(File("/tmp/git-repo")).call().use { git ->
-//            File(git.repository.directory.parent, "GetterMethod.kt").writeText(
-//                """
+//            @Language("Kt") val code = """
 //                class GetterMethod(private val str: String) {
 //                    fun getStr(): String {
 //                        return str
 //                    }
 //                }
 //            """.trimIndent()
-//            )
+//            File(git.repository.directory.parent, "GetterMethod.kt").writeText(code)
 //            git.add().addFilepattern(".").call()
 //            git.commit().setMessage("Initial commit").call()
 //        }
@@ -123,12 +122,11 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
 //            it.clean()
 //        }
 //
-//        val finerMethodFile = File("/tmp/git-repo/GetterMethod.getStr().mjava")
+//        val finerMethodFile = File("/tmp/git-repo/GetterMethod.getStr().mkt")
 //        assertExists(finerMethodFile)
-//        TestCase.assertEquals(
+//        assertEquals(
 //            """
-//            public
-//            String
+//            fun
 //            getStr
 //            (
 //            )

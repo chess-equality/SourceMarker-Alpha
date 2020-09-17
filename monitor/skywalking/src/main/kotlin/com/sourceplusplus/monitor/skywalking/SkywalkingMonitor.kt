@@ -2,6 +2,7 @@ package com.sourceplusplus.monitor.skywalking
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.toDeferred
+import com.sourceplusplus.monitor.skywalking.track.EndpointMetricsTracker
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
 import com.sourceplusplus.monitor.skywalking.track.ServiceInstanceTracker
 import com.sourceplusplus.monitor.skywalking.track.ServiceTracker
@@ -38,6 +39,7 @@ class SkywalkingMonitor : CoroutineVerticle() {
             vertx.deployVerticleAwait(ServiceTracker(skywalkingClient))
             vertx.deployVerticleAwait(ServiceInstanceTracker(skywalkingClient))
             vertx.deployVerticleAwait(EndpointTracker(skywalkingClient))
+            vertx.deployVerticleAwait(EndpointMetricsTracker(skywalkingClient))
         }
     }
 }

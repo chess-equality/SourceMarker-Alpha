@@ -5,6 +5,10 @@ import com.sourceplusplus.marker.source.mark.SourceMarkPopupAction
 import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
 import com.sourceplusplus.marker.source.mark.api.SourceMark
 import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkJcefComponent
+import com.sourceplusplus.monitor.skywalking.SkywalkingClient
+import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
+import com.sourceplusplus.monitor.skywalking.model.LocalDuration
+import com.sourceplusplus.monitor.skywalking.track.EndpointMetricsTracker
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
 import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity
 import io.vertx.kotlin.coroutines.dispatcher
@@ -12,6 +16,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.jetbrains.uast.expressions.UInjectionHost
 import org.jetbrains.uast.java.JavaUQualifiedReferenceExpression
+import java.time.LocalDateTime
 import java.util.concurrent.ThreadLocalRandom
 
 class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
@@ -29,6 +34,18 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                 val endpoint =
                     EndpointTracker.searchExactEndpoint(endpointName, PluginSourceMarkerStartupActivity.vertx)
                 println(endpoint)
+
+               val metrics = EndpointMetricsTracker.getMetrics(
+                    GetEndpointMetrics(
+                        listOf("endpoint_cpm", "endpoint_avg", "endpoint_sla", "endpoint_percentile"), endpoint!!.id,
+                        LocalDuration(
+                            LocalDateTime.now().minusMinutes(15),
+                            LocalDateTime.now(),
+                            SkywalkingClient.DurationStep.MINUTE
+                        )
+                    ), PluginSourceMarkerStartupActivity.vertx
+                )
+                println(metrics)
 
 //                EndpointMetricsTracker.getMetrics(endpoint.id)
 //                val card = JsonObject().put("meta", "throughput_average")

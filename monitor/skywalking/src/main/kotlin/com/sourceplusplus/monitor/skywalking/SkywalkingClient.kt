@@ -3,6 +3,7 @@ package com.sourceplusplus.monitor.skywalking
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.toDeferred
+import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.eventbus.MessageCodec
@@ -32,6 +33,7 @@ class SkywalkingClient(
 
         fun registerCodecs(vertx: Vertx) {
             log.info("Registering Apache SkyWalking codecs")
+            registerCodec(vertx, GetEndpointMetrics::class.java)
             registerCodec(vertx, GetAllServicesQuery.Result::class.java)
             registerCodec(vertx, GetServiceInstancesQuery.Result::class.java)
             registerCodec(vertx, SearchEndpointQuery.Result::class.java)
