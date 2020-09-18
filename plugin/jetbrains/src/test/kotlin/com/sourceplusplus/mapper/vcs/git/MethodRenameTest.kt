@@ -150,5 +150,54 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
 //        assertEquals(DiffEntry.ChangeType.RENAME, diffs[0].changeType)
 //        assertEquals("GetterMethod.getStr().mjava", diffs[0].oldPath)
 //        assertEquals("GetterMethod.getStr2().mjava", diffs[0].newPath)
+//        commit_logs()
+//    }
+
+//    @Throws(IOException::class, NoHeadException::class, GitAPIException::class)
+//    fun commit_logs() {
+//        val logMessages: MutableList<String> = ArrayList()
+//        val builder = FileRepositoryBuilder()
+//        val repo: Repository = builder.setGitDir(File("/tmp/git-repo" + "/.git"))
+//            .setMustExist(true).build()
+//        val git = Git(repo)
+//        val log: Iterable<RevCommit> = git.log().call()
+//        var previousCommit: RevCommit? = null
+//        for (commit in log) {
+//            if (previousCommit != null) {
+//                val diffEntries = git.diff()
+//                    .setOldTree(getCanonicalTreeParser(git, previousCommit))
+//                    .setNewTree(getCanonicalTreeParser(git, commit))
+//                    .setPathFilter(PathFilter.create("GetterMethod.getStr2().mjava"))
+//                    .call()
+//                println(diffEntries)
+//            }
+////            if (previousCommit != null) {
+//////                val oldTreeIterator: AbstractTreeIterator = getCanonicalTreeParser(git, previousCommit)
+//////                val newTreeIterator: AbstractTreeIterator = getCanonicalTreeParser(git, commit)
+//////                val outputStream: OutputStream = ByteArrayOutputStream()
+//////                DiffFormatter(outputStream).use { formatter ->
+//////                    formatter.setRepository(git.getRepository())
+//////                    formatter.format(oldTreeIterator, newTreeIterator)
+//////                }
+//////                val diff: String = outputStream.toString()
+//////                println(diff)
+////            }
+//            println("LogCommit: $commit")
+//            val logMessage = commit.fullMessage
+//            println("LogMessage: $logMessage")
+//            logMessages.add(logMessage.trim { it <= ' ' })
+//            previousCommit = commit
+//        }
+//        git.close()
+//    }
+//
+//
+//    @Throws(IOException::class)
+//    private fun getCanonicalTreeParser(git: Git, commitId: ObjectId): AbstractTreeIterator {
+//        RevWalk(git.getRepository()).use { walk ->
+//            val commit: RevCommit = walk.parseCommit(commitId)
+//            val treeId = commit.tree.id
+//            git.getRepository().newObjectReader().use { reader -> return CanonicalTreeParser(null, reader, treeId) }
+//        }
 //    }
 }
