@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.model.trace
+package com.sourceplusplus.protocol.artifact.trace
 
 enum class TraceTableType(val description: String, val isCentered: Boolean) {
     OPERATION("Operation", false),

@@ -7,6 +7,7 @@ import com.sourceplusplus.marker.source.mark.SourceMarkPopupAction
 import com.sourceplusplus.marker.source.mark.api.ClassSourceMark
 import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
 import com.sourceplusplus.marker.source.mark.api.SourceMark
+import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkJcefComponent
 import com.sourceplusplus.marker.source.mark.api.key.SourceKey
 import com.sourceplusplus.monitor.skywalking.SkywalkingClient
 import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
@@ -46,7 +47,7 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         }
 
         //todo: use SourcePortalAPI to ensure correct view is showing
-//        val jcefComponent = sourceMark.sourceMarkComponent as SourceMarkJcefComponent
+        val jcefComponent = sourceMark.sourceMarkComponent as SourceMarkJcefComponent
 //        if (ThreadLocalRandom.current().nextBoolean()) {
 //            jcefComponent.getBrowser().cefBrowser.executeJavaScript(
 //                """
@@ -54,11 +55,11 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
 //            """.trimIndent(), "", 0
 //            )
 //        } else {
-//            jcefComponent.getBrowser().cefBrowser.executeJavaScript(
-//                """
-//                  window.location.href = 'http://localhost:8080/traces';
-//            """.trimIndent(), "", 0
-//            )
+        jcefComponent.getBrowser().cefBrowser.executeJavaScript(
+            """
+                  window.location.href = 'http://localhost:8080/traces';
+            """.trimIndent(), "", 0
+        )
 //        }
 
         super.performPopupAction(sourceMark, editor)
@@ -88,7 +89,8 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                         sourceMark.putUserData(ENDPOINT_ID, endpoint.id)
                         log.debug("Detected endpoint id: ${endpoint.id}")
 
-                        updateOverview(endpoint.id)
+//                        updateOverview(endpoint.id)
+                        updateTraces(endpoint.id)
                     } else {
                         log.debug("Could not find endpoint id for: $endpointName")
                     }
@@ -102,7 +104,12 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         GlobalScope.launch(vertx.dispatcher()) {
             val traces = EndpointTracesTracker.getTraces(
                 GetEndpointTraces(
-                    endpointId = endpointId
+                    endpointId = endpointId,
+                    zonedDuration = ZonedDuration(
+                        ZonedDateTime.now().minusMinutes(15),
+                        ZonedDateTime.now(),
+                        SkywalkingClient.DurationStep.MINUTE
+                    )
                 ), vertx
             )
             println(traces)

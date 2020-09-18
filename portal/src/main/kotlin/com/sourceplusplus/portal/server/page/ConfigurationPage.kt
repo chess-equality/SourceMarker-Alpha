@@ -1,12 +1,16 @@
 package com.sourceplusplus.portal.server.page
 
+import com.sourceplusplus.portal.server.model.PageType.*
+import com.sourceplusplus.portal.server.model.artifact.ArtifactConfigType.AUTO_SUBSCRIBE
+import com.sourceplusplus.portal.server.model.artifact.ArtifactConfigType.ENTRY_METHOD
+import com.sourceplusplus.portal.server.model.artifact.ArtifactInfoType.*
 import com.sourceplusplus.portal.server.portal
 import com.sourceplusplus.portal.server.template.*
-import com.sourceplusplus.portal.server.model.PageType.*
-import com.sourceplusplus.portal.server.model.trace.TraceOrderType.*
-import com.sourceplusplus.portal.server.model.artifact.ArtifactConfigType.*
-import com.sourceplusplus.portal.server.model.artifact.ArtifactInfoType.*
-import kotlinx.html.*
+import com.sourceplusplus.protocol.artifact.trace.TraceOrderType.*
+import kotlinx.html.FlowContent
+import kotlinx.html.HTML
+import kotlinx.html.body
+import kotlinx.html.head
 import kotlinx.html.stream.appendHTML
 
 class ConfigurationPage {

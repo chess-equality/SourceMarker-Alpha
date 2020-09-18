@@ -28,6 +28,7 @@ subprojects {
     repositories {
         mavenCentral()
         jcenter()
+        maven(url = "https://kotlin.bintray.com/kotlinx/")
     }
 }
 

@@ -2,6 +2,7 @@ package com.sourceplusplus.monitor.skywalking.track
 
 import com.sourceplusplus.monitor.skywalking.SkywalkingClient
 import com.sourceplusplus.monitor.skywalking.model.GetEndpointTraces
+import com.sourceplusplus.protocol.artifact.trace.TraceResult
 import io.vertx.core.Vertx
 import io.vertx.kotlin.core.eventbus.requestAwait
 import io.vertx.kotlin.coroutines.CoroutineVerticle
@@ -15,7 +16,25 @@ class EndpointTracesTracker(private val skywalkingClient: SkywalkingClient) : Co
         vertx.eventBus().localConsumer<GetEndpointTraces>("$address.getTraces") {
             launch(vertx.dispatcher()) {
                 val request = it.body()
-                it.reply(skywalkingClient.getEndpointTraces(request.endpointId))
+
+                val traces = skywalkingClient.queryBasicTraces(
+                    request.endpointId,
+                    duration = request.zonedDuration.toDuration(skywalkingClient)
+                )
+
+                val traceStack = emptyList<TraceResult>()
+//                if (traces != null) {
+//                    traces.traces.forEach {
+//                        it.traceIds.forEach { traceId ->
+//                            val traceResult = skywalkingClient.queryTraceStack(traceId = traceId)
+//                            if (traceResult != null) {
+//                                traceStack.add(traceResult.)
+//                            }
+//                        }
+//                    }
+//                }
+
+                it.reply(traces)
             }
         }
     }

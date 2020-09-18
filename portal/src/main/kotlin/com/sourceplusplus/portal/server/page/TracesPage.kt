@@ -3,10 +3,10 @@ package com.sourceplusplus.portal.server.page
 import com.sourceplusplus.portal.server.portal
 import com.sourceplusplus.portal.server.template.*
 import com.sourceplusplus.portal.server.model.PageType.*
-import com.sourceplusplus.portal.server.model.trace.TraceOrderType.*
-import com.sourceplusplus.portal.server.model.trace.TraceTableType.*
-import com.sourceplusplus.portal.server.model.trace.TraceSpanInfoType.*
-import com.sourceplusplus.portal.server.model.trace.TraceStackHeaderType.*
+import com.sourceplusplus.protocol.artifact.trace.TraceOrderType.*
+import com.sourceplusplus.protocol.artifact.trace.TraceSpanInfoType.*
+import com.sourceplusplus.protocol.artifact.trace.TraceStackHeaderType.*
+import com.sourceplusplus.protocol.artifact.trace.TraceTableType.*
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 

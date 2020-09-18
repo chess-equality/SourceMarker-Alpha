@@ -13,6 +13,7 @@ import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
 import monitor.skywalking.protocol.metadata.SearchEndpointQuery
 import monitor.skywalking.protocol.metrics.GetLinearIntValuesQuery
 import monitor.skywalking.protocol.trace.QueryBasicTracesQuery
+import monitor.skywalking.protocol.trace.QueryTraceQuery
 import monitor.skywalking.protocol.type.*
 import org.slf4j.LoggerFactory
 import java.time.ZoneOffset.ofHours
@@ -49,13 +50,24 @@ class SkywalkingClient(
         registerCodecs(vertx)
     }
 
-    suspend fun getEndpointTraces(
+    suspend fun queryTraceStack(
+        traceId: String,
+    ): QueryTraceQuery.Result? {
+        val response = apolloClient.query(QueryTraceQuery(traceId)).toDeferred().await()
+
+        //todo: throw error if failed
+        return response.data!!.result
+    }
+
+    suspend fun queryBasicTraces(
         endpointId: String,
+        duration: Duration,
     ): QueryBasicTracesQuery.Result? {
         val response = apolloClient.query(
             QueryBasicTracesQuery(
                 TraceQueryCondition(
                     endpointId = Input.optional(endpointId),
+                    queryDuration = Input.optional(duration),
                     queryOrder = QueryOrder.BY_START_TIME, //todo: move to request
                     traceState = TraceState.ALL, //todo: move to request
                     paging = Pagination(pageSize = 10) //todo: move to request

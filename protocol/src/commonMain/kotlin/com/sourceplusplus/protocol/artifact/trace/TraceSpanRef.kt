@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.model.trace
+package com.sourceplusplus.protocol.artifact.trace
 
 data class TraceSpanRef(
     val traceId: String,

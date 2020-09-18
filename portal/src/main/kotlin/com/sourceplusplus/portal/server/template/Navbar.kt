@@ -1,7 +1,7 @@
 package com.sourceplusplus.portal.server.template
 
 import com.sourceplusplus.portal.server.model.TimeIntervalType
-import com.sourceplusplus.portal.server.model.trace.TraceStackHeaderType
+import com.sourceplusplus.protocol.artifact.trace.TraceStackHeaderType
 import kotlinx.html.*
 
 fun FlowContent.overviewNavBar(block: FlowContent.() -> Unit) {

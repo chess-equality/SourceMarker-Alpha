@@ -7,7 +7,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.sourceplusplus.portal.server.model.*
-import com.sourceplusplus.portal.server.model.trace.*
+import com.sourceplusplus.protocol.artifact.trace.*
 import io.vertx.core.Vertx
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonArray
@@ -17,6 +17,7 @@ import io.vertx.ext.bridge.PermittedOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions
 import io.vertx.ext.web.handler.sockjs.SockJSHandler
+import kotlinx.datetime.Clock
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom.current
@@ -102,7 +103,7 @@ fun main() {
                 "thing5" to UUID.randomUUID().toString()
             ),
             logs = listOf(
-                TraceSpanLogEntry(time = Instant.now(), data = UUID.randomUUID().toString())
+                TraceSpanLogEntry(time = Clock.System.now(), data = UUID.randomUUID().toString())
             )
         )
         vertx.eventBus().publish("1-DisplaySpanInfo", JsonObject(Json.encode(span)))
@@ -152,8 +153,8 @@ fun displayTraces(vertx: Vertx) {
         appUuid = "1",
         artifactQualifiedName = UUID.randomUUID().toString(),
         artifactSimpleName = UUID.randomUUID().toString(),
-        start = Instant.now(),
-        stop = Instant.now(),
+        start = Clock.System.now(),
+        stop = Clock.System.now(),
         total = traces.size,
         traces = traces.toList(),
         orderType = TraceOrderType.LATEST_TRACES
