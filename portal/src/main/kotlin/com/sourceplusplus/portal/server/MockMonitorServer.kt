@@ -6,6 +6,20 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplaySpanInfo
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplayTraceStack
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplayTraces
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedViewAsExternalPortal
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ConfigurationTabOpened
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.TracesTabOpened
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.ClearOverview
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplayArtifactConfiguration
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplayCard
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplaySpanInfo
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplayTraceStack
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplayTraces
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.UpdateChart
 import com.sourceplusplus.protocol.artifact.trace.*
 import com.sourceplusplus.protocol.portal.*
 import io.vertx.core.Vertx
@@ -44,14 +58,14 @@ fun main() {
 
     vertx.createHttpServer().requestHandler(router).listen(8888, "localhost")
 
-    vertx.eventBus().consumer<String>("ClickedViewAsExternalPortal") {
+    vertx.eventBus().consumer<String>(ClickedViewAsExternalPortal) {
         it.reply(JsonObject().put("portal_uuid", "1"))
     }
 
-    vertx.eventBus().consumer<Void>("OverviewTabOpened") {
+    vertx.eventBus().consumer<Void>(OverviewTabOpened) {
         updateCards(vertx)
 
-        vertx.eventBus().publish("1-ClearOverview", "")
+        vertx.eventBus().publish(ClearOverview("1"), "")
         displayChart(vertx)
     }
     vertx.setPeriodic(2500) {
@@ -59,14 +73,14 @@ fun main() {
         displayChart(vertx)
     }
 
-    vertx.eventBus().consumer<Void>("ClickedDisplayTraces") {
+    vertx.eventBus().consumer<Void>(ClickedDisplayTraces) {
         displayTraces(vertx)
     }
-    vertx.eventBus().consumer<Void>("TracesTabOpened") {
+    vertx.eventBus().consumer<Void>(TracesTabOpened) {
         displayTraces(vertx)
     }
 
-    vertx.eventBus().consumer<String>("ClickedDisplayTraceStack") {
+    vertx.eventBus().consumer<String>(ClickedDisplayTraceStack) {
         val traceSpans = mutableListOf<TraceSpanInfo>()
         for (i in 1..5) {
             val span = TraceSpan(
@@ -89,10 +103,10 @@ fun main() {
             )
             traceSpans.add(spanInfo)
         }
-        vertx.eventBus().publish("1-DisplayTraceStack", JsonObject(Json.encode(TraceSpanStack(traceSpans))))
+        vertx.eventBus().publish(DisplayTraceStack("1"), JsonObject(Json.encode(TraceSpanStack(traceSpans))))
     }
 
-    vertx.eventBus().consumer<Void>("ClickedDisplaySpanInfo") {
+    vertx.eventBus().consumer<Void>(ClickedDisplaySpanInfo) {
         val span = TraceSpan(
             segmentId = "100",
             startTime = Instant.now().toEpochMilli(), //todo: use Instant instead of long
@@ -108,12 +122,12 @@ fun main() {
                 TraceSpanLogEntry(time = Clock.System.now(), data = UUID.randomUUID().toString())
             )
         )
-        vertx.eventBus().publish("1-DisplaySpanInfo", JsonObject(Json.encode(span)))
+        vertx.eventBus().publish(DisplaySpanInfo("1"), JsonObject(Json.encode(span)))
     }
 
-    vertx.eventBus().consumer<Void>("ConfigurationTabOpened") {
+    vertx.eventBus().consumer<Void>(ConfigurationTabOpened) {
         vertx.eventBus().publish(
-            "1-DisplayArtifactConfiguration", JsonObject()
+            DisplayArtifactConfiguration("1"), JsonObject()
                 .put("artifact_qualified_name", UUID.randomUUID().toString())
                 .put("create_date", Instant.now().epochSecond)
                 .put("last_updated", Instant.now().epochSecond)
@@ -138,7 +152,7 @@ fun displayChart(vertx: Vertx) {
             doubleArrayOf(current().nextDouble(10.0), current().nextDouble(10.0))
         )
     val splineChart = SplineChart(MetricType.ResponseTime_Average, QueryTimeFrame.LAST_15_MINUTES, listOf(seriesData))
-    vertx.eventBus().publish("1-UpdateChart", JsonObject(Json.encode(splineChart)))
+    vertx.eventBus().publish(UpdateChart("1"), JsonObject(Json.encode(splineChart)))
 }
 
 fun displayTraces(vertx: Vertx) {
@@ -165,7 +179,7 @@ fun displayTraces(vertx: Vertx) {
         traces = traces.toList(),
         orderType = TraceOrderType.LATEST_TRACES
     )
-    vertx.eventBus().publish("1-DisplayTraces", JsonObject(Json.encode(tracesResult)))
+    vertx.eventBus().publish(DisplayTraces("1"), JsonObject(Json.encode(tracesResult)))
 }
 
 fun updateCards(vertx: Vertx) {
@@ -175,7 +189,7 @@ fun updateCards(vertx: Vertx) {
         BarTrendCard(meta = "responsetime_average", header = current().nextInt(100).toString())
     val slaAverageCard =
         BarTrendCard(meta = "servicelevelagreement_average", header = current().nextInt(100).toString())
-    vertx.eventBus().publish("1-DisplayCard", JsonObject(Json.encode(throughputAverageCard)))
-    vertx.eventBus().publish("1-DisplayCard", JsonObject(Json.encode(responseTimeAverageCard)))
-    vertx.eventBus().publish("1-DisplayCard", JsonObject(Json.encode(slaAverageCard)))
+    vertx.eventBus().publish(DisplayCard("1"), JsonObject(Json.encode(throughputAverageCard)))
+    vertx.eventBus().publish(DisplayCard("1"), JsonObject(Json.encode(responseTimeAverageCard)))
+    vertx.eventBus().publish(DisplayCard("1"), JsonObject(Json.encode(slaAverageCard)))
 }

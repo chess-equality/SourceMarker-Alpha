@@ -2,6 +2,8 @@ package com.sourceplusplus.monitor.skywalking
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.coroutines.toDeferred
+import com.sourceplusplus.monitor.skywalking.spectate.OverviewSpectator
+import com.sourceplusplus.monitor.skywalking.spectate.TracesSpectator
 import com.sourceplusplus.monitor.skywalking.track.*
 import io.vertx.kotlin.core.deployVerticleAwait
 import io.vertx.kotlin.coroutines.CoroutineVerticle
@@ -21,6 +23,9 @@ class SkywalkingMonitor : CoroutineVerticle() {
     }
 
     private suspend fun setup() {
+        vertx.deployVerticleAwait(OverviewSpectator())
+        vertx.deployVerticleAwait(TracesSpectator())
+
         val client = ApolloClient.builder()
             .serverUrl(config.getString("graphql_endpoint"))
             .build()
