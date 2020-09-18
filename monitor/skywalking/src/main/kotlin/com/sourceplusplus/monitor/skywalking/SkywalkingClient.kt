@@ -4,6 +4,7 @@ import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.toDeferred
 import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
+import com.sourceplusplus.monitor.skywalking.model.GetEndpointTraces
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
 import io.vertx.core.eventbus.MessageCodec
@@ -11,9 +12,8 @@ import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
 import monitor.skywalking.protocol.metadata.SearchEndpointQuery
 import monitor.skywalking.protocol.metrics.GetLinearIntValuesQuery
-import monitor.skywalking.protocol.type.Duration
-import monitor.skywalking.protocol.type.MetricCondition
-import monitor.skywalking.protocol.type.Step
+import monitor.skywalking.protocol.trace.QueryBasicTracesQuery
+import monitor.skywalking.protocol.type.*
 import org.slf4j.LoggerFactory
 import java.time.ZoneOffset.ofHours
 import java.time.ZonedDateTime
@@ -31,10 +31,12 @@ class SkywalkingClient(
 
         fun registerCodecs(vertx: Vertx) {
             log.info("Registering Apache SkyWalking codecs")
+            registerCodec(vertx, GetEndpointTraces::class.java)
             registerCodec(vertx, GetEndpointMetrics::class.java)
             registerCodec(vertx, GetAllServicesQuery.Result::class.java)
             registerCodec(vertx, GetServiceInstancesQuery.Result::class.java)
             registerCodec(vertx, SearchEndpointQuery.Result::class.java)
+            registerCodec(vertx, QueryBasicTracesQuery.Result::class.java)
             registerCodec(vertx, ArrayList::class.java)
         }
 
@@ -45,6 +47,24 @@ class SkywalkingClient(
 
     init {
         registerCodecs(vertx)
+    }
+
+    suspend fun getEndpointTraces(
+        endpointId: String,
+    ): QueryBasicTracesQuery.Result? {
+        val response = apolloClient.query(
+            QueryBasicTracesQuery(
+                TraceQueryCondition(
+                    endpointId = Input.optional(endpointId),
+                    queryOrder = QueryOrder.BY_START_TIME, //todo: move to request
+                    traceState = TraceState.ALL, //todo: move to request
+                    paging = Pagination(pageSize = 10) //todo: move to request
+                )
+            )
+        ).toDeferred().await()
+
+        //todo: throw error if failed
+        return response.data!!.result
     }
 
     suspend fun getEndpointMetrics(

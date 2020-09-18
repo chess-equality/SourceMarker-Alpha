@@ -41,7 +41,3 @@ class EndpointMetricsTracker(private val skywalkingClient: SkywalkingClient) : C
         }
     }
 }
-
-fun GetLinearIntValuesQuery.Result.toDoubleArray(): DoubleArray {
-    return values.map { (it.value as BigDecimal).toDouble() }.toDoubleArray()
-}

@@ -10,10 +10,12 @@ import com.sourceplusplus.marker.source.mark.api.SourceMark
 import com.sourceplusplus.marker.source.mark.api.key.SourceKey
 import com.sourceplusplus.monitor.skywalking.SkywalkingClient
 import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
+import com.sourceplusplus.monitor.skywalking.model.GetEndpointTraces
 import com.sourceplusplus.monitor.skywalking.model.ZonedDuration
+import com.sourceplusplus.monitor.skywalking.toDoubleArray
 import com.sourceplusplus.monitor.skywalking.track.EndpointMetricsTracker
+import com.sourceplusplus.monitor.skywalking.track.EndpointTracesTracker
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
-import com.sourceplusplus.monitor.skywalking.track.toDoubleArray
 import com.sourceplusplus.portal.server.model.*
 import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity.Companion.vertx
 import com.sourceplusplus.sourcemarker.psi.EndpointNameDetector
@@ -92,6 +94,18 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                     }
                 }
             }
+        }
+    }
+
+    //todo: portal should request traces
+    private fun updateTraces(endpointId: String) {
+        GlobalScope.launch(vertx.dispatcher()) {
+            val traces = EndpointTracesTracker.getTraces(
+                GetEndpointTraces(
+                    endpointId = endpointId
+                ), vertx
+            )
+            println(traces)
         }
     }
 
