@@ -1,7 +1,7 @@
 package com.sourceplusplus.portal.server.template
 
-import com.sourceplusplus.portal.server.model.artifact.ArtifactConfigType
-import com.sourceplusplus.portal.server.model.artifact.ArtifactInfoType
+import com.sourceplusplus.protocol.artifact.ArtifactConfigType
+import com.sourceplusplus.protocol.artifact.ArtifactInfoType
 import kotlinx.html.*
 
 fun FlowContent.configurationContent(block: FlowContent.() -> Unit) {

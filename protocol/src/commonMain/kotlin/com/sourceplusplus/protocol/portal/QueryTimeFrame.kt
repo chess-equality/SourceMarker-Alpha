@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.model
+package com.sourceplusplus.protocol.portal
 
 enum class QueryTimeFrame(val minutes: Int) {
     LAST_5_MINUTES(5),

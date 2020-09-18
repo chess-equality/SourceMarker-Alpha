@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.model
+package com.sourceplusplus.protocol.portal
 
 enum class TimeIntervalType(val id: String) {
     FIVE_MINUTES("5_minutes"),

@@ -1,9 +1,9 @@
 package com.sourceplusplus.portal.server.page
 
-import com.sourceplusplus.portal.server.model.PageType.*
-import com.sourceplusplus.portal.server.model.artifact.ArtifactConfigType.AUTO_SUBSCRIBE
-import com.sourceplusplus.portal.server.model.artifact.ArtifactConfigType.ENTRY_METHOD
-import com.sourceplusplus.portal.server.model.artifact.ArtifactInfoType.*
+import com.sourceplusplus.protocol.portal.PageType.*
+import com.sourceplusplus.protocol.artifact.ArtifactConfigType.AUTO_SUBSCRIBE
+import com.sourceplusplus.protocol.artifact.ArtifactConfigType.ENTRY_METHOD
+import com.sourceplusplus.protocol.artifact.ArtifactInfoType.*
 import com.sourceplusplus.portal.server.portal
 import com.sourceplusplus.portal.server.template.*
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType.*

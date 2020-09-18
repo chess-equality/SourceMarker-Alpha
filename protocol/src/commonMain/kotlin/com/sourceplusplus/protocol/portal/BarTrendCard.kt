@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.model
+package com.sourceplusplus.protocol.portal
 
 data class BarTrendCard(
     val timeFrame: QueryTimeFrame? = null,

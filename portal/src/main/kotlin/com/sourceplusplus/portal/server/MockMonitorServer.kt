@@ -6,8 +6,8 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.sourceplusplus.portal.server.model.*
 import com.sourceplusplus.protocol.artifact.trace.*
+import com.sourceplusplus.protocol.portal.*
 import io.vertx.core.Vertx
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonArray
@@ -18,6 +18,9 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions
 import io.vertx.ext.web.handler.sockjs.SockJSHandler
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom.current
@@ -128,7 +131,11 @@ fun main() {
 fun displayChart(vertx: Vertx) {
     val seriesData =
         SplineSeriesData(
-            0, listOf(Instant.now(), Instant.now().plusSeconds(10)),
+            0,
+            listOf(
+                Clock.System.now().toEpochMilliseconds(),
+                Clock.System.now().plus(10, DateTimeUnit.SECOND, TimeZone.UTC).toEpochMilliseconds()
+            ),
             doubleArrayOf(current().nextDouble(10.0), current().nextDouble(10.0))
         )
     val splineChart = SplineChart(MetricType.ResponseTime_Average, QueryTimeFrame.LAST_15_MINUTES, listOf(seriesData))

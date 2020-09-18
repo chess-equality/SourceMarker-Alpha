@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.model
+package com.sourceplusplus.protocol.portal
 
 enum class MetricType {
     Throughput_Average,

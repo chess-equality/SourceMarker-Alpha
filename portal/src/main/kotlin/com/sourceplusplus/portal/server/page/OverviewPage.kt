@@ -2,9 +2,9 @@ package com.sourceplusplus.portal.server.page
 
 import com.sourceplusplus.portal.server.portal
 import com.sourceplusplus.portal.server.template.*
-import com.sourceplusplus.portal.server.model.PageType.*
-import com.sourceplusplus.portal.server.model.ChartItemType.*
-import com.sourceplusplus.portal.server.model.TimeIntervalType.*
+import com.sourceplusplus.protocol.portal.PageType.*
+import com.sourceplusplus.protocol.portal.ChartItemType.*
+import com.sourceplusplus.protocol.portal.TimeIntervalType.*
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType.*
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML

@@ -1,6 +1,6 @@
 package com.sourceplusplus.portal.server.template
 
-import com.sourceplusplus.portal.server.model.PageType
+import com.sourceplusplus.protocol.portal.PageType
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType
 import kotlinx.html.*
 

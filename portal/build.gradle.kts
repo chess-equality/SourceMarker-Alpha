@@ -19,6 +19,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.11.1")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.11.1")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-guava:2.11.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
 }
 
 tasks {

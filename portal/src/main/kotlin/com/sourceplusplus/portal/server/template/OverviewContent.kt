@@ -1,6 +1,6 @@
 package com.sourceplusplus.portal.server.template
 
-import com.sourceplusplus.portal.server.model.ChartItemType
+import com.sourceplusplus.protocol.portal.ChartItemType
 import kotlinx.html.*
 
 fun FlowContent.overviewContent(block: FlowContent.() -> Unit) {

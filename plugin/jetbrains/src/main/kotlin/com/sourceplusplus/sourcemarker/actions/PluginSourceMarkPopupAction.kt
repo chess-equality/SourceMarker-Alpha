@@ -17,7 +17,7 @@ import com.sourceplusplus.monitor.skywalking.toDoubleArray
 import com.sourceplusplus.monitor.skywalking.track.EndpointMetricsTracker
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracesTracker
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
-import com.sourceplusplus.portal.server.model.*
+import com.sourceplusplus.protocol.portal.*
 import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity.Companion.vertx
 import com.sourceplusplus.sourcemarker.psi.EndpointNameDetector
 import io.vertx.core.json.Json
@@ -55,11 +55,11 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
 //            """.trimIndent(), "", 0
 //            )
 //        } else {
-        jcefComponent.getBrowser().cefBrowser.executeJavaScript(
-            """
-                  window.location.href = 'http://localhost:8080/traces';
-            """.trimIndent(), "", 0
-        )
+//        jcefComponent.getBrowser().cefBrowser.executeJavaScript(
+//            """
+//                  window.location.href = 'http://localhost:8080/traces';
+//            """.trimIndent(), "", 0
+//        )
 //        }
 
         super.performPopupAction(sourceMark, editor)
@@ -89,8 +89,8 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                         sourceMark.putUserData(ENDPOINT_ID, endpoint.id)
                         log.debug("Detected endpoint id: ${endpoint.id}")
 
-//                        updateOverview(endpoint.id)
-                        updateTraces(endpoint.id)
+                        updateOverview(endpoint.id)
+//                        updateTraces(endpoint.id)
                     } else {
                         log.debug("Could not find endpoint id for: $endpointName")
                     }
@@ -131,7 +131,11 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
             val metrics = EndpointMetricsTracker.getMetrics(metricsRequest, vertx)
 
             val seriesData =
-                SplineSeriesData(0, metricsRequest.toInstantTimes(), metrics[0].toDoubleArray())
+                SplineSeriesData(
+                    0,
+                    metricsRequest.toInstantTimes().map { it.toEpochMilliseconds() } as List<Long>, //todo: toInstantTimes() only
+                    metrics[0].toDoubleArray()
+                )
             val splineChart =
                 SplineChart(
                     MetricType.Throughput_Average,

@@ -1,10 +1,8 @@
-package com.sourceplusplus.portal.server.model
-
-import java.time.Instant
+package com.sourceplusplus.protocol.portal
 
 data class SplineSeriesData(
     val seriesIndex: Int,
-    val times: List<Instant>,
+    val times: List<Long>, //todo: Instant
     val values: DoubleArray
 ) {
     override fun equals(other: Any?): Boolean {

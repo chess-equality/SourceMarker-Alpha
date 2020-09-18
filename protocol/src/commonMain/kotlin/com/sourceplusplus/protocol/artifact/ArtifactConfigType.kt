@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.model.artifact
+package com.sourceplusplus.protocol.artifact
 
 enum class ArtifactConfigType(val description: String) {
     ENTRY_METHOD("Entry method"),
