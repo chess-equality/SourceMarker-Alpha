@@ -4,8 +4,8 @@ package com.sourceplusplus.protocol.artifact.trace
 data class TraceSpan(
     val traceId: String? = null,
     val segmentId: String,
-    val spanId: Long? = null,
-    val parentSpanId: Long? = null,
+    val spanId: Int? = null,
+    val parentSpanId: Int? = null,
     val refs: List<TraceSpanRef> = emptyList(),
     val serviceCode: String? = null,
     val serviceInstanceName: String? = null,

@@ -6,8 +6,9 @@ data class Trace(
     val operationNames: List<String>,
     val duration: Int,
     val start: Long,
-    val error: Boolean,
+    val error: Boolean?,
     val traceIds: List<String>,
     val prettyDuration: String,
-    val partial: Boolean? = null
+    val partial: Boolean? = null,
+    val segmentId: String? = null
 )

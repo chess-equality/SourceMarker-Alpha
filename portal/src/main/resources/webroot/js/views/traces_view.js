@@ -302,6 +302,7 @@ function displaySpanInfo(spanInfo) {
 }
 
 function displayTraceStack(traceStack) {
+    traceStack = traceStack.spans; //todo: temp
     portalLog('Displaying trace stack: ' + JSON.stringify(traceStack));
 
     //todo: move all this stuff to setupUI()

@@ -10,7 +10,6 @@ import com.sourceplusplus.protocol.artifact.trace.*
 import com.sourceplusplus.protocol.portal.*
 import io.vertx.core.Vertx
 import io.vertx.core.json.Json
-import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
 import io.vertx.core.json.jackson.DatabindCodec
 import io.vertx.ext.bridge.PermittedOptions
@@ -68,7 +67,7 @@ fun main() {
     }
 
     vertx.eventBus().consumer<String>("ClickedDisplayTraceStack") {
-        val traceStack = JsonArray()
+        val traceSpans = mutableListOf<TraceSpanInfo>()
         for (i in 1..5) {
             val span = TraceSpan(
                 artifactQualifiedName = UUID.randomUUID().toString(),
@@ -88,9 +87,9 @@ fun main() {
                 timeTook = "10s",
                 totalTracePercent = current().nextDouble(100.0)
             )
-            traceStack.add(JsonObject(Json.encode(spanInfo)))
+            traceSpans.add(spanInfo)
         }
-        vertx.eventBus().publish("1-DisplayTraceStack", traceStack)
+        vertx.eventBus().publish("1-DisplayTraceStack", JsonObject(Json.encode(TraceSpanStack(traceSpans))))
     }
 
     vertx.eventBus().consumer<Void>("ClickedDisplaySpanInfo") {
@@ -160,8 +159,8 @@ fun displayTraces(vertx: Vertx) {
         appUuid = "1",
         artifactQualifiedName = UUID.randomUUID().toString(),
         artifactSimpleName = UUID.randomUUID().toString(),
-        start = Clock.System.now(),
-        stop = Clock.System.now(),
+        start = Clock.System.now().toEpochMilliseconds(),
+        stop = Clock.System.now().toEpochMilliseconds(),
         total = traces.size,
         traces = traces.toList(),
         orderType = TraceOrderType.LATEST_TRACES

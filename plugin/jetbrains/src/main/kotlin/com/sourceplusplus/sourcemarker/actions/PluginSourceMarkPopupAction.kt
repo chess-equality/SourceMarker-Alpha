@@ -73,7 +73,8 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         val cachedEndpointId = sourceMark.getUserData(ENDPOINT_ID)
         if (cachedEndpointId != null) {
             log.debug("Found cached endpoint id: $cachedEndpointId")
-            updateOverview(cachedEndpointId)
+//            updateOverview(cachedEndpointId)
+            updateTraces(cachedEndpointId)
         } else {
             log.debug("Determining endpoint name")
             val endpointName = endpointDetector.determineEndpointName(sourceMark)
@@ -89,8 +90,8 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                         sourceMark.putUserData(ENDPOINT_ID, endpoint.id)
                         log.debug("Detected endpoint id: ${endpoint.id}")
 
-                        updateOverview(endpoint.id)
-//                        updateTraces(endpoint.id)
+                        //updateOverview(endpoint.id)
+                        updateTraces(endpoint.id)
                     } else {
                         log.debug("Could not find endpoint id for: $endpointName")
                     }
@@ -102,7 +103,7 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
     //todo: portal should request traces
     private fun updateTraces(endpointId: String) {
         GlobalScope.launch(vertx.dispatcher()) {
-            val traces = EndpointTracesTracker.getTraces(
+            val traceResult = EndpointTracesTracker.getTraces(
                 GetEndpointTraces(
                     endpointId = endpointId,
                     zonedDuration = ZonedDuration(
@@ -112,7 +113,7 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                     )
                 ), vertx
             )
-            println(traces)
+            vertx.eventBus().publish("null-DisplayTraces", JsonObject(Json.encode(traceResult)))
         }
     }
 

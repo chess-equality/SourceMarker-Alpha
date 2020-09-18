@@ -1,14 +1,12 @@
 package com.sourceplusplus.protocol.artifact.trace
 
-import kotlinx.datetime.Instant
-
 data class TraceResult(
     val appUuid: String?,
     val artifactQualifiedName: String?,
     val artifactSimpleName: String?,
     val orderType: TraceOrderType,
-    val start: Instant,
-    val stop: Instant,
+    val start: Long, //todo: Instant
+    val stop: Long, //todo: Instant
     val step: String? = null,
     val traces: List<Trace>,
     val total: Int
