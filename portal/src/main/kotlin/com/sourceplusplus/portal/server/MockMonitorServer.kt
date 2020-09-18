@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.sourceplusplus.portal.server.model.*
+import com.sourceplusplus.portal.server.model.trace.*
 import io.vertx.core.Vertx
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonArray
@@ -65,50 +66,46 @@ fun main() {
     vertx.eventBus().consumer<String>("ClickedDisplayTraceStack") {
         val traceStack = JsonArray()
         for (i in 1..5) {
-            traceStack.add(
-                JsonObject().put("root_artifact_qualified_name", UUID.randomUUID().toString())
-                    .put("app_uuid", "1")
-                    .put("operation_name", UUID.randomUUID().toString())
-                    .put("time_took", "10s")
-                    .put("total_trace_percent", current().nextInt(100))
-                    .put(
-                        "span", JsonObject()
-                            .put("error", current().nextBoolean())
-                            .put("artifact_qualified_name", UUID.randomUUID().toString())
-                            .put("has_child_stack", false)
-                            .put("trace_id", "100")
-                            .put("segment_id", "100")
-                            .put("span_id", "100")
-                            .put("start_time", Instant.now().toEpochMilli())
-                            .put("component", "DATABASE")
-                    )
+            val span = TraceSpan(
+                artifactQualifiedName = UUID.randomUUID().toString(),
+                traceId = "100",
+                segmentId = "100",
+                spanId = 100,
+                error = current().nextBoolean(),
+                hasChildStack = false,
+                startTime = Instant.now().toEpochMilli(), //todo: use Instant instead of long
+                component = "DATABASE"
             )
+            val spanInfo = TraceSpanInfo(
+                span = span,
+                appUuid = "1",
+                rootArtifactQualifiedName = UUID.randomUUID().toString(),
+                operationName = UUID.randomUUID().toString(),
+                timeTook = "10s",
+                totalTracePercent = current().nextDouble(100.0)
+            )
+            traceStack.add(JsonObject(Json.encode(spanInfo)))
         }
         vertx.eventBus().publish("1-DisplayTraceStack", traceStack)
     }
 
     vertx.eventBus().consumer<Void>("ClickedDisplaySpanInfo") {
-        vertx.eventBus().publish(
-            "1-DisplaySpanInfo", JsonObject()
-                .put("start_time", Instant.now().toEpochMilli())
-                .put("end_time", Instant.now().toEpochMilli())
-                .put("segment_id", "100")
-                .put(
-                    "tags", JsonObject()
-                        .put("thing1", UUID.randomUUID().toString())
-                        .put("thing2", UUID.randomUUID().toString())
-                        .put("thing3", UUID.randomUUID().toString())
-                        .put("thing4", UUID.randomUUID().toString())
-                        .put("thing5", UUID.randomUUID().toString())
-                )
-                .put(
-                    "logs", JsonArray().add(
-                        JsonObject()
-                            .put("data", UUID.randomUUID().toString())
-                            .put("time", Instant.now().epochSecond)
-                    )
-                )
+        val span = TraceSpan(
+            segmentId = "100",
+            startTime = Instant.now().toEpochMilli(), //todo: use Instant instead of long
+            endTime = Instant.now().toEpochMilli(), //todo: use Instant instead of long
+            tags = mapOf(
+                "thing1" to UUID.randomUUID().toString(),
+                "thing2" to UUID.randomUUID().toString(),
+                "thing3" to UUID.randomUUID().toString(),
+                "thing4" to UUID.randomUUID().toString(),
+                "thing5" to UUID.randomUUID().toString()
+            ),
+            logs = listOf(
+                TraceSpanLogEntry(time = Instant.now(), data = UUID.randomUUID().toString())
+            )
         )
+        vertx.eventBus().publish("1-DisplaySpanInfo", JsonObject(Json.encode(span)))
     }
 
     vertx.eventBus().consumer<Void>("ConfigurationTabOpened") {
@@ -138,30 +135,30 @@ fun displayChart(vertx: Vertx) {
 }
 
 fun displayTraces(vertx: Vertx) {
-    val traces = JsonArray()
+    val traces = mutableListOf<Trace>()
     for (i in 1..20) {
-        traces.add(
-            JsonObject().put(
-                "trace_ids",
-                JsonArray().add(current().nextInt().toString() + "." + current().nextInt().toString())
-            )
-                .put("operation_names", JsonArray().add(UUID.randomUUID().toString()))
-                .put("pretty_duration", "10s")
-                .put("error", current().nextBoolean())
-                .put("start", Instant.now().toEpochMilli())
+        val trace = Trace(
+            traceIds = listOf("${current().nextInt()}.${current().nextInt()}"),
+            operationNames = listOf(UUID.randomUUID().toString()),
+            prettyDuration = "10s",
+            duration = 10000,
+            error = current().nextBoolean(),
+            start = Instant.now().toEpochMilli() //todo: instant instead of long
         )
+        traces.add(trace)
     }
-    vertx.eventBus().publish(
-        "1-DisplayTraces", JsonObject()
-            .put("app_uuid", "1")
-            .put("artifact_qualified_name", UUID.randomUUID().toString())
-            .put("artifact_simple_name", UUID.randomUUID().toString())
-            .put("start", Instant.now().epochSecond)
-            .put("stop", Instant.now().epochSecond)
-            .put("total", 20)
-            .put("order_type", "LATEST_TRACES")
-            .put("traces", traces)
+
+    val tracesResult = TraceResult(
+        appUuid = "1",
+        artifactQualifiedName = UUID.randomUUID().toString(),
+        artifactSimpleName = UUID.randomUUID().toString(),
+        start = Instant.now(),
+        stop = Instant.now(),
+        total = traces.size,
+        traces = traces.toList(),
+        orderType = TraceOrderType.LATEST_TRACES
     )
+    vertx.eventBus().publish("1-DisplayTraces", JsonObject(Json.encode(tracesResult)))
 }
 
 fun updateCards(vertx: Vertx) {

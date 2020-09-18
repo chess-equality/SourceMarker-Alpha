@@ -3,7 +3,7 @@ package com.sourceplusplus.portal.server.page
 import com.sourceplusplus.portal.server.portal
 import com.sourceplusplus.portal.server.template.*
 import com.sourceplusplus.portal.server.model.PageType.*
-import com.sourceplusplus.portal.server.model.trace.TraceType.*
+import com.sourceplusplus.portal.server.model.trace.TraceOrderType.*
 import com.sourceplusplus.portal.server.model.artifact.ArtifactConfigType.*
 import com.sourceplusplus.portal.server.model.artifact.ArtifactInfoType.*
 import kotlinx.html.*
@@ -18,7 +18,7 @@ class ConfigurationPage {
                     portalNav {
                         navItem(OVERVIEW)
                         navItem(TRACES) {
-                            navSubItem(LATEST, SLOWEST, FAILED)
+                            navSubItem(LATEST_TRACES, SLOWEST_TRACES, FAILED_TRACES)
                         }
                         navItem(CONFIGURATION, isActive = true)
                     }

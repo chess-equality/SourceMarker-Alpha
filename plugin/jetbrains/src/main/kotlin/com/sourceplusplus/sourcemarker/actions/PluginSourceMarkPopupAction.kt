@@ -16,13 +16,12 @@ import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
 import com.sourceplusplus.monitor.skywalking.track.toDoubleArray
 import com.sourceplusplus.portal.server.model.*
 import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity.Companion.vertx
+import com.sourceplusplus.sourcemarker.psi.EndpointNameDetector
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.jetbrains.uast.expressions.UInjectionHost
-import org.jetbrains.uast.java.JavaUQualifiedReferenceExpression
 import org.slf4j.LoggerFactory
 import java.text.DecimalFormat
 import java.time.ZonedDateTime
@@ -35,6 +34,7 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
     }
 
     private val decimalFormat = DecimalFormat(".#")
+    private val endpointDetector = EndpointNameDetector()
 
     override fun performPopupAction(sourceMark: SourceMark, editor: Editor) {
         //todo: determine sourceportal context
@@ -73,7 +73,7 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
             updateOverview(cachedEndpointId)
         } else {
             log.debug("Determining endpoint name")
-            val endpointName = determineEndpointName(sourceMark)
+            val endpointName = endpointDetector.determineEndpointName(sourceMark)
 
             if (endpointName != null) {
                 log.debug("Detected endpoint name: $endpointName")
@@ -145,20 +145,6 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                 )
             vertx.eventBus().publish("null-DisplayCard", JsonObject(Json.encode(slaAverageCard)))
         }
-    }
-
-    private fun determineEndpointName(sourceMark: SourceMark): String? {
-        if (sourceMark is MethodSourceMark) {
-            val requestMappingAnnotation =
-                sourceMark.getPsiMethod().findAnnotation("org.springframework.web.bind.annotation.RequestMapping")
-            if (requestMappingAnnotation != null) {
-                val value = (requestMappingAnnotation.findAttributeValue("value") as UInjectionHost).evaluateToString()
-                val method =
-                    (requestMappingAnnotation.findAttributeValue("method") as JavaUQualifiedReferenceExpression).selector
-                return "{${method}}$value"
-            }
-        }
-        return null
     }
 
     private fun calculateAverage(values: DoubleArray): Double {

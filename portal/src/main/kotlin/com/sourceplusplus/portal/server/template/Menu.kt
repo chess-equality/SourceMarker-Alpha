@@ -1,7 +1,7 @@
 package com.sourceplusplus.portal.server.template
 
 import com.sourceplusplus.portal.server.model.*
-import com.sourceplusplus.portal.server.model.trace.TraceType
+import com.sourceplusplus.portal.server.model.trace.TraceOrderType
 import kotlinx.html.*
 
 fun FlowContent.menu(block: FlowContent.() -> Unit) {
@@ -56,8 +56,8 @@ fun FlowContent.menuItem(pageType: PageType, isActive: Boolean, block: (FlowCont
     }
 }
 
-fun FlowContent.subMenuItem(vararg traceTypes: TraceType = arrayOf()) {
-    for (traceType in traceTypes) {
+fun FlowContent.subMenuItem(vararg traceOrderTypes: TraceOrderType = arrayOf()) {
+    for (traceType in traceOrderTypes) {
         a(classes = "item sidebar_sub_text_color") {
             id = "sidebar_traces_link_${traceType.id}"
             href = traceType.id

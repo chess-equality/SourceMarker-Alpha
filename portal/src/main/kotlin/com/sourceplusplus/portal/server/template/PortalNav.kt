@@ -1,7 +1,7 @@
 package com.sourceplusplus.portal.server.template
 
 import com.sourceplusplus.portal.server.model.PageType
-import com.sourceplusplus.portal.server.model.trace.TraceType
+import com.sourceplusplus.portal.server.model.trace.TraceOrderType
 import kotlinx.html.*
 
 class PortalNavigationConfiguration(private val flowContent: FlowContent) {
@@ -32,10 +32,10 @@ class PortalNavigationConfiguration(private val flowContent: FlowContent) {
         }
     }
 
-    fun navSubItem(vararg traceTypes: TraceType = arrayOf()) {
+    fun navSubItem(vararg traceOrderTypes: TraceOrderType = arrayOf()) {
         when (mode) {
-            ModeType.MENU -> flowContent.subMenuItem(*traceTypes)
-            ModeType.TAB -> flowContent.subTabItem(*traceTypes)
+            ModeType.MENU -> flowContent.subMenuItem(*traceOrderTypes)
+            ModeType.TAB -> flowContent.subTabItem(*traceOrderTypes)
         }
     }
 }

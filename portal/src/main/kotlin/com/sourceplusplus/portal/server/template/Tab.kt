@@ -1,7 +1,7 @@
 package com.sourceplusplus.portal.server.template
 
 import com.sourceplusplus.portal.server.model.*
-import com.sourceplusplus.portal.server.model.trace.TraceType
+import com.sourceplusplus.portal.server.model.trace.TraceOrderType
 import kotlinx.html.*
 
 fun FlowContent.tabs(block: FlowContent.() -> Unit) {
@@ -52,9 +52,9 @@ fun FlowContent.tabItem(pageType: PageType, isActive: Boolean, block: (FlowConte
     }
 }
 
-fun FlowContent.subTabItem(vararg traceTypes: TraceType = arrayOf()) {
+fun FlowContent.subTabItem(vararg traceOrderTypes: TraceOrderType = arrayOf()) {
     div("menu secondary_background_color") {
-        for (traceType in traceTypes) {
+        for (traceType in traceOrderTypes) {
             a(classes = "item") {
                 id = "traces_link_${traceType.id}"
                 href = traceType.id
