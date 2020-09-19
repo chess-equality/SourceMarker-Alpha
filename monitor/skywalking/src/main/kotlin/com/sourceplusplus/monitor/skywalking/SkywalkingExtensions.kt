@@ -13,24 +13,26 @@ import monitor.skywalking.protocol.trace.QueryTraceQuery
 import java.math.BigDecimal
 
 fun toProtocol(
+    appUuid: String,
     artifactQualifiedName: String,
+    timeFrame: QueryTimeFrame,
     metricsRequest: GetEndpointMetrics,
     metrics: List<GetLinearIntValuesQuery.Result>
 ): ArtifactMetricResult {
     return ArtifactMetricResult(
-        appUuid = "null",
+        appUuid = appUuid,
         artifactQualifiedName = artifactQualifiedName,
-        timeFrame = QueryTimeFrame.LAST_5_MINUTES,
+        timeFrame = timeFrame,
         start = Instant.fromEpochMilliseconds(metricsRequest.zonedDuration.start.toInstant().toEpochMilli()),
         stop = Instant.fromEpochMilliseconds(metricsRequest.zonedDuration.stop.toInstant().toEpochMilli()),
-        step = metricsRequest.zonedDuration.step.toString(),
-        artifactMetrics = metrics.map { it.toProtocol("todo") }
+        step = metricsRequest.zonedDuration.step.name,
+        artifactMetrics = metrics.mapIndexed { i, result -> result.toProtocol(metricsRequest.metricIds[i]) }
     )
 }
 
 fun GetLinearIntValuesQuery.Result.toProtocol(metricType: String): ArtifactMetrics {
     return ArtifactMetrics(
-        metricType = MetricType.ResponseTime_Average,
+        metricType = MetricType.realValueOf(metricType),
         values = values.map { (it.value as BigDecimal).toInt() }
     )
 }

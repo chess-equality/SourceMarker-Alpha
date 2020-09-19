@@ -80,6 +80,7 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
             log.info("Overview time frame set to: " + view.timeFrame)
             updateUI(portal)
 
+            vertx.eventBus().send(RefreshOverview, portal)
 //            //subscribe (re-subscribe) to get latest stats
 //            val subscribeRequest = ArtifactMetricSubscribeRequest.builder()
 //                .appUuid(portal.appUuid)
@@ -99,6 +100,8 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
             val portal = SourcePortal.getPortal(request.getString("portal_uuid"))!!
             portal.overviewView.activeChartMetric = valueOf(request.getString("metric_type"))
             updateUI(portal)
+
+            vertx.eventBus().send(RefreshOverview, portal)
         }
         log.info("{} started", javaClass.simpleName)
     }

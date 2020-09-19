@@ -41,13 +41,19 @@ class PortalEventListener : CoroutineVerticle() {
                         listOf("endpoint_cpm", "endpoint_avg", "endpoint_sla", "endpoint_percentile"),
                         endpointId,
                         ZonedDuration(
-                            ZonedDateTime.now().minusMinutes(15),
+                            ZonedDateTime.now().minusMinutes(sourcePortal.overviewView.timeFrame.minutes.toLong()),
                             ZonedDateTime.now(),
                             SkywalkingClient.DurationStep.MINUTE
                         )
                     )
                     val metrics = EndpointMetricsTracker.getMetrics(metricsRequest, vertx)
-                    val metricResult = toProtocol(sourcePortal.viewingPortalArtifact, metricsRequest, metrics)
+                    val metricResult = toProtocol(
+                        sourcePortal.appUuid,
+                        sourcePortal.viewingPortalArtifact,
+                        sourcePortal.overviewView.timeFrame,
+                        metricsRequest,
+                        metrics
+                    )
                     vertx.eventBus().send(ArtifactMetricUpdated, metricResult)
                 }
             }
