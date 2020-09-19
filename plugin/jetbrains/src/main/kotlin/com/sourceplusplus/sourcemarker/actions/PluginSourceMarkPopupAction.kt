@@ -48,8 +48,8 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
 
         //todo: determine sourceportal context
         when (sourceMark) {
-            is ClassSourceMark -> performClassPopup(sourceMark)
-            is MethodSourceMark -> performMethodPopup(sourceMark)
+            is ClassSourceMark -> GlobalScope.launch(vertx.dispatcher()) { performClassPopup(sourceMark) }
+            is MethodSourceMark -> GlobalScope.launch(vertx.dispatcher()) { performMethodPopup(sourceMark) }
         }
 
         //todo: use SourcePortalAPI to ensure correct view is showing (don't refresh if correct already viewing)
@@ -75,16 +75,26 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         super.performPopupAction(sourceMark, editor)
     }
 
-    private fun performClassPopup(sourceMark: ClassSourceMark) {
+    private suspend fun performClassPopup(sourceMark: ClassSourceMark) {
         //todo: get all endpoint keys for current file
+        val endpointIds = sourceMark.sourceFileMarker.getSourceMarks()
+            .filterIsInstance<MethodSourceMark>()
+            .filter { getOrFindEndpointId(it) != null }
+            .map { it.getUserData(ENDPOINT_ID)!! }
+        println(endpointIds)
+
+        //todo: disable traces page, disable overview page
     }
 
-    private fun performMethodPopup(sourceMark: MethodSourceMark) {
+    private suspend fun performMethodPopup(sourceMark: MethodSourceMark) {
+        val endpointId = getOrFindEndpointId(sourceMark)
+    }
+
+    private suspend fun getOrFindEndpointId(sourceMark: MethodSourceMark): String? {
         val cachedEndpointId = sourceMark.getUserData(ENDPOINT_ID)
         if (cachedEndpointId != null) {
             log.debug("Found cached endpoint id: $cachedEndpointId")
-//            updateOverview(cachedEndpointId)
-//            updateTraces(cachedEndpointId)
+            return cachedEndpointId
         } else {
             log.debug("Determining endpoint name")
             val endpointName = endpointDetector.determineEndpointName(sourceMark)
@@ -92,21 +102,17 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
             if (endpointName != null) {
                 log.debug("Detected endpoint name: $endpointName")
 
-                GlobalScope.launch(vertx.dispatcher()) {
-                    log.debug("Determining endpoint id")
-                    val endpoint =
-                        EndpointTracker.searchExactEndpoint(endpointName, vertx)
-                    if (endpoint != null) {
-                        sourceMark.putUserData(ENDPOINT_ID, endpoint.id)
-                        log.debug("Detected endpoint id: ${endpoint.id}")
-
-//                        updateOverview(endpoint.id)
-//                        updateTraces(endpoint.id)
-                    } else {
-                        log.debug("Could not find endpoint id for: $endpointName")
-                    }
+                log.debug("Determining endpoint id")
+                val endpoint = EndpointTracker.searchExactEndpoint(endpointName, vertx)
+                if (endpoint != null) {
+                    sourceMark.putUserData(ENDPOINT_ID, endpoint.id)
+                    log.debug("Detected endpoint id: ${endpoint.id}")
+                    return endpoint.id
+                } else {
+                    log.debug("Could not find endpoint id for: $endpointName")
                 }
             }
         }
+        return null
     }
 }

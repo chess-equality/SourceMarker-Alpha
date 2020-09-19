@@ -17,11 +17,12 @@ import java.util.concurrent.atomic.AtomicBoolean
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
 open class ClassGutterMark(
-        override val sourceFileMarker: SourceFileMarker,
-        override val psiClass: UClass
+    override val sourceFileMarker: SourceFileMarker,
+    override var psiClass: UClass
 ) : ClassSourceMark(sourceFileMarker, psiClass), GutterMark {
 
-    final override val configuration: GutterMarkConfiguration = SourceMarkerPlugin.configuration.defaultGutterMarkConfiguration
+    final override val configuration: GutterMarkConfiguration =
+        SourceMarkerPlugin.configuration.defaultGutterMarkConfiguration
     private var visible: AtomicBoolean = AtomicBoolean()
 
     /**

@@ -104,7 +104,7 @@ abstract class MethodSourceMark(
     }
 
     override fun getPsiElement(): PsiMethod {
-        return (psiMethod.sourcePsi as PsiMethod?)!!
+        return psiMethod.sourcePsi as PsiMethod
     }
 
     fun updatePsiMethod(psiMethod: UMethod): Boolean {

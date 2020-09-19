@@ -3,10 +3,13 @@ package com.sourceplusplus.marker.source.mark.api
 import com.intellij.openapi.Disposable
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.roots.ProjectRootManager
-import com.intellij.psi.PsiElement
+import com.intellij.psi.PsiClass
 import com.intellij.psi.PsiInvalidElementAccessException
+import com.sourceplusplus.marker.MarkerUtils
 import com.sourceplusplus.marker.source.SourceFileMarker
 import com.sourceplusplus.marker.source.mark.api.component.api.SourceMarkComponent
+import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEvent
+import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventCode
 import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventListener
 import com.sourceplusplus.marker.source.mark.api.key.SourceKey
 import org.jetbrains.uast.UClass
@@ -22,9 +25,9 @@ import kotlin.collections.HashMap
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
 abstract class ClassSourceMark(
-        override val sourceFileMarker: SourceFileMarker,
-        internal open val psiClass: UClass,
-        override val artifactQualifiedName: String = psiClass.qualifiedName!!
+    override val sourceFileMarker: SourceFileMarker,
+    internal open var psiClass: UClass,
+    override var artifactQualifiedName: String = psiClass.qualifiedName!!
 ) : SourceMark {
 
     override var editor: Editor? = null
@@ -42,7 +45,7 @@ abstract class ClassSourceMark(
 
     override val moduleName: String
         get() = ProjectRootManager.getInstance(sourceFileMarker.project).fileIndex
-                .getModuleForFile(psiClass.containingFile.virtualFile)!!.name
+            .getModuleForFile(psiClass.containingFile.virtualFile)!!.name
 
     /**
      * Line number of the gutter mark.
@@ -88,8 +91,23 @@ abstract class ClassSourceMark(
         return psiClass
     }
 
-    override fun getPsiElement(): PsiElement {
-        return psiClass.sourcePsi!!
+    override fun getPsiElement(): PsiClass {
+        return psiClass.sourcePsi as PsiClass
+    }
+
+    fun updatePsiClass(psiClass: UClass): Boolean {
+        this.psiClass = psiClass
+        val newArtifactQualifiedName = MarkerUtils.getFullyQualifiedName(psiClass)
+        if (artifactQualifiedName != newArtifactQualifiedName) {
+            check(sourceFileMarker.removeSourceMark(this, autoRefresh = false, autoDispose = false))
+            val oldArtifactQualifiedName = artifactQualifiedName
+            artifactQualifiedName = newArtifactQualifiedName
+            return if (sourceFileMarker.applySourceMark(this, autoRefresh = false)) {
+                triggerEvent(SourceMarkEvent(this, SourceMarkEventCode.NAME_CHANGED, oldArtifactQualifiedName))
+                true
+            } else false
+        }
+        return true
     }
 
     private val eventListeners = ArrayList<SourceMarkEventListener>()

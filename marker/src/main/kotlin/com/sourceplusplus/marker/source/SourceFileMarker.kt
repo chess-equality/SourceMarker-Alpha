@@ -11,6 +11,7 @@ import com.intellij.psi.PsiFile
 import com.intellij.psi.PsiJavaFile
 import com.sourceplusplus.marker.source.mark.api.*
 import com.sourceplusplus.marker.source.mark.api.key.SourceKey
+import com.sourceplusplus.marker.source.mark.gutter.ClassGutterMark
 import com.sourceplusplus.marker.source.mark.gutter.MethodGutterMark
 import com.sourceplusplus.marker.source.mark.inlay.ExpressionInlayMark
 import com.sourceplusplus.marker.source.mark.inlay.MethodInlayMark
@@ -99,8 +100,10 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
     }
 
     @JvmOverloads
-    open fun removeSourceMark(sourceMark: SourceMark, autoRefresh: Boolean = false,
-                              autoDispose: Boolean = true): Boolean {
+    open fun removeSourceMark(
+        sourceMark: SourceMark, autoRefresh: Boolean = false,
+        autoDispose: Boolean = true
+    ): Boolean {
         log.trace("Removing source mark for artifact: $sourceMark")
         return if (sourceMarks.remove(sourceMark)) {
             if (autoDispose) sourceMark.dispose(false)
@@ -111,12 +114,15 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
     }
 
     @JvmOverloads
-    open fun applySourceMark(sourceMark: SourceMark, autoRefresh: Boolean = false,
-                             overrideFilter: Boolean = false): Boolean {
+    open fun applySourceMark(
+        sourceMark: SourceMark, autoRefresh: Boolean = false,
+        overrideFilter: Boolean = false
+    ): Boolean {
         if (overrideFilter || sourceMark.canApply()) {
             log.trace("Applying source mark for artifact: $sourceMark")
             if (sourceMarks.add(sourceMark)) {
                 when (sourceMark) {
+                    is ClassGutterMark -> sourceMark.getPsiElement().nameIdentifier!!.putUserData(SourceKey.GutterMark, sourceMark)
                     is MethodGutterMark -> sourceMark.getPsiElement().nameIdentifier!!.putUserData(SourceKey.GutterMark, sourceMark)
                     is MethodInlayMark -> sourceMark.getPsiElement().nameIdentifier!!.putUserData(SourceKey.InlayMark, sourceMark)
                     is ExpressionInlayMark -> sourceMark.getPsiElement().putUserData(SourceKey.InlayMark, sourceMark)
@@ -144,6 +150,12 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
 
     open fun getSourceMarks(artifactQualifiedName: String): List<SourceMark> {
         return sourceMarks.filter { it.artifactQualifiedName == artifactQualifiedName }
+    }
+
+    open fun getClassSourceMark(psiClass: PsiElement, type: SourceMark.Type): ClassSourceMark? {
+        return sourceMarks.find {
+            it is ClassSourceMark && it.valid && it.psiClass.sourcePsi === psiClass && it.type == type
+        } as ClassSourceMark?
     }
 
     open fun getMethodSourceMark(psiMethod: PsiElement, type: SourceMark.Type): MethodSourceMark? {
@@ -192,7 +204,15 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
      * {@inheritDoc}
      */
     override fun createSourceMark(psiClass: UClass, type: SourceMark.Type): ClassSourceMark {
-        TODO("Not yet implemented")
+        log.trace("Creating source mark. Class: ${psiClass.qualifiedName} - Type: $type")
+        return when (type) {
+            SourceMark.Type.GUTTER -> {
+                ClassGutterMark(this, psiClass)
+            }
+            SourceMark.Type.INLAY -> {
+                TODO("Not yet implemented")
+            }
+        }
     }
 
     open fun getClassQualifiedNames(): List<String> {

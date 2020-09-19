@@ -7,6 +7,7 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.intellij.openapi.util.TextRange
 import com.sourceplusplus.marker.source.SourceFileMarker
+import com.sourceplusplus.marker.source.mark.api.ClassSourceMark
 import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
 import com.sourceplusplus.marker.source.mark.api.SourceMark
 import org.jetbrains.annotations.NotNull
@@ -30,10 +31,15 @@ open class SourceMarkPopupAction : AnAction() {
         val editor = e.getData(CommonDataKeys.EDITOR)
         val psiFile = e.getData(CommonDataKeys.PSI_FILE)
         if (project != null && editor != null && psiFile != null) {
+            var classSourceMark: ClassSourceMark? = null
             var sourceMark: SourceMark? = null
             val fileMarker = psiFile.getUserData(SourceFileMarker.KEY)
             if (fileMarker != null) {
                 sourceMark = fileMarker.getSourceMarks().find {
+                    if (it is ClassSourceMark) {
+                        classSourceMark = it
+                        false
+                    } else
                     if (it is MethodSourceMark) {
                         if (it.configuration.activateOnKeyboardShortcut) {
                             //+1 on end offset so match is made even right after method end
@@ -51,6 +57,8 @@ open class SourceMarkPopupAction : AnAction() {
 
             if (sourceMark != null) {
                 performPopupAction(sourceMark, editor)
+            } else if (classSourceMark != null) {
+                performPopupAction(classSourceMark!!, editor)
             }
         }
     }
