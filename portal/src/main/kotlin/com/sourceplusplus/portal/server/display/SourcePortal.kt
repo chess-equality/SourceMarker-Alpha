@@ -30,7 +30,7 @@ class SourcePortal(
         private val log = LoggerFactory.getLogger(SourcePortal::class.java)
 
         val portalMap: LoadingCache<String, SourcePortal> = CacheBuilder.newBuilder()
-            .expireAfterAccess(5, TimeUnit.MINUTES)
+//            .expireAfterAccess(5, TimeUnit.MINUTES)
             .build(object : CacheLoader<String, SourcePortal>() {
                 override fun load(portalUuid: String): SourcePortal? {
                     return getPortal(portalUuid)

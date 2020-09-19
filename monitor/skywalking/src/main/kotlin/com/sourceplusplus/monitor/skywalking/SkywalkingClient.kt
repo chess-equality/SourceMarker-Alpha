@@ -31,7 +31,6 @@ class SkywalkingClient(
 
         fun registerCodecs(vertx: Vertx) {
             log.info("Registering Apache SkyWalking codecs")
-            registerCodec(vertx, TraceResult::class.java)
             registerCodec(vertx, GetEndpointTraces::class.java)
             registerCodec(vertx, GetEndpointMetrics::class.java)
             registerCodec(vertx, GetAllServicesQuery.Result::class.java)

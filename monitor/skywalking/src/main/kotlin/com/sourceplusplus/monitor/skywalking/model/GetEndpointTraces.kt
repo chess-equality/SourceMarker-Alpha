@@ -5,6 +5,8 @@ import monitor.skywalking.protocol.type.QueryOrder
 import monitor.skywalking.protocol.type.TraceState
 
 class GetEndpointTraces(
+    val appUuid: String,
+    val artifactQualifiedName: String,
     val endpointId: String,
     val zonedDuration: ZonedDuration,
     val queryOrder: QueryOrder = QueryOrder.BY_START_TIME,

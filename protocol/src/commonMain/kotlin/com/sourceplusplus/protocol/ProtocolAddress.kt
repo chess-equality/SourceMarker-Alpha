@@ -6,7 +6,7 @@ class ProtocolAddress {
             //Portal
             const val ClosePortal = "ClosePortal"
             const val ClickedViewAsExternalPortal = "ClickedViewAsExternalPortal"
-            const val KeepAlivePortal = "KeepAlivePortal"
+            const val KeepAlivePortal = "KeepAlivePortal" //todo: remove
             const val UpdatePortalArtifact = "UpdatePortalArtifact"
             const val CanOpenPortal = "CanOpenPortal"
             const val OpenedPortal = "OpenedPortal"
@@ -26,6 +26,8 @@ class ProtocolAddress {
             const val ClickedDisplayTraceStack = "ClickedDisplayTraceStack"
             const val ClickedDisplaySpanInfo = "ClickedDisplaySpanInfo"
             const val GetTraceStack = "GetTraceStack"
+            const val RefreshTraces = "RefreshTraces"
+            const val ArtifactTraceUpdated = "ArtifactTraceUpdated"
 
             //Portal - Configuration
             const val ConfigurationTabOpened = "ConfigurationTabOpened"

@@ -8,10 +8,13 @@ import com.sourceplusplus.portal.server.display.tabs.views.TracesView
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
 import com.sourceplusplus.protocol.ArtifactNameUtils.removePackageAndClassName
 import com.sourceplusplus.protocol.ArtifactNameUtils.removePackageNames
+import com.sourceplusplus.protocol.ProtocolAddress
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ArtifactTraceUpdated
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplaySpanInfo
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplayTraceStack
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplayTraces
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.GetTraceStack
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.RefreshTraces
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.TracesTabOpened
 import com.sourceplusplus.protocol.artifact.trace.*
 import com.sourceplusplus.protocol.portal.PageType
@@ -39,6 +42,15 @@ class TracesTab : AbstractTab(PageType.TRACES) {
     override fun start() {
         super.start()
 
+        vertx.setPeriodic(5000) {
+            SourcePortal.getPortals().forEach {
+                if (it.currentTab == PageType.TRACES) {
+                    //todo: only update if external or internal and currently displaying
+                    vertx.eventBus().send(RefreshTraces, it)
+                }
+            }
+        }
+
         //refresh with traces from cache (if avail)
         vertx.eventBus().consumer<JsonObject>(TracesTabOpened) {
             log.info("Traces tab opened")
@@ -59,6 +71,7 @@ class TracesTab : AbstractTab(PageType.TRACES) {
             SourcePortal.ensurePortalActive(portal)
             updateUI(portal)
 
+            vertx.eventBus().send(RefreshTraces, portal)
             //subscribe (re-subscribe) to get traces as they are created
 //            val subscribeRequest = ArtifactTraceSubscribeRequest.builder()
 //                    .appUuid(portal.appUuid)
@@ -74,9 +87,9 @@ class TracesTab : AbstractTab(PageType.TRACES) {
 //                }
 //            })
         }
-//        vertx.eventBus().consumer<TraceResult>(ARTIFACT_TRACE_UPDATED.address) {
-//            handleArtifactTraceResult(it.body())
-//        }
+        vertx.eventBus().consumer<TraceResult>(ArtifactTraceUpdated) {
+            handleArtifactTraceResult(it.body())
+        }
 
         //get historical traces
         vertx.eventBus().consumer<JsonObject>(TracesTabOpened) {

@@ -11,8 +11,6 @@ import io.vertx.kotlin.core.eventbus.requestAwait
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
-import java.util.*
 
 class EndpointTracesTracker(private val skywalkingClient: SkywalkingClient) : CoroutineVerticle() {
 
@@ -55,11 +53,10 @@ class EndpointTracesTracker(private val skywalkingClient: SkywalkingClient) : Co
                 }
                 it.reply(
                     TraceResult(
-                        appUuid = "1",
-                        artifactQualifiedName = UUID.randomUUID().toString(),
-                        artifactSimpleName = UUID.randomUUID().toString(),
-                        start = Clock.System.now().toEpochMilliseconds(),
-                        stop = Clock.System.now().toEpochMilliseconds(),
+                        appUuid = request.appUuid,
+                        artifactQualifiedName = request.artifactQualifiedName,
+                        start = request.zonedDuration.start.toInstant().toEpochMilli(),
+                        stop = request.zonedDuration.start.toInstant().toEpochMilli(),
                         total = traceStack.size,
                         traces = traceStack,
                         orderType = TraceOrderType.LATEST_TRACES
