@@ -8,7 +8,7 @@ package com.sourceplusplus.protocol.portal
  * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
  */
 enum class PageType {
-    OVERVIEW,
+    OVERVIEW, //todo: rename to Activity
     TRACES,
     CONFIGURATION
 }

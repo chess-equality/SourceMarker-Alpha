@@ -11,7 +11,7 @@ import io.vertx.core.json.JsonObject
 import org.slf4j.LoggerFactory
 
 /**
- * Used to track the current viewable state of the Source++ Portal.
+ * Used to track the current viewable state of the SourceMarker Portal.
  *
  * Recognizes and produces messages for the following events:
  *  - user hovered over S++ icon
@@ -60,7 +60,7 @@ class PortalViewTracker : AbstractVerticle() {
 //            println("here")
 ////            if (it.body() is SourceArtifact) {
 ////                val artifact = it.body() as SourceArtifact
-//////                log.info("Showing Source++ Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
+//////                log.info("Showing SourceMarker Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
 ////                //todo: reset ui if artifact different than last artifact
 ////            }
 //        }
@@ -70,7 +70,7 @@ class PortalViewTracker : AbstractVerticle() {
 //            println("here")
 ////            if (it.body() is SourceArtifact) {
 ////                val artifact = it.body() as SourceArtifact
-//////                log.info("Hiding Source++ Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
+//////                log.info("Hiding SourceMarker Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
 ////            }
 //        }
 

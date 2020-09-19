@@ -109,7 +109,7 @@ open class SourceInlayProvider : InlayHintsProvider<NoSettings> {
     }
 
     override val key: SettingsKey<NoSettings> = SettingsKey("SourceMarker/InlayHints")
-    override val name: String = "Source++"
+    override val name: String = "SourceMarker"
     override val previewText: String? = null
     override val isVisibleInSettings: Boolean = false
     override fun isLanguageSupported(language: Language): Boolean = true

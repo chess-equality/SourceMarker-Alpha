@@ -22,8 +22,8 @@ import org.jetbrains.uast.UMethod
 import org.slf4j.LoggerFactory
 
 /**
- * Used to mark a source code file with Source++ artifact marks.
- * Source++ artifact marks can be used to subscribe to and collect source code runtime information.
+ * Used to mark a source code file with SourceMarker artifact marks.
+ * SourceMarker artifact marks can be used to subscribe to and collect source code runtime information.
  *
  * @version 0.2.2
  * @since 0.1.0

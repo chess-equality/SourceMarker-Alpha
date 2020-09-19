@@ -14,7 +14,7 @@ class OverviewPage {
         return buildString {
             appendLine("<!DOCTYPE html>")
             appendHTML().portal {
-                overviewPage("Overview - Source++") {
+                overviewPage("Overview - SourceMarker") {
                     portalNav {
                         navItem(OVERVIEW, isActive = true)
                         navItem(TRACES) {

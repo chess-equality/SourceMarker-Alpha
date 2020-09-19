@@ -18,7 +18,7 @@ class ConfigurationPage {
         return buildString {
             appendLine("<!DOCTYPE html>")
             appendHTML().portal {
-                configurationPage("Configuration - Source++") {
+                configurationPage("Configuration - SourceMarker") {
                     portalNav {
                         navItem(OVERVIEW)
                         navItem(TRACES) {

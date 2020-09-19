@@ -88,7 +88,7 @@ class SourcePortal(
             portal.viewingPortalArtifact = Objects.requireNonNull(artifactQualifiedName)
 
             portalMap.put(portalUuid, portal)
-            log.info("Registered external Source++ Portal. Portal UUID: $portalUuid - App UUID: $appUuid - Artifact: $artifactQualifiedName")
+            log.info("Registered external SourceMarker Portal. Portal UUID: $portalUuid - App UUID: $appUuid - Artifact: $artifactQualifiedName")
             log.info("Active portals: " + portalMap.size())
             return portalUuid
         }

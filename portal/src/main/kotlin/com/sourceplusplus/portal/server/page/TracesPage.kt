@@ -15,7 +15,7 @@ class TracesPage {
         return buildString {
             appendLine("<!DOCTYPE html>")
             appendHTML().portal {
-                tracesPage("Traces - Source++") {
+                tracesPage("Traces - SourceMarker") {
                     portalNav {
                         navItem(OVERVIEW)
                         navItem(TRACES, isActive = true) {
