@@ -104,6 +104,7 @@ class SourcePortal(
     override fun close() {
         log.info("Closed portal: $portalUuid")
         portalMap.invalidate(portalUuid)
+        //todo: de-register portal consumers
         log.info("Active portals: " + portalMap.size())
     }
 

@@ -9,16 +9,12 @@ import java.util.function.Predicate
  * @since 0.2.2
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
-interface CreateSourceMarkFilter : Predicate<String> {
+fun interface CreateSourceMarkFilter : Predicate<String> {
     companion object {
         @JvmStatic
-        val ALL: CreateSourceMarkFilter = object : CreateSourceMarkFilter {
-            override fun test(artifactQualifiedName: String): Boolean = true
-        }
+        val ALL: CreateSourceMarkFilter = CreateSourceMarkFilter { true }
 
         @JvmStatic
-        val NONE: CreateSourceMarkFilter = object : CreateSourceMarkFilter {
-            override fun test(artifactQualifiedName: String): Boolean = false
-        }
+        val NONE: CreateSourceMarkFilter = CreateSourceMarkFilter { false }
     }
 }

@@ -6,6 +6,7 @@ import com.sourceplusplus.marker.source.mark.api.ClassSourceMark
 import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
 import com.sourceplusplus.marker.source.mark.api.SourceMark
 import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkJcefComponent
+import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventCode
 import com.sourceplusplus.marker.source.mark.api.key.SourceKey
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
 import com.sourceplusplus.portal.server.display.SourcePortal
@@ -35,6 +36,12 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
                 )
             )
             sourceMark.putUserData(SOURCE_PORTAL, sourcePortal)
+
+            sourceMark.addEventListener { event ->
+                if (event.eventCode == SourceMarkEventCode.MARK_REMOVED) {
+                    event.sourceMark.getUserData(SOURCE_PORTAL)!!.close()
+                }
+            }
         }
         val sourcePortal = sourceMark.getUserData(SOURCE_PORTAL)!!
 

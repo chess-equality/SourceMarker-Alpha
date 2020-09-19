@@ -5,6 +5,7 @@ import com.codahale.metrics.UniformReservoir
 import com.sourceplusplus.portal.server.display.PortalTab
 import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.ArtifactMetrics
 import com.sourceplusplus.protocol.portal.BarTrendCard
@@ -40,7 +41,6 @@ import kotlin.collections.ArrayList
 class OverviewTab : AbstractTab(PortalTab.Overview) {
 
     companion object {
-        val OVERVIEW_TAB_OPENED = "OverviewTabOpened"
         val SET_METRIC_TIME_FRAME = "SetMetricTimeFrame"
         val SET_ACTIVE_CHART_METRIC = "SetActiveChartMetric"
 
@@ -53,7 +53,7 @@ class OverviewTab : AbstractTab(PortalTab.Overview) {
         super.start()
 
         //refresh with stats from cache (if avail)
-        vertx.eventBus().consumer<JsonObject>(OVERVIEW_TAB_OPENED) {
+        vertx.eventBus().consumer<JsonObject>(OverviewTabOpened) {
             log.info("Overview tab opened")
             val portalUuid = it.body().getString("portal_uuid")
             val portal = SourcePortal.getPortal(portalUuid)!!

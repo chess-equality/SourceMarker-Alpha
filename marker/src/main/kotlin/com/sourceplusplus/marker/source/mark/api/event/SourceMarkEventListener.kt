@@ -7,6 +7,6 @@ package com.sourceplusplus.marker.source.mark.api.event
  * @since 0.1.0
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
-interface SourceMarkEventListener {
+fun interface SourceMarkEventListener {
     fun handleEvent(event: SourceMarkEvent)
 }
