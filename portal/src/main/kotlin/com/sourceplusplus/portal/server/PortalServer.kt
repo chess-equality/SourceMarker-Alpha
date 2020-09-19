@@ -59,6 +59,7 @@ class PortalServer : CoroutineVerticle() {
         router.get("/*").handler {
             val fileStream = PortalServer::class.java.classLoader.getResourceAsStream("webroot" + it.request().path())
             it.response().setStatusCode(200).end(Buffer.buffer(Unpooled.copiedBuffer(fileStream!!.readAllBytes())))
+            //todo: add cache headers
         }
 
         // Start the server

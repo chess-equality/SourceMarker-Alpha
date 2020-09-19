@@ -106,13 +106,13 @@ function clearOverview() {
     overviewChart.resize();
 }
 
-function displayCard(card) {
+function displayCard(card) { //todo-chess-equality: [card: BarTrendCard]
     console.log('Displaying card');
 
     document.getElementById('card_' + card.meta.toLowerCase() + '_header').textContent = card.header;
 }
 
-function updateChart(chartData) {
+function updateChart(chartData) { //todo-chess-equality: [chartData: SplintChart]
     console.log('Updating chart');
 
     let cards = ["throughput_average", "responsetime_average", "servicelevelagreement_average"];

@@ -55,7 +55,7 @@ function setupUI() {
 }
 setupUI();
 
-function displayTraces(traceResult) {
+function displayTraces(traceResult) { //todo-chess-equality: [traceResult: TraceResult]
     console.log('Displaying traces - Artifact: ' + traceResult.artifact_simple_name +
         ' - From: ' + moment.unix(Number(traceResult.start)).format() + ' - To: ' + moment.unix(Number(traceResult.stop)).format() +
         ' - Order type: ' + traceResult.order_type + ' - Amount: ' + traceResult.traces.length);
@@ -135,7 +135,7 @@ function displayTraces(traceResult) {
 }
 
 //todo: merge this method with displayTraceStack
-function displayInnerTraces(innerTraceStack) {
+function displayInnerTraces(innerTraceStack) { //todo-chess-equality: [innerTraceStack: List<TraceSpanInfo>]
     portalLog('Displaying inner trace stack: ' + JSON.stringify(innerTraceStack));
 
     //todo: move all this stuff to setupUI()
@@ -230,7 +230,7 @@ function displayInnerTraces(innerTraceStack) {
     }
 }
 
-function displaySpanInfo(spanInfo) {
+function displaySpanInfo(spanInfo) { //todo-chess-equality: [spanInfo: TraceSpan]
     portalLog('Displaying trace span info: ' + JSON.stringify(spanInfo));
 
     //todo: move all this stuff to setupUI()
@@ -301,7 +301,7 @@ function displaySpanInfo(spanInfo) {
     }
 }
 
-function displayTraceStack(traceStack) {
+function displayTraceStack(traceStack) { //todo-chess-equality: [traceStack: List<TraceSpanInfo>]
     traceStack = traceStack.spans; //todo: temp
     portalLog('Displaying trace stack: ' + JSON.stringify(traceStack));
 

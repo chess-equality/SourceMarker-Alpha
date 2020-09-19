@@ -13,7 +13,7 @@ function setupUI() {
 }
 setupUI();
 
-function updateArtifactConfigurationTable(artifact) {
+function updateArtifactConfigurationTable(artifact) { //todo-chess-equality: [artifact: JsonObject]
     $('#artifact_qualified_name').text(artifact.artifact_qualified_name);
     $('#artifact_create_date').text(moment.unix(artifact.create_date).format('LLLL'));
     $('#artifact_last_updated').text(moment.unix(artifact.last_updated).format('LLLL'));
