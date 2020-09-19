@@ -49,6 +49,15 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
     override fun start() {
         super.start()
 
+        vertx.setPeriodic(5000) {
+            SourcePortal.getPortals().forEach {
+                if (it.currentTab == PageType.OVERVIEW) {
+                    //todo: only update if external or internal and currently displaying
+                    vertx.eventBus().send(RefreshOverview, it)
+                }
+            }
+        }
+
         //refresh with stats from cache (if avail)
         vertx.eventBus().consumer<JsonObject>(OverviewTabOpened) {
             log.info("Overview tab opened")
@@ -57,11 +66,6 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
             portal.currentTab = thisTab
             SourcePortal.ensurePortalActive(portal)
             updateUI(portal)
-
-            //todo: stop when tab change/portal closed
-            vertx.setPeriodic(5000) {
-                vertx.eventBus().send(RefreshOverview, portal)
-            }
         }
         vertx.eventBus().consumer<ArtifactMetricResult>(ArtifactMetricUpdated) {
             val artifactMetricResult = it.body()
