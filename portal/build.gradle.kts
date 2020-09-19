@@ -1,6 +1,5 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
-//    kotlin("jvm")
 }
 
 dependencies {
@@ -34,10 +33,4 @@ tasks {
             kotlinOptions.jvmTarget = "1.8"
         }
     }
-//    compileKotlin {
-//        kotlinOptions.jvmTarget = "1.8"
-//    }
-//    compileTestKotlin {
-//        kotlinOptions.jvmTarget = "1.8"
-//    }
 }

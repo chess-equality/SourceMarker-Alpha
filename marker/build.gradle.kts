@@ -4,7 +4,6 @@ plugins {
 
 repositories {
     maven(url = "https://www.jetbrains.com/intellij-repository/releases") { name = "intellij-releases" }
-//    maven(url = "https://www.jetbrains.com/intellij-repository/snapshots") { name = "intellij-snapshots" }
     maven(url = "https://jetbrains.bintray.com/intellij-third-party-dependencies/") { name = "intellij-dependencies" }
 }
 
@@ -52,8 +51,4 @@ tasks {
             kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=compatibility")
         }
     }
-
-//    withType<io.gitlab.arturbosch.detekt.Detekt> {
-//        jvmTarget = "1.8"
-//    }
 }
