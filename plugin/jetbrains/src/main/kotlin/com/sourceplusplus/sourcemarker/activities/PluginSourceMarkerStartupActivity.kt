@@ -7,6 +7,7 @@ import com.fasterxml.jackson.datatype.guava.GuavaModule
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.intellij.openapi.Disposable
+import com.intellij.openapi.application.ApplicationManager
 import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.project.Project
 import com.sourceplusplus.marker.plugin.SourceMarkerPlugin
@@ -67,6 +68,10 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
     }
 
     override fun runActivity(project: Project) {
+        if (ApplicationManager.getApplication().isUnitTestMode) {
+            return //todo: change when integration tests are added
+        }
+
         initPortal()
         initMarker()
         initMapper()
@@ -80,7 +85,7 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         val config = JsonObject().apply {
             put("graphql_endpoint", "http://localhost:12800/graphql")
         }
-        //vertx.deployVerticle(SkywalkingMonitor(), DeploymentOptions().setConfig(config))
+        vertx.deployVerticle(SkywalkingMonitor(), DeploymentOptions().setConfig(config))
     }
 
     private fun initMapper() {
