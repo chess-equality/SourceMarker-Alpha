@@ -1,5 +1,11 @@
 package com.sourceplusplus.protocol.portal
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 enum class TimeIntervalType(val id: String) {
     FIVE_MINUTES("5_minutes"),
     FIFTEEN_MINUTES("15_minutes"),

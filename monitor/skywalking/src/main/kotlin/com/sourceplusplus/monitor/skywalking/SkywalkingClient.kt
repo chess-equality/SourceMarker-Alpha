@@ -20,6 +20,12 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class SkywalkingClient(
     val vertx: Vertx,
     private val apolloClient: ApolloClient,

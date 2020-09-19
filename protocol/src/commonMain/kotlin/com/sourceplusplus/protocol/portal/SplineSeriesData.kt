@@ -1,5 +1,11 @@
 package com.sourceplusplus.protocol.portal
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 data class SplineSeriesData(
     val seriesIndex: Int,
     val times: List<Long>, //todo: Instant

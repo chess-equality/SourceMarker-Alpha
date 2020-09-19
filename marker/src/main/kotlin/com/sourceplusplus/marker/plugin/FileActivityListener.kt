@@ -20,9 +20,8 @@ import org.slf4j.LoggerFactory
 /**
  * todo: description
  *
- * @version 0.2.2
- * @since 0.1.0
- * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class FileActivityListener : FileEditorManagerListener {
 

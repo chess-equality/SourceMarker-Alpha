@@ -5,9 +5,8 @@ import java.util.function.Predicate
 /**
  * todo: description
  *
- * @version 0.2.2
- * @since 0.2.2
- * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 fun interface CreateSourceMarkFilter : Predicate<String> {
     companion object {

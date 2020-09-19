@@ -6,6 +6,12 @@ import java.time.Duration
 import java.time.Period
 import java.time.ZonedDateTime
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 data class GetEndpointMetrics(
     val metricIds: List<String>,
     val endpointId: String,

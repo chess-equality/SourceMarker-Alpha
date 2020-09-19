@@ -11,9 +11,8 @@ import org.slf4j.LoggerFactory
 /**
  * Used to display and configure a given source code artifact.
  *
- * @version 0.3.2
- * @since 0.2.0
- * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
+ * @since 0.0.1
+ * @author <a href="mailto:bfergerson@apache.org">Brandon Fergerson</a>
  */
 class ConfigurationTab(private val pluginAvailable: Boolean) : AbstractTab(PageType.CONFIGURATION) {
 

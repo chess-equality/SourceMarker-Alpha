@@ -16,9 +16,8 @@ import java.util.concurrent.TimeUnit
 /**
  * Represents a view into a specific source artifact.
  *
- * @version 0.3.2
- * @since 0.2.0
- * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
+ * @since 0.0.1
+ * @author <a href="mailto:bfergerson@apache.org">Brandon Fergerson</a>
  */
 class SourcePortal(
     val portalUuid: String,

@@ -4,6 +4,12 @@ import io.vertx.core.buffer.Buffer
 import io.vertx.core.eventbus.MessageCodec
 import java.util.*
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class LocalMessageCodec<T> internal constructor(private val type: Class<T>) : MessageCodec<T, T> {
     override fun encodeToWire(buffer: Buffer, o: T) {
         throw UnsupportedOperationException("Not supported yet.")

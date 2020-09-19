@@ -4,6 +4,12 @@ import monitor.skywalking.protocol.type.Pagination
 import monitor.skywalking.protocol.type.QueryOrder
 import monitor.skywalking.protocol.type.TraceState
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class GetEndpointTraces(
     val appUuid: String,
     val artifactQualifiedName: String,

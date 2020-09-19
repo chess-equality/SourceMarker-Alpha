@@ -17,9 +17,8 @@ import org.slf4j.LoggerFactory
  *  - user hovered over S++ icon
  *  - user opened/closed portal
  *
- * @version 0.3.2
- * @since 0.1.0
- * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
+ * @since 0.0.1
+ * @author <a href="mailto:bfergerson@apache.org">Brandon Fergerson</a>
  */
 class PortalViewTracker : AbstractVerticle() {
 

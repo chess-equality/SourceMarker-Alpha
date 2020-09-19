@@ -22,6 +22,9 @@ import java.nio.charset.StandardCharsets
 
 /**
  * Based off FinerGit
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
     //todo: ability to add to existing mapped repo

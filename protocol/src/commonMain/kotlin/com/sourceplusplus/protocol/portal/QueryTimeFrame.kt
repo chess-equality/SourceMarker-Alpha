@@ -1,5 +1,11 @@
 package com.sourceplusplus.protocol.portal
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 enum class QueryTimeFrame(val minutes: Int) {
     LAST_5_MINUTES(5),
     LAST_15_MINUTES(15),

@@ -8,6 +8,12 @@ import io.vertx.kotlin.coroutines.CoroutineVerticle
 import monitor.skywalking.protocol.metadata.GetTimeInfoQuery
 import org.slf4j.LoggerFactory
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class SkywalkingMonitor : CoroutineVerticle() {
 
     companion object {

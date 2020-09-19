@@ -11,6 +11,12 @@ import kotlinx.coroutines.launch
 import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import java.time.ZonedDateTime
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class ServiceTracker(private val skywalkingClient: SkywalkingClient) : CoroutineVerticle() {
 
     var currentService: GetAllServicesQuery.Result? = null

@@ -9,9 +9,8 @@ import io.vertx.core.json.JsonObject
 /**
  * Contains common portal tab functionality.
  *
- * @version 0.3.2
- * @since 0.2.0
- * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
+ * @since 0.0.1
+ * @author <a href="mailto:bfergerson@apache.org">Brandon Fergerson</a>
  */
 abstract class AbstractTab(val thisTab: PageType) : AbstractVerticle() {
 

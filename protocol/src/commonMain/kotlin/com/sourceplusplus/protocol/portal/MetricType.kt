@@ -1,5 +1,11 @@
 package com.sourceplusplus.protocol.portal
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 enum class MetricType {
     Throughput_Average,
     ResponseTime_Average,

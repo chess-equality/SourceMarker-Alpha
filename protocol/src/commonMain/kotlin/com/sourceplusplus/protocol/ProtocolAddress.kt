@@ -1,5 +1,11 @@
 package com.sourceplusplus.protocol
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class ProtocolAddress {
     class Global {
         companion object {

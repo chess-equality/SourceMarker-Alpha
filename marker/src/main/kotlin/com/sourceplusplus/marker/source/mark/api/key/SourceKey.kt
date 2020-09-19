@@ -7,11 +7,9 @@ import com.sourceplusplus.marker.source.mark.inlay.InlayMark
 /**
  * todo: description
  *
- * @version 0.2.2
- * @since 0.1.0
- * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-@Suppress("unused")
 data class SourceKey<T>(val name: String) {
     companion object {
         @JvmField

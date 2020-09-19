@@ -34,9 +34,8 @@ import kotlin.collections.ArrayList
  *  - Minimum/Maximum response time
  *  - Average SLA
  *
- * @version 0.3.2
- * @since 0.1.0
- * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
+ * @since 0.0.1
+ * @author <a href="mailto:bfergerson@apache.org">Brandon Fergerson</a>
  */
 class OverviewTab : AbstractTab(PageType.OVERVIEW) {
 

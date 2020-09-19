@@ -4,8 +4,13 @@ import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
 import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEvent
 import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventCode
 import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventListener
-import com.sourceplusplus.mentor.api.impl.SourceMentorImpl
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class PluginSourceMarkEventListener : SourceMarkEventListener {
 
     //private val sourceMentor = SourceMentorImpl()

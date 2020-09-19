@@ -5,6 +5,12 @@ import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
 import com.sourceplusplus.protocol.advice.method.MethodAdvice
 import org.slf4j.LoggerFactory
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class SourceMentorImpl : SourceMentor {
 
     companion object {

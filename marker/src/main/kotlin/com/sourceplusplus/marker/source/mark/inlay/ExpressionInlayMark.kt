@@ -9,9 +9,8 @@ import com.sourceplusplus.marker.plugin.SourceMarkerPlugin.configuration as plug
 /**
  * todo: description
  *
- * @version 0.2.2
- * @since 0.2.0
- * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 open class ExpressionInlayMark @JvmOverloads constructor(
         override val sourceFileMarker: SourceFileMarker,

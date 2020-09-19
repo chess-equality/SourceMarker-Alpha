@@ -37,6 +37,12 @@ import io.vertx.ext.web.handler.sockjs.SockJSHandler
 import org.slf4j.LoggerFactory
 import java.awt.Dimension
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposable {
 
     companion object {

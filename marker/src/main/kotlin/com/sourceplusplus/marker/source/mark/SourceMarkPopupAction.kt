@@ -15,9 +15,8 @@ import org.jetbrains.annotations.NotNull
 /**
  * todo: description
  *
- * @version 0.2.2
- * @since 0.1.4
- * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 open class SourceMarkPopupAction : AnAction() {
 

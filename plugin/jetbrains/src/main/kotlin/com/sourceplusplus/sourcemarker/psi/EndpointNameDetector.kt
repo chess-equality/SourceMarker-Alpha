@@ -4,6 +4,12 @@ import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
 import org.jetbrains.uast.expressions.UInjectionHost
 import org.jetbrains.uast.java.JavaUQualifiedReferenceExpression
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class EndpointNameDetector {
 
     private val requestMappingAnnotation = "org.springframework.web.bind.annotation.RequestMapping"
