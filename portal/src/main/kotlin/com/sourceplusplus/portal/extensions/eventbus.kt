@@ -8,7 +8,6 @@ import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.UpdateChart
 import com.sourceplusplus.protocol.artifact.trace.TraceResult
 import com.sourceplusplus.protocol.artifact.trace.TraceSpan
 import com.sourceplusplus.protocol.artifact.trace.TraceSpanInfo
-import com.sourceplusplus.protocol.artifact.trace.TraceSpanStack
 import com.sourceplusplus.protocol.portal.BarTrendCard
 import com.sourceplusplus.protocol.portal.SplineChart
 import io.vertx.core.eventbus.EventBus
@@ -39,7 +38,11 @@ fun EventBus.displaySpanInfo(portalUuid: String, span: JsonObject) {
 }
 
 fun EventBus.displayTraceStack(portalUuid: String, traceSpans: List<TraceSpanInfo>) {
-    send(DisplayTraceStack(portalUuid), JsonObject(Json.encode(TraceSpanStack(traceSpans))))
+    val arr = JsonArray()
+    traceSpans.forEach {
+        arr.add(JsonObject(Json.encode(it)))
+    }
+    send(DisplayTraceStack(portalUuid), arr)
 }
 
 @Deprecated("")

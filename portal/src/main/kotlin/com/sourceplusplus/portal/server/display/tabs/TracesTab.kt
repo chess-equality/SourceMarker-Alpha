@@ -8,12 +8,12 @@ import com.sourceplusplus.portal.server.display.tabs.views.TracesView
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
 import com.sourceplusplus.protocol.ArtifactNameUtils.removePackageAndClassName
 import com.sourceplusplus.protocol.ArtifactNameUtils.removePackageNames
-import com.sourceplusplus.protocol.ProtocolAddress
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ArtifactTraceUpdated
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplaySpanInfo
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplayTraceStack
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplayTraces
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.GetTraceStack
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.QueryTraceStack
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.RefreshTraces
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.TracesTabOpened
 import com.sourceplusplus.protocol.artifact.trace.*
@@ -225,6 +225,19 @@ class TracesTab : AbstractTab(PageType.TRACES) {
                 messageHandler.reply(traceStack)
 //                context.stop()
             } else {
+                vertx.eventBus().request<TraceSpanStackQueryResult>(QueryTraceStack, globalTraceId) {
+                    if (it.failed()) {
+                        log.error("Failed to get trace spans", it.cause())
+                    } else {
+                        representation.cacheTraceStack(
+                            globalTraceId, handleTraceStack(
+                                appUuid, artifactQualifiedName, it.result().body()
+                            )
+                        )
+                        messageHandler.reply(representation.getTraceStack(globalTraceId))
+//                        context.stop()
+                    }
+                }
 //                val traceStackQuery = TraceSpanStackQuery.builder()
 //                    .oneLevelDeep(true)
 //                    .traceId(globalTraceId).build()
@@ -436,21 +449,23 @@ class TracesTab : AbstractTab(PageType.TRACES) {
             val timeTook = humanReadableDuration(Duration.ofMillis(timeTookMs))
 
             //detect if operation name is really an artifact name
-//            val operationName = ""
-//            if (QUALIFIED_NAME_PATTERN.matcher(span.endpointName).matches()) {
-//                spanInfo.span(span = span.withArtifactQualifiedName(span.endpointName()))
-//            }
-//            if (span.artifactQualifiedName) {
-//                spanInfo.operationName(removePackageAndClassName(removePackageNames(span.artifactQualifiedName())))
-//            } else {
-//                spanInfo.operationName(span.endpointName())
-//            }
+            val finalSpan = if (QUALIFIED_NAME_PATTERN.matcher(span.endpointName!!).matches()) {
+                span.copy(artifactQualifiedName = span.endpointName)
+            } else {
+                span
+            }
+            val operationName = if (finalSpan.artifactQualifiedName != null) {
+                removePackageAndClassName(removePackageNames(finalSpan.artifactQualifiedName))
+            } else {
+                finalSpan.endpointName
+            }
 
             spanInfos.add(
                 TraceSpanInfo(
-                    span = span,
+                    span = finalSpan,
                     appUuid = appUuid,
                     rootArtifactQualifiedName = rootArtifactQualifiedName,
+                    operationName = operationName,
                     timeTook = timeTook,
                     totalTracePercent = if (totalTime == 0L) {
                         0.0

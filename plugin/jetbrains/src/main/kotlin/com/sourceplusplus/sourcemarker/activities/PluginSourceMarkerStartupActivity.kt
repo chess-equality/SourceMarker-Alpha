@@ -22,6 +22,7 @@ import com.sourceplusplus.portal.server.PortalServer
 import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.trace.TraceResult
+import com.sourceplusplus.protocol.artifact.trace.TraceSpanStackQueryResult
 import com.sourceplusplus.sourcemarker.listeners.PluginSourceMarkEventListener
 import com.sourceplusplus.sourcemarker.listeners.PortalEventListener
 import io.vertx.core.DeploymentOptions
@@ -46,6 +47,7 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
             registerCodec(vertx, SourcePortal::class.java)
             registerCodec(vertx, ArtifactMetricResult::class.java)
             registerCodec(vertx, TraceResult::class.java)
+            registerCodec(vertx, TraceSpanStackQueryResult::class.java)
 
             DatabindCodec.mapper().registerModule(GuavaModule())
             DatabindCodec.mapper().registerModule(Jdk8Module())

@@ -6,6 +6,7 @@ import com.sourceplusplus.monitor.skywalking.toProtocol
 import com.sourceplusplus.protocol.artifact.trace.Trace
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType
 import com.sourceplusplus.protocol.artifact.trace.TraceResult
+import com.sourceplusplus.protocol.artifact.trace.TraceSpanStackQueryResult
 import io.vertx.core.Vertx
 import io.vertx.kotlin.core.eventbus.requestAwait
 import io.vertx.kotlin.coroutines.CoroutineVerticle
@@ -64,6 +65,21 @@ class EndpointTracesTracker(private val skywalkingClient: SkywalkingClient) : Co
                 )
             }
         }
+        vertx.eventBus().localConsumer<String>("$address.getTraceStack") {
+            launch(vertx.dispatcher()) {
+                val traceStack = skywalkingClient.queryTraceStack(it.body())
+                if (traceStack != null) {
+                    it.reply(
+                        TraceSpanStackQueryResult(
+                            traceSpans = traceStack.spans.map { it.toProtocol() },
+                            total = traceStack.spans.size
+                        )
+                    )
+                } else {
+                    it.reply(null)
+                }
+            }
+        }
     }
 
     companion object {
@@ -72,6 +88,12 @@ class EndpointTracesTracker(private val skywalkingClient: SkywalkingClient) : Co
         suspend fun getTraces(request: GetEndpointTraces, vertx: Vertx): TraceResult {
             return vertx.eventBus()
                 .requestAwait<TraceResult>("$address.getTraces", request)
+                .body()
+        }
+
+        suspend fun getTraceStack(traceId: String, vertx: Vertx): TraceSpanStackQueryResult {
+            return vertx.eventBus()
+                .requestAwait<TraceSpanStackQueryResult>("$address.getTraceStack", traceId)
                 .body()
         }
     }

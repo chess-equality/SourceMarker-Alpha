@@ -28,6 +28,7 @@ class ProtocolAddress {
             const val GetTraceStack = "GetTraceStack"
             const val RefreshTraces = "RefreshTraces"
             const val ArtifactTraceUpdated = "ArtifactTraceUpdated"
+            const val QueryTraceStack = "QueryTraceStack"
 
             //Portal - Configuration
             const val ConfigurationTabOpened = "ConfigurationTabOpened"

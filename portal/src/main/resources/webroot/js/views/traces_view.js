@@ -302,7 +302,6 @@ function displaySpanInfo(spanInfo) { //todo-chess-equality: [spanInfo: TraceSpan
 }
 
 function displayTraceStack(traceStack) { //todo-chess-equality: [traceStack: List<TraceSpanInfo>]
-    traceStack = traceStack.spans; //todo: temp
     portalLog('Displaying trace stack: ' + JSON.stringify(traceStack));
 
     //todo: move all this stuff to setupUI()

@@ -53,19 +53,6 @@ fun QueryBasicTracesQuery.Trace.toProtocol(): Trace {
     )
 }
 
-fun QueryTraceQuery.Result.toProtocol(): TraceSpanStack {
-    return TraceSpanStack(spans.map {
-        TraceSpanInfo(
-            span = it.toProtocol(),
-            appUuid = "todo1",
-            operationName = "todo2",
-            rootArtifactQualifiedName = "todo3",
-            timeTook = "todo4",
-            totalTracePercent = 10.0
-        )
-    })
-}
-
 fun QueryTraceQuery.Log.toProtocol(): TraceSpanLogEntry {
     return TraceSpanLogEntry(
         time = Instant.fromEpochMilliseconds(time as Long),
@@ -90,8 +77,8 @@ fun QueryTraceQuery.Span.toProtocol(): TraceSpan {
         parentSpanId = parentSpanId,
         refs = refs.map { it.toProtocol() },
         serviceCode = serviceCode,
-        startTime = startTime as Long,
-        endTime = endTime as Long,
+        startTime = (startTime as BigDecimal).toLong(),
+        endTime = (endTime as BigDecimal).toLong(),
         endpointName = endpointName,
         type = type,
         peer = peer,

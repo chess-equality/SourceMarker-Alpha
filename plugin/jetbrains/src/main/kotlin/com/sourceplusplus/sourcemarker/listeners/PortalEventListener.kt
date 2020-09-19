@@ -14,6 +14,7 @@ import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ArtifactMetricUpdated
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ArtifactTraceUpdated
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClosePortal
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.QueryTraceStack
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.RefreshOverview
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.RefreshTraces
 import com.sourceplusplus.sourcemarker.actions.PluginSourceMarkPopupAction.Companion.ENDPOINT_ID
@@ -86,6 +87,13 @@ class PortalEventListener : CoroutineVerticle() {
                     )
                     vertx.eventBus().send(ArtifactTraceUpdated, traceResult)
                 }
+            }
+        }
+
+        vertx.eventBus().consumer<String>(QueryTraceStack) {handler ->
+            val traceId = handler.body()
+            GlobalScope.launch(vertx.dispatcher()) {
+                handler.reply(EndpointTracesTracker.getTraceStack(traceId, vertx))
             }
         }
     }
