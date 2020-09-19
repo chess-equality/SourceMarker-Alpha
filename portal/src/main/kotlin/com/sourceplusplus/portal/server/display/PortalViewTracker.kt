@@ -1,9 +1,14 @@
 package com.sourceplusplus.portal.server.display
 
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.CanOpenPortal
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ChangedPortalArtifact
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedViewAsExternalPortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClosePortal
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.KeepAlivePortal
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.UpdatePortalArtifact
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.json.JsonObject
+import org.slf4j.LoggerFactory
 
 /**
  * Used to track the current viewable state of the Source++ Portal.
@@ -19,30 +24,25 @@ import io.vertx.core.json.JsonObject
 class PortalViewTracker : AbstractVerticle() {
 
     companion object {
-        val KEEP_ALIVE_PORTAL = "KeepAlivePortal"
-        val UPDATE_PORTAL_ARTIFACT = "UpdatePortalArtifact"
-        val CAN_OPEN_PORTAL = "CanOpenPortal"
-        val OPENED_PORTAL = "OpenedPortal"
-        val CLOSED_PORTAL = "ClosedPortal"
-        val CHANGED_PORTAL_ARTIFACT = "ChangedPortalArtifact"
+        private val log = LoggerFactory.getLogger(PortalViewTracker::class.java)
     }
 
     override fun start() {
         //get portal from cache to ensure it remains active
-        vertx.eventBus().consumer<JsonObject>(KEEP_ALIVE_PORTAL) { messageHandler ->
+        vertx.eventBus().consumer<JsonObject>(KeepAlivePortal) { messageHandler ->
             val portalUuid = JsonObject.mapFrom(messageHandler.body()).getString("portal_uuid")
             val portal = SourcePortal.getPortal(portalUuid)
             if (portal != null) {
                 SourcePortal.ensurePortalActive(portal)
                 messageHandler.reply(200)
             } else {
-//                log.warn("Failed to find portal. Portal UUID: {}", portalUuid)
+                log.warn("Failed to find portal. Portal UUID: {}", portalUuid)
                 messageHandler.fail(404, "Portal not found")
             }
         }
 
         //user wants to open portal
-        vertx.eventBus().consumer<Void>(CAN_OPEN_PORTAL) { messageHandler ->
+        vertx.eventBus().consumer<Void>(CanOpenPortal) { messageHandler ->
             messageHandler.reply(true)
         }
 
@@ -74,21 +74,21 @@ class PortalViewTracker : AbstractVerticle() {
 ////            }
 //        }
 
-        vertx.eventBus().consumer<JsonObject>(UPDATE_PORTAL_ARTIFACT) {
+        vertx.eventBus().consumer<JsonObject>(UpdatePortalArtifact) {
             val request = JsonObject.mapFrom(it.body())
             val portalUuid = request.getString("portal_uuid")
             val artifactQualifiedName = request.getString("artifact_qualified_name")
 
             val portal = SourcePortal.getPortal(portalUuid)!!
-            if (artifactQualifiedName != portal.portalUI.viewingPortalArtifact) {
-                portal.portalUI.viewingPortalArtifact = artifactQualifiedName
+            if (artifactQualifiedName != portal.viewingPortalArtifact) {
+                portal.viewingPortalArtifact = artifactQualifiedName
                 vertx.eventBus().publish(
-                    CHANGED_PORTAL_ARTIFACT,
+                    ChangedPortalArtifact,
                     JsonObject().put("portal_uuid", portalUuid)
                         .put("artifact_qualified_name", artifactQualifiedName)
                 )
             }
         }
-//        log.info("{} started", getClass().getSimpleName())
+        log.info("{} started", javaClass.simpleName)
     }
 }

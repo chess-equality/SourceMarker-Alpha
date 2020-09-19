@@ -3,7 +3,6 @@ package com.sourceplusplus.portal.server.display.tabs
 import com.sourceplusplus.portal.extensions.displaySpanInfo
 import com.sourceplusplus.portal.extensions.displayTraceStack
 import com.sourceplusplus.portal.extensions.displayTraces
-import com.sourceplusplus.portal.server.display.PortalTab
 import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.portal.server.display.tabs.views.TracesView
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
@@ -12,8 +11,10 @@ import com.sourceplusplus.protocol.ArtifactNameUtils.removePackageNames
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplaySpanInfo
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplayTraceStack
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplayTraces
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.GetTraceStack
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.TracesTabOpened
 import com.sourceplusplus.protocol.artifact.trace.*
+import com.sourceplusplus.protocol.portal.PageType
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
@@ -28,13 +29,11 @@ import java.util.regex.Pattern
  * @since 0.1.0
  * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
  */
-class TracesTab : AbstractTab(PortalTab.Traces) {
+class TracesTab : AbstractTab(PageType.TRACES) {
 
     companion object {
-        val GET_TRACE_STACK = "GetTraceStack"
-        val QUALIFIED_NAME_PATTERN = Pattern.compile(".+\\..+\\(.*\\)")
-
         private val log = LoggerFactory.getLogger(TracesTab::class.java)
+        val QUALIFIED_NAME_PATTERN = Pattern.compile(".+\\..+\\(.*\\)")!!
     }
 
     override fun start() {
@@ -54,9 +53,9 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
             val orderType = message.getString("trace_order_type")
             if (orderType != null) {
                 //user possibly changed current trace order type; todo: create event
-                portal.portalUI.tracesView.orderType = TraceOrderType.valueOf(orderType.toUpperCase())
+                portal.tracesView.orderType = TraceOrderType.valueOf(orderType.toUpperCase())
             }
-            portal.portalUI.currentTab = PortalTab.Traces
+            portal.currentTab = thisTab
             SourcePortal.ensurePortalActive(portal)
             updateUI(portal)
 
@@ -87,7 +86,7 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
                 log.warn("Ignoring traces tab opened event. Unable to find portal: {}", portalUuid)
             } else {
                 if (portal.external) {
-                    portal.portalUI.tracesView.viewTraceAmount = 25
+                    portal.tracesView.viewTraceAmount = 25
                 }
 
 //                val traceQuery = TraceQuery.builder()
@@ -131,18 +130,18 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
 
             if (request.getString("trace_id") == null) {
                 val portal = SourcePortal.getPortal(request.getString("portal_uuid"))!!
-                portal.portalUI.tracesView.viewType = TracesView.Companion.ViewType.TRACE_STACK
+                portal.tracesView.viewType = TracesView.Companion.ViewType.TRACE_STACK
                 updateUI(portal)
             } else {
-                vertx.eventBus().request<JsonArray>(GET_TRACE_STACK, request) {
+                vertx.eventBus().request<JsonArray>(GetTraceStack, request) {
                     if (it.failed()) {
                         it.cause().printStackTrace()
                         log.error("Failed to display trace stack", it.cause())
                     } else {
                         val portal = SourcePortal.getPortal(request.getString("portal_uuid"))!!
-                        portal.portalUI.tracesView.viewType = TracesView.Companion.ViewType.TRACE_STACK
-                        portal.portalUI.tracesView.traceStack = it.result().body() as JsonArray
-                        portal.portalUI.tracesView.traceId = request.getString("trace_id")
+                        portal.tracesView.viewType = TracesView.Companion.ViewType.TRACE_STACK
+                        portal.tracesView.traceStack = it.result().body() as JsonArray
+                        portal.tracesView.traceId = request.getString("trace_id")
                         updateUI(portal)
                     }
                 }
@@ -151,7 +150,7 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
 
         vertx.eventBus().consumer<JsonObject>(ClickedDisplayTraces) {
             val portal = SourcePortal.getPortal((it.body() as JsonObject).getString("portal_uuid"))!!
-            val representation = portal.portalUI.tracesView
+            val representation = portal.tracesView
             representation.viewType = TracesView.Companion.ViewType.TRACES
 
             if (representation.innerTraceStack.size > 0) {
@@ -184,7 +183,7 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
 
             val portalUuid = spanInfoRequest.getString("portal_uuid")
             val portal = SourcePortal.getPortal(portalUuid)!!
-            val representation = portal.portalUI.tracesView
+            val representation = portal.tracesView
             representation.viewType = TracesView.Companion.ViewType.SPAN_INFO
             representation.traceId = spanInfoRequest.getString("trace_id")
             representation.spanId = spanInfoRequest.getInteger("span_id")
@@ -192,7 +191,7 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
         }
 
         //query core for trace stack (or get from cache)
-        vertx.eventBus().consumer<JsonObject>(GET_TRACE_STACK) { messageHandler ->
+        vertx.eventBus().consumer<JsonObject>(GetTraceStack) { messageHandler ->
 //            val timer = PortalBootstrap.portalMetrics.timer(GET_TRACE_STACK)
 //            val context = timer.time()
             val request = messageHandler.body() as JsonObject
@@ -206,7 +205,7 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
             )
 
             val portal = SourcePortal.getPortal(portalUuid)!!
-            val representation = portal.portalUI.tracesView
+            val representation = portal.tracesView
             val traceStack = representation.getTraceStack(globalTraceId)
             if (traceStack != null) {
                 log.trace("Got trace spans: {} from cache - Stack size: {}", globalTraceId, traceStack.size())
@@ -236,11 +235,11 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
     }
 
     override fun updateUI(portal: SourcePortal) {
-        if (portal.portalUI.currentTab != thisTab) {
+        if (portal.currentTab != thisTab) {
             return
         }
 
-        when (portal.portalUI.tracesView.viewType) {
+        when (portal.tracesView.viewType) {
             TracesView.Companion.ViewType.TRACES -> displayTraces(portal)
             TracesView.Companion.ViewType.TRACE_STACK -> displayTraceStack(portal)
             TracesView.Companion.ViewType.SPAN_INFO -> displaySpanInfo(portal)
@@ -248,8 +247,8 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
     }
 
     fun displayTraces(portal: SourcePortal) {
-        if (portal.portalUI.tracesView.artifactTraceResult != null) {
-            val artifactTraceResult = portal.portalUI.tracesView.artifactTraceResult!!
+        if (portal.tracesView.artifactTraceResult != null) {
+            val artifactTraceResult = portal.tracesView.artifactTraceResult!!
             vertx.eventBus().displayTraces(portal.portalUuid, artifactTraceResult)
             log.debug(
                 "Displayed traces for artifact: {} - Type: {} - Trace size: {}",
@@ -260,7 +259,7 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
     }
 
     fun displayTraceStack(portal: SourcePortal) {
-        val representation = portal.portalUI.tracesView
+        val representation = portal.tracesView
         val traceId = representation.traceId
         val traceStack = representation.traceStack
 
@@ -281,9 +280,9 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
     }
 
     fun displaySpanInfo(portal: SourcePortal) {
-        val traceId = portal.portalUI.tracesView.traceId!!
-        val spanId = portal.portalUI.tracesView.spanId
-        val representation = portal.portalUI.tracesView
+        val traceId = portal.tracesView.traceId!!
+        val spanId = portal.tracesView.spanId
+        val representation = portal.tracesView
         val traceStack = if (representation.innerTrace) {
             representation.innerTraceStack.peek()
         } else {
@@ -320,7 +319,7 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
 //                        })
                     break
                 } else if (spanArtifactQualifiedName == null ||
-                    spanArtifactQualifiedName == portal.portalUI.viewingPortalArtifact
+                    spanArtifactQualifiedName == portal.viewingPortalArtifact
                 ) {
                     vertx.eventBus().displaySpanInfo(portal.portalUuid, span)
                     log.info("Displayed trace span info: {}", span)
@@ -401,11 +400,11 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
         )
 
         portals.forEach {
-            val representation = it.portalUI.tracesView
+            val representation = it.tracesView
             representation.cacheArtifactTraceResult(updatedArtifactTraceResult)
 
-            if (it.portalUI.viewingPortalArtifact == updatedArtifactTraceResult.artifactQualifiedName
-                && it.portalUI.tracesView.viewType == TracesView.Companion.ViewType.TRACES
+            if (it.viewingPortalArtifact == updatedArtifactTraceResult.artifactQualifiedName
+                && it.tracesView.viewType == TracesView.Companion.ViewType.TRACES
             ) {
                 updateUI(it)
             }

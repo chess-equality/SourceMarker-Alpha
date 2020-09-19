@@ -3,15 +3,30 @@ package com.sourceplusplus.protocol
 class ProtocolAddress {
     class Global {
         companion object {
+            //Portal
             const val ClosePortal = "ClosePortal"
+            const val ClickedViewAsExternalPortal = "ClickedViewAsExternalPortal"
+            const val KeepAlivePortal = "KeepAlivePortal"
+            const val UpdatePortalArtifact = "UpdatePortalArtifact"
+            const val CanOpenPortal = "CanOpenPortal"
+            const val OpenedPortal = "OpenedPortal"
+            const val ClosedPortal = "ClosedPortal"
+            const val ChangedPortalArtifact = "ChangedPortalArtifact"
 
+            //Portal - Overview
             const val OverviewTabOpened = "OverviewTabOpened"
+            const val SetMetricTimeFrame = "SetMetricTimeFrame"
+            const val SetActiveChartMetric = "SetActiveChartMetric"
+
+            //Portal - Traces
             const val TracesTabOpened = "TracesTabOpened"
-            const val ConfigurationTabOpened = "ConfigurationTabOpened"
             const val ClickedDisplayTraces = "ClickedDisplayTraces"
             const val ClickedDisplayTraceStack = "ClickedDisplayTraceStack"
             const val ClickedDisplaySpanInfo = "ClickedDisplaySpanInfo"
-            const val ClickedViewAsExternalPortal = "ClickedViewAsExternalPortal"
+            const val GetTraceStack = "GetTraceStack"
+
+            //Portal - Configuration
+            const val ConfigurationTabOpened = "ConfigurationTabOpened"
         }
     }
 

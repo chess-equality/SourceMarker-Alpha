@@ -2,17 +2,15 @@ package com.sourceplusplus.portal.server.display.tabs
 
 import com.codahale.metrics.Histogram
 import com.codahale.metrics.UniformReservoir
-import com.sourceplusplus.portal.server.display.PortalTab
 import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetActiveChartMetric
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetMetricTimeFrame
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.ArtifactMetrics
-import com.sourceplusplus.protocol.portal.BarTrendCard
+import com.sourceplusplus.protocol.portal.*
 import com.sourceplusplus.protocol.portal.MetricType.*
-import com.sourceplusplus.protocol.portal.QueryTimeFrame
-import com.sourceplusplus.protocol.portal.SplineChart
-import com.sourceplusplus.protocol.portal.SplineSeriesData
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
 import kotlinx.datetime.Instant
@@ -38,12 +36,9 @@ import kotlin.collections.ArrayList
  * @since 0.1.0
  * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
  */
-class OverviewTab : AbstractTab(PortalTab.Overview) {
+class OverviewTab : AbstractTab(PageType.OVERVIEW) {
 
     companion object {
-        val SET_METRIC_TIME_FRAME = "SetMetricTimeFrame"
-        val SET_ACTIVE_CHART_METRIC = "SetActiveChartMetric"
-
         private val log = LoggerFactory.getLogger(OverviewTab::class.java)
     }
 
@@ -57,7 +52,7 @@ class OverviewTab : AbstractTab(PortalTab.Overview) {
             log.info("Overview tab opened")
             val portalUuid = it.body().getString("portal_uuid")
             val portal = SourcePortal.getPortal(portalUuid)!!
-            portal.portalUI.currentTab = PortalTab.Overview
+            portal.currentTab = thisTab
             SourcePortal.ensurePortalActive(portal)
             updateUI(portal)
         }
@@ -70,15 +65,15 @@ class OverviewTab : AbstractTab(PortalTab.Overview) {
 //                }
 //        }
 
-        vertx.eventBus().consumer<JsonObject>(SET_METRIC_TIME_FRAME) {
+        vertx.eventBus().consumer<JsonObject>(SetMetricTimeFrame) {
             val request = JsonObject.mapFrom(it.body())
             val portal = SourcePortal.getPortal(request.getString("portal_uuid"))!!
-            val view = portal.portalUI.overviewView
+            val view = portal.overviewView
             view.timeFrame = QueryTimeFrame.valueOf(request.getString("metric_time_frame").toUpperCase())
             log.info("Overview time frame set to: " + view.timeFrame)
             updateUI(portal)
 
-            //subscribe (re-subscribe) to get latest stats
+//            //subscribe (re-subscribe) to get latest stats
 //            val subscribeRequest = ArtifactMetricSubscribeRequest.builder()
 //                .appUuid(portal.appUuid)
 //                .artifactQualifiedName(portal.portalUI.viewingPortalArtifact)
@@ -92,21 +87,21 @@ class OverviewTab : AbstractTab(PortalTab.Overview) {
 //                }
 //            })
         }
-        vertx.eventBus().consumer<JsonObject>(SET_ACTIVE_CHART_METRIC) {
+        vertx.eventBus().consumer<JsonObject>(SetActiveChartMetric) {
             val request = JsonObject.mapFrom(it.body())
             val portal = SourcePortal.getPortal(request.getString("portal_uuid"))!!
-            portal.portalUI.overviewView.activeChartMetric = valueOf(request.getString("metric_type"))
+            portal.overviewView.activeChartMetric = valueOf(request.getString("metric_type"))
             updateUI(portal)
         }
         log.info("{} started", javaClass.simpleName)
     }
 
     override fun updateUI(portal: SourcePortal) {
-        if (portal.portalUI.currentTab != thisTab) {
+        if (portal.currentTab != thisTab) {
             return
         }
 
-        val artifactMetricResult = portal.portalUI.overviewView.metricResult ?: return
+        val artifactMetricResult = portal.overviewView.metricResult ?: return
         if (log.isTraceEnabled) {
             log.trace(
                 "Artifact metrics updated. Portal uuid: {} - App uuid: {} - Artifact qualified name: {} - Time frame: {}",
@@ -118,7 +113,7 @@ class OverviewTab : AbstractTab(PortalTab.Overview) {
 
         artifactMetricResult.artifactMetrics.forEach {
             updateCard(portal, artifactMetricResult, it)
-            if (it.metricType == portal.portalUI.overviewView.activeChartMetric) {
+            if (it.metricType == portal.overviewView.activeChartMetric) {
                 updateSplineGraph(portal, artifactMetricResult, it)
             }
         }

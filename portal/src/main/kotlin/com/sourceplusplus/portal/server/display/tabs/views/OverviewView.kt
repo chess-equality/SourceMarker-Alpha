@@ -1,6 +1,6 @@
 package com.sourceplusplus.portal.server.display.tabs.views
 
-import com.sourceplusplus.portal.server.display.PortalUI
+import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.portal.MetricType
 import com.sourceplusplus.protocol.portal.QueryTimeFrame
@@ -14,7 +14,7 @@ import java.util.concurrent.ConcurrentHashMap
  * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
  */
 class OverviewView(
-    val portalUI: PortalUI
+    val portal: SourcePortal
 ) {
 
     var metricResultCache = ConcurrentHashMap<String, MutableMap<QueryTimeFrame, ArtifactMetricResult>>()
@@ -36,7 +36,7 @@ class OverviewView(
     }
 
     val metricResult: ArtifactMetricResult?
-        get() = getMetricResult(portalUI.viewingPortalArtifact, timeFrame)
+        get() = getMetricResult(portal.viewingPortalArtifact, timeFrame)
 
     fun getMetricResult(artifactQualifiedName: String, timeFrame: QueryTimeFrame): ArtifactMetricResult? {
         return metricResultCache[artifactQualifiedName]?.get(timeFrame)

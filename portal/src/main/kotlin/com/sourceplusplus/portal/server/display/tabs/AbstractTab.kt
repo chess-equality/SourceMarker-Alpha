@@ -1,8 +1,8 @@
 package com.sourceplusplus.portal.server.display.tabs
 
-import com.sourceplusplus.portal.server.display.PortalViewTracker
-import com.sourceplusplus.portal.server.display.PortalTab
 import com.sourceplusplus.portal.server.display.SourcePortal
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OpenedPortal
+import com.sourceplusplus.protocol.portal.PageType
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.json.JsonObject
 
@@ -13,12 +13,12 @@ import io.vertx.core.json.JsonObject
  * @since 0.2.0
  * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
  */
-abstract class AbstractTab(val thisTab: PortalTab) : AbstractVerticle() {
+abstract class AbstractTab(val thisTab: PageType) : AbstractVerticle() {
 
     override fun start() {
-        vertx.eventBus().consumer<JsonObject>(PortalViewTracker.OPENED_PORTAL) {
+        vertx.eventBus().consumer<JsonObject>(OpenedPortal) {
             val portal = SourcePortal.getPortal(JsonObject.mapFrom(it.body()).getString("portal_uuid"))!!
-            if (portal.portalUI.currentTab == thisTab) {
+            if (portal.currentTab == thisTab) {
                 updateUI(portal)
             }
         }

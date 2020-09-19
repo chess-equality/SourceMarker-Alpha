@@ -12,7 +12,7 @@ class PortalEventListener : CoroutineVerticle() {
     override suspend fun start() {
         vertx.eventBus().consumer<SourcePortal>(ClosePortal) {
             val sourceMark =
-                SourceMarkerPlugin.getSourceMark(it.body().portalUI.viewingPortalArtifact, SourceMark.Type.GUTTER)
+                SourceMarkerPlugin.getSourceMark(it.body().viewingPortalArtifact, SourceMark.Type.GUTTER)
             if (sourceMark != null) {
                 ApplicationManager.getApplication().invokeLater(sourceMark::closePopup)
             }
