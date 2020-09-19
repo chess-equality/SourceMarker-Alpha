@@ -23,8 +23,6 @@ import com.intellij.psi.PsiMethod
 import com.intellij.psi.PsiStatement
 import com.intellij.ui.paint.EffectPainter
 import com.sourceplusplus.marker.MarkerUtils
-import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEvent
-import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventListener
 import com.sourceplusplus.marker.source.mark.inlay.InlayMark
 import com.sourceplusplus.marker.source.mark.inlay.config.InlayMarkVirtualText
 import com.sourceplusplus.marker.source.mark.inlay.event.InlayMarkEventCode
@@ -47,6 +45,7 @@ import javax.swing.JPanel
  * @since 0.2.0
  * @author [Brandon Fergerson](mailto:brandon@srcpl.us)
  */
+@Suppress("UnstableApiUsage")
 open class SourceInlayProvider : InlayHintsProvider<NoSettings> {
 
     companion object {
@@ -56,26 +55,24 @@ open class SourceInlayProvider : InlayHintsProvider<NoSettings> {
         private var currentProject: Project? = null
 
         init {
-            SourceMarkerPlugin.addGlobalSourceMarkEventListener(object : SourceMarkEventListener {
-                override fun handleEvent(event: SourceMarkEvent) {
-                    when (event.eventCode) {
-                        InlayMarkEventCode.VIRTUAL_TEXT_UPDATED -> {
-                            ApplicationManager.getApplication().invokeLater {
-                                FileEditorManager.getInstance(event.sourceMark.project).selectedTextEditor?.inlayModel
-                                        //todo: smaller range
-                                        ?.getInlineElementsInRange(0, Integer.MAX_VALUE)?.forEach {
-                                            it.repaint()
-                                        }
-                                FileEditorManager.getInstance(event.sourceMark.project).selectedTextEditor?.inlayModel
-                                        //todo: smaller range
-                                        ?.getBlockElementsInRange(0, Integer.MAX_VALUE)?.forEach {
-                                            it.repaint()
-                                        }
-                            }
+            SourceMarkerPlugin.addGlobalSourceMarkEventListener { event ->
+                when (event.eventCode) {
+                    InlayMarkEventCode.VIRTUAL_TEXT_UPDATED -> {
+                        ApplicationManager.getApplication().invokeLater {
+                            FileEditorManager.getInstance(event.sourceMark.project).selectedTextEditor?.inlayModel
+                                //todo: smaller range
+                                ?.getInlineElementsInRange(0, Integer.MAX_VALUE)?.forEach {
+                                    it.repaint()
+                                }
+                            FileEditorManager.getInstance(event.sourceMark.project).selectedTextEditor?.inlayModel
+                                //todo: smaller range
+                                ?.getBlockElementsInRange(0, Integer.MAX_VALUE)?.forEach {
+                                    it.repaint()
+                                }
                         }
                     }
                 }
-            })
+            }
         }
 
         private fun createInlayMarkIfNecessary(element: PsiElement): InlayMark? {
