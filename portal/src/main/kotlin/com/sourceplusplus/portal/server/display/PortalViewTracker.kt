@@ -1,5 +1,6 @@
 package com.sourceplusplus.portal.server.display
 
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedViewAsExternalPortal
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.json.JsonObject
 
@@ -23,7 +24,6 @@ class PortalViewTracker : AbstractVerticle() {
         val OPENED_PORTAL = "OpenedPortal"
         val CLOSED_PORTAL = "ClosedPortal"
         val CHANGED_PORTAL_ARTIFACT = "ChangedPortalArtifact"
-        val CLICKED_VIEW_AS_EXTERNAL_PORTAL = "ClickedViewAsExternalPortal"
     }
 
     override fun start() {
@@ -46,29 +46,29 @@ class PortalViewTracker : AbstractVerticle() {
         }
 
         //user wants a new external portal
-        vertx.eventBus().consumer<JsonObject>(CLICKED_VIEW_AS_EXTERNAL_PORTAL) { messageHandler ->
+        vertx.eventBus().consumer<JsonObject>(ClickedViewAsExternalPortal) { messageHandler ->
             val portal = SourcePortal.getPortal(JsonObject.mapFrom(messageHandler.body()).getString("portal_uuid"))!!
             messageHandler.reply(JsonObject().put("portal_uuid", portal.createExternalPortal().portalUuid))
         }
 
-        //user opened portal
-        vertx.eventBus().consumer<Any>(OPENED_PORTAL) {
-            println("here")
-//            if (it.body() is SourceArtifact) {
-//                val artifact = it.body() as SourceArtifact
-////                log.info("Showing Source++ Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
-//                //todo: reset ui if artifact different than last artifact
-//            }
-        }
-
-        //user closed portal
-        vertx.eventBus().consumer<Any>(CLOSED_PORTAL) {
-            println("here")
-//            if (it.body() is SourceArtifact) {
-//                val artifact = it.body() as SourceArtifact
-////                log.info("Hiding Source++ Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
-//            }
-        }
+//        //user opened portal
+//        vertx.eventBus().consumer<Any>(OPENED_PORTAL) {
+//            println("here")
+////            if (it.body() is SourceArtifact) {
+////                val artifact = it.body() as SourceArtifact
+//////                log.info("Showing Source++ Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
+////                //todo: reset ui if artifact different than last artifact
+////            }
+//        }
+//
+//        //user closed portal
+//        vertx.eventBus().consumer<Any>(CLOSED_PORTAL) {
+//            println("here")
+////            if (it.body() is SourceArtifact) {
+////                val artifact = it.body() as SourceArtifact
+//////                log.info("Hiding Source++ Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
+////            }
+//        }
 
         vertx.eventBus().consumer<JsonObject>(UPDATE_PORTAL_ARTIFACT) {
             val request = JsonObject.mapFrom(it.body())
