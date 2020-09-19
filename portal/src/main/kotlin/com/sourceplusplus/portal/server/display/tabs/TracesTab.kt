@@ -1,5 +1,8 @@
 package com.sourceplusplus.portal.server.display.tabs
 
+import com.sourceplusplus.portal.extensions.displaySpanInfo
+import com.sourceplusplus.portal.extensions.displayTraceStack
+import com.sourceplusplus.portal.extensions.displayTraces
 import com.sourceplusplus.portal.server.display.PortalTab
 import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.portal.server.display.tabs.views.TracesView
@@ -10,9 +13,6 @@ import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDispl
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplayTraceStack
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDisplayTraces
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.TracesTabOpened
-import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplaySpanInfo
-import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplayTraceStack
-import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplayTraces
 import com.sourceplusplus.protocol.artifact.trace.*
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonArray
@@ -250,10 +250,7 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
     fun displayTraces(portal: SourcePortal) {
         if (portal.portalUI.tracesView.artifactTraceResult != null) {
             val artifactTraceResult = portal.portalUI.tracesView.artifactTraceResult!!
-            vertx.eventBus().send(
-                DisplayTraces(portal.portalUuid),
-                JsonObject(Json.encode(artifactTraceResult))
-            )
+            vertx.eventBus().displayTraces(portal.portalUuid, artifactTraceResult)
             log.debug(
                 "Displayed traces for artifact: {} - Type: {} - Trace size: {}",
                 getShortQualifiedFunctionName(artifactTraceResult.artifactQualifiedName),
@@ -278,7 +275,7 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
             )
             log.info("Displayed inner trace stack. Stack size: {}", representation.innerTraceStack.peek().size())
         } else if (traceStack != null && !traceStack.isEmpty) {
-            vertx.eventBus().send(DisplayTraceStack(portal.portalUuid), representation.traceStack)
+            vertx.eventBus().displayTraceStack(portal.portalUuid, representation.traceStack!!)
             log.info("Displayed trace stack for id: {} - Stack size: {}", traceId, traceStack.size())
         }
     }
@@ -325,7 +322,7 @@ class TracesTab : AbstractTab(PortalTab.Traces) {
                 } else if (spanArtifactQualifiedName == null ||
                     spanArtifactQualifiedName == portal.portalUI.viewingPortalArtifact
                 ) {
-                    vertx.eventBus().send(DisplaySpanInfo(portal.portalUuid), span)
+                    vertx.eventBus().displaySpanInfo(portal.portalUuid, span)
                     log.info("Displayed trace span info: {}", span)
                 } else {
 //                    vertx.eventBus().request<Boolean>(

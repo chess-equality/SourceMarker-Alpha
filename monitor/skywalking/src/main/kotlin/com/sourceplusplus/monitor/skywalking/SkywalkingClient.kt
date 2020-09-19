@@ -38,7 +38,7 @@ class SkywalkingClient(
             registerCodec(vertx, GetServiceInstancesQuery.Result::class.java)
             registerCodec(vertx, SearchEndpointQuery.Result::class.java)
             registerCodec(vertx, QueryBasicTracesQuery.Result::class.java)
-            registerCodec(vertx, ArrayList::class.java)
+            registerCodec(vertx, ArrayList::class.java) //todo: should likely wrap in object
         }
 
         private fun <T> registerCodec(vertx: Vertx, type: Class<T>) {
