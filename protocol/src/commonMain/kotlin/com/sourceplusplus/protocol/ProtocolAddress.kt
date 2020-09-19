@@ -17,6 +17,8 @@ class ProtocolAddress {
             const val OverviewTabOpened = "OverviewTabOpened"
             const val SetMetricTimeFrame = "SetMetricTimeFrame"
             const val SetActiveChartMetric = "SetActiveChartMetric"
+            const val RefreshOverview = "RefreshOverview"
+            const val ArtifactMetricUpdated = "ArtifactMetricUpdated"
 
             //Portal - Traces
             const val TracesTabOpened = "TracesTabOpened"

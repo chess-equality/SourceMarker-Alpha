@@ -4,7 +4,9 @@ import com.codahale.metrics.Histogram
 import com.codahale.metrics.UniformReservoir
 import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ArtifactMetricUpdated
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.RefreshOverview
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetActiveChartMetric
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetMetricTimeFrame
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
@@ -55,15 +57,20 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
             portal.currentTab = thisTab
             SourcePortal.ensurePortalActive(portal)
             updateUI(portal)
+
+            //todo: stop when tab change/portal closed
+            vertx.setPeriodic(5000) {
+                vertx.eventBus().send(RefreshOverview, portal)
+            }
         }
-//        vertx.eventBus().consumer<ArtifactMetricResult>(PluginBridgeEndpoints.ARTIFACT_METRIC_UPDATED.address) {
-//            val artifactMetricResult = it.body()
-//            SourcePortal.getPortals(artifactMetricResult.appUuid!!, artifactMetricResult.artifactQualifiedName)
-//                .forEach {
-//                    it.portalUI.overviewView.cacheMetricResult(artifactMetricResult)
-//                    updateUI(it)
-//                }
-//        }
+        vertx.eventBus().consumer<ArtifactMetricResult>(ArtifactMetricUpdated) {
+            val artifactMetricResult = it.body()
+            SourcePortal.getPortals(artifactMetricResult.appUuid!!, artifactMetricResult.artifactQualifiedName)
+                .forEach { portal ->
+                    portal.overviewView.cacheMetricResult(artifactMetricResult)
+                    updateUI(portal)
+                }
+        }
 
         vertx.eventBus().consumer<JsonObject>(SetMetricTimeFrame) {
             val request = JsonObject.mapFrom(it.body())

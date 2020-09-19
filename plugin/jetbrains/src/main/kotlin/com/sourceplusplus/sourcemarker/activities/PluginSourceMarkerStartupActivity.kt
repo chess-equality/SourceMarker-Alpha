@@ -20,6 +20,7 @@ import com.sourceplusplus.marker.source.mark.gutter.config.GutterMarkConfigurati
 import com.sourceplusplus.monitor.skywalking.SkywalkingMonitor
 import com.sourceplusplus.portal.server.PortalServer
 import com.sourceplusplus.portal.server.display.SourcePortal
+import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.sourcemarker.listeners.PluginSourceMarkEventListener
 import com.sourceplusplus.sourcemarker.listeners.PortalEventListener
 import io.vertx.core.DeploymentOptions
@@ -42,6 +43,7 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         fun registerCodecs(vertx: Vertx) {
             log.info("Registering SourceMarker Protocol codecs")
             registerCodec(vertx, SourcePortal::class.java)
+            registerCodec(vertx, ArtifactMetricResult::class.java)
 
             DatabindCodec.mapper().registerModule(GuavaModule())
             DatabindCodec.mapper().registerModule(Jdk8Module())

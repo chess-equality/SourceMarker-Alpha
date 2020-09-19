@@ -1,11 +1,39 @@
 package com.sourceplusplus.monitor.skywalking
 
+import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
+import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
+import com.sourceplusplus.protocol.artifact.ArtifactMetrics
 import com.sourceplusplus.protocol.artifact.trace.*
+import com.sourceplusplus.protocol.portal.MetricType
+import com.sourceplusplus.protocol.portal.QueryTimeFrame
 import kotlinx.datetime.Instant
 import monitor.skywalking.protocol.metrics.GetLinearIntValuesQuery
 import monitor.skywalking.protocol.trace.QueryBasicTracesQuery
 import monitor.skywalking.protocol.trace.QueryTraceQuery
 import java.math.BigDecimal
+
+fun toProtocol(
+    artifactQualifiedName: String,
+    metricsRequest: GetEndpointMetrics,
+    metrics: List<GetLinearIntValuesQuery.Result>
+): ArtifactMetricResult {
+    return ArtifactMetricResult(
+        appUuid = "null",
+        artifactQualifiedName = artifactQualifiedName,
+        timeFrame = QueryTimeFrame.LAST_5_MINUTES,
+        start = Instant.fromEpochMilliseconds(metricsRequest.zonedDuration.start.toInstant().toEpochMilli()),
+        stop = Instant.fromEpochMilliseconds(metricsRequest.zonedDuration.stop.toInstant().toEpochMilli()),
+        step = metricsRequest.zonedDuration.step.toString(),
+        artifactMetrics = metrics.map { it.toProtocol("todo") }
+    )
+}
+
+fun GetLinearIntValuesQuery.Result.toProtocol(metricType: String): ArtifactMetrics {
+    return ArtifactMetrics(
+        metricType = MetricType.ResponseTime_Average,
+        values = values.map { (it.value as BigDecimal).toInt() }
+    )
+}
 
 fun GetLinearIntValuesQuery.Result.toDoubleArray(): DoubleArray {
     return values.map { (it.value as BigDecimal).toDouble() }.toDoubleArray()
