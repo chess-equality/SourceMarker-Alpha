@@ -49,7 +49,7 @@ todo
 | :marker                       | Used to tie visual marks & popups to source code artifacts           | 0.0.1   |
 | :mentor                       | Produces source code artifact informative/cautionary advice          | 0.0.1   |
 | :portal                       | Used to visually display contextualized artifact data/advice         | 0.0.1   |
-| :protocol                     | Common data models and communication clients                         | 0.0.1   |
+| :protocol                     | Common communication data models                                     | 0.0.1   |
 
 ### Implementation
 
