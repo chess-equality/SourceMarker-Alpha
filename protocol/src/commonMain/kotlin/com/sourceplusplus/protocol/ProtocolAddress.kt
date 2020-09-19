@@ -27,6 +27,9 @@ class ProtocolAddress {
 
             //Portal - Configuration
             const val ConfigurationTabOpened = "ConfigurationTabOpened"
+            const val DisplayArtifactConfiguration = "DisplayArtifactConfiguration"
+            const val UpdateArtifactEntryMethod = "UpdateArtifactEntryMethod"
+            const val UpdateArtifactAutoSubscribe = "UpdateArtifactAutoSubscribe"
         }
     }
 

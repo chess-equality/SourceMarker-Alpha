@@ -3,6 +3,7 @@ package com.sourceplusplus.portal.server.display
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
 import com.google.common.cache.LoadingCache
+import com.sourceplusplus.portal.server.display.tabs.views.ConfigurationView
 import com.sourceplusplus.portal.server.display.tabs.views.OverviewView
 import com.sourceplusplus.portal.server.display.tabs.views.TracesView
 import com.sourceplusplus.protocol.portal.PageType
@@ -103,13 +104,14 @@ class SourcePortal(
 
     val overviewView: OverviewView = OverviewView(this)
     val tracesView: TracesView = TracesView()
+    val configurationView: ConfigurationView = ConfigurationView()
     lateinit var viewingPortalArtifact: String
     var currentTab = PageType.OVERVIEW
 
     fun cloneViews(portal: SourcePortal) {
         this.overviewView.cloneView(portal.overviewView)
         this.tracesView.cloneView(portal.tracesView)
-//        this.configurationView.cloneView(portalUI.configurationView)
+        this.configurationView.cloneView(portal.configurationView)
     }
 
     override fun close() {
