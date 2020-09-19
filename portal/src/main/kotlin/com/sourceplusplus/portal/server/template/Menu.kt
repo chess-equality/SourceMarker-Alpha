@@ -25,7 +25,7 @@ fun FlowContent.menuItem(pageType: PageType, isActive: Boolean, block: (FlowCont
                 a(classes = "item inactive_tab") {
                     id = "sidebar_overview_link"
                     href = "overview"
-                    +"Dashboard"
+                    +"Overview"
                 }
             }
         }

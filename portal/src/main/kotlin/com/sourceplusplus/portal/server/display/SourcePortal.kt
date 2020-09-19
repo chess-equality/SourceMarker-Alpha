@@ -126,4 +126,15 @@ class SourcePortal(
         portalClone.cloneViews(this)
         return portalClone
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is SourcePortal) return false
+        if (portalUuid != other.portalUuid) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return portalUuid.hashCode()
+    }
 }
