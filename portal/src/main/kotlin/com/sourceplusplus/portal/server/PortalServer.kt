@@ -1,5 +1,8 @@
 package com.sourceplusplus.portal.server
 
+import com.sourceplusplus.portal.server.display.PortalViewTracker
+import com.sourceplusplus.portal.server.display.tabs.OverviewTab
+import com.sourceplusplus.portal.server.display.tabs.TracesTab
 import com.sourceplusplus.portal.server.page.ConfigurationPage
 import com.sourceplusplus.portal.server.page.OverviewPage
 import com.sourceplusplus.portal.server.page.TracesPage
@@ -11,6 +14,7 @@ import io.vertx.ext.web.Router
 import io.vertx.ext.web.RoutingContext
 import io.vertx.ext.web.handler.LoggerHandler
 import io.vertx.ext.web.handler.ResponseTimeHandler
+import io.vertx.kotlin.core.deployVerticleAwait
 import io.vertx.kotlin.core.http.listenAwait
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.dispatcher
@@ -33,6 +37,10 @@ class PortalServer : CoroutineVerticle() {
     }
 
     override suspend fun start() {
+        vertx.deployVerticleAwait(OverviewTab())
+        vertx.deployVerticleAwait(TracesTab())
+        vertx.deployVerticleAwait(PortalViewTracker())
+
         // Build Vert.x Web router
         val router = Router.router(vertx)
         router.route().handler(LoggerHandler.create())
@@ -95,5 +103,5 @@ class PortalServer : CoroutineVerticle() {
     }
 }
 
-fun <T, C : TagConsumer<T>> C.portal(namespace : String? = null, block : HTML.() -> Unit = {}) :
+fun <T, C : TagConsumer<T>> C.portal(namespace: String? = null, block: HTML.() -> Unit = {}):
         T = HTML(kotlinx.html.emptyMap, this, namespace).visitAndFinalize(this, block)

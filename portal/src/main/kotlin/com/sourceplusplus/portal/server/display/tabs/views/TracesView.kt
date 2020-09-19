@@ -14,7 +14,6 @@ import kotlin.collections.HashMap
  * @since 0.2.0
  * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
  */
-//@Canonical
 class TracesView {
 
     var traceResultCache = ConcurrentHashMap<TraceOrderType, TraceResult>()

@@ -8,6 +8,7 @@ import com.sourceplusplus.marker.source.mark.api.SourceMark
 import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkJcefComponent
 import com.sourceplusplus.marker.source.mark.api.key.SourceKey
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
+import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity.Companion.vertx
 import com.sourceplusplus.sourcemarker.psi.EndpointNameDetector
 import io.vertx.kotlin.coroutines.dispatcher
@@ -19,26 +20,39 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
 
     companion object {
         private val log = LoggerFactory.getLogger(PluginSourceMarkPopupAction::class.java)
-        val ENDPOINT_ID = SourceKey<String>("ARTIFACT_ENDPOINT")
+        val SOURCE_PORTAL = SourceKey<SourcePortal>("SOURCE_PORTAL")
+        val ENDPOINT_ID = SourceKey<String>("ENDPOINT_ID")
     }
 
     private val endpointDetector = EndpointNameDetector()
 
     override fun performPopupAction(sourceMark: SourceMark, editor: Editor) {
+        //register source portal (if necessary)
+        if (sourceMark.getUserData(SOURCE_PORTAL) == null) {
+            val sourcePortal = SourcePortal.getPortal(
+                SourcePortal.register( //todo: appUuid
+                    "null", sourceMark.artifactQualifiedName, false
+                )
+            )
+            sourceMark.putUserData(SOURCE_PORTAL, sourcePortal)
+        }
+        val sourcePortal = sourceMark.getUserData(SOURCE_PORTAL)!!
+
         //todo: determine sourceportal context
         when (sourceMark) {
             is ClassSourceMark -> performClassPopup(sourceMark)
             is MethodSourceMark -> performMethodPopup(sourceMark)
         }
 
-        //todo: use SourcePortalAPI to ensure correct view is showing
+        //todo: use SourcePortalAPI to ensure correct view is showing (don't refresh if correct already viewing)
+        //todo: likely need to unregister old portal handlers
         val jcefComponent = sourceMark.sourceMarkComponent as SourceMarkJcefComponent
 //        if (ThreadLocalRandom.current().nextBoolean()) {
-//            jcefComponent.getBrowser().cefBrowser.executeJavaScript(
-//                """
-//                  window.location.href = 'http://localhost:8080/configuration';
+//        jcefComponent.getBrowser().cefBrowser.executeJavaScript(
+//            """
+//                  window.location.href = 'http://localhost:8080/overview?portal_uuid=${sourcePortal.portalUuid}';
 //            """.trimIndent(), "", 0
-//            )
+//        )
 //        } else {
 //        jcefComponent.getBrowser().cefBrowser.executeJavaScript(
 //            """

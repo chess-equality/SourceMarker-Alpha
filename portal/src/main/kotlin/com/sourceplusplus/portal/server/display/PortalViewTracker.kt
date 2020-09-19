@@ -14,7 +14,6 @@ import io.vertx.core.json.JsonObject
  * @since 0.1.0
  * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
  */
-//@Slf4j
 class PortalViewTracker : AbstractVerticle() {
 
     companion object {
@@ -53,21 +52,23 @@ class PortalViewTracker : AbstractVerticle() {
         }
 
         //user opened portal
-//        vertx.eventBus().consumer<Any>(OPENED_PORTAL) {
+        vertx.eventBus().consumer<Any>(OPENED_PORTAL) {
+            println("here")
 //            if (it.body() is SourceArtifact) {
 //                val artifact = it.body() as SourceArtifact
 ////                log.info("Showing Source++ Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
 //                //todo: reset ui if artifact different than last artifact
 //            }
-//        }
+        }
 
         //user closed portal
-//        vertx.eventBus().consumer<Any>(CLOSED_PORTAL) {
+        vertx.eventBus().consumer<Any>(CLOSED_PORTAL) {
+            println("here")
 //            if (it.body() is SourceArtifact) {
 //                val artifact = it.body() as SourceArtifact
 ////                log.info("Hiding Source++ Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
 //            }
-//        }
+        }
 
         vertx.eventBus().consumer<JsonObject>(UPDATE_PORTAL_ARTIFACT) {
             val request = JsonObject.mapFrom(it.body())

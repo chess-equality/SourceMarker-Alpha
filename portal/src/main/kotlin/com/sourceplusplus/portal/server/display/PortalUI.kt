@@ -10,7 +10,6 @@ import com.sourceplusplus.portal.server.display.tabs.views.TracesView
  * @since 0.1.0
  * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
  */
-//@Slf4j
 class PortalUI(portalUuid: String) {
 
     companion object {

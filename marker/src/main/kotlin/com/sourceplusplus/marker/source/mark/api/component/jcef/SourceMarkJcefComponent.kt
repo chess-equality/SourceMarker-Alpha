@@ -44,11 +44,13 @@ class SourceMarkJcefComponent(
 
     fun getBrowser(): JBCefBrowser {
         if (browser == null) {
+            configuration.browserLoadingListener.beforeBrowserCreated(configuration)
             browser = JBCefBrowser(client, configuration.initialUrl)
 
             if (configuration.initialHtml != null) {
                 loadHtml(configuration.initialHtml!!)
             }
+            configuration.browserLoadingListener.afterBrowserCreated(browser!!)
         }
         return browser!!
     }

@@ -1,5 +1,6 @@
 package com.sourceplusplus.marker.source.mark.api.component.jcef.config
 
+import com.intellij.ui.jcef.JBCefBrowser
 import com.sourceplusplus.marker.source.mark.api.component.api.config.SourceMarkComponentConfiguration
 import java.awt.Dimension
 
@@ -18,6 +19,7 @@ class SourceMarkJcefComponentConfiguration : SourceMarkComponentConfiguration() 
     var componentWidth: Int = 400
     var componentHeight: Int = 300
     var autoDisposeBrowser: Boolean = true
+    var browserLoadingListener: BrowserLoadingListener = BrowserLoadingListener()
 
     fun setComponentSize(size: Dimension) {
         componentWidth = size.width
@@ -43,6 +45,14 @@ class SourceMarkJcefComponentConfiguration : SourceMarkComponentConfiguration() 
         copy.componentWidth = componentWidth
         copy.componentHeight = componentHeight
         copy.autoDisposeBrowser = autoDisposeBrowser
+        copy.browserLoadingListener = browserLoadingListener
         return copy
+    }
+}
+
+open class BrowserLoadingListener {
+    open fun beforeBrowserCreated(configuration: SourceMarkJcefComponentConfiguration) {
+    }
+    open fun afterBrowserCreated(browser: JBCefBrowser) {
     }
 }

@@ -13,7 +13,6 @@ import java.util.concurrent.ConcurrentHashMap
  * @since 0.2.0
  * @author <a href="mailto:brandon@srcpl.us">Brandon Fergerson</a>
  */
-//@Canonical
 class OverviewView(
     val portalUI: PortalUI
 ) {

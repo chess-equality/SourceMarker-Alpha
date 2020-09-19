@@ -14,11 +14,12 @@ import com.sourceplusplus.marker.plugin.SourceMarkerStartupActivity
 import com.sourceplusplus.marker.source.mark.api.component.api.config.ComponentSizeEvaluator
 import com.sourceplusplus.marker.source.mark.api.component.api.config.SourceMarkComponentConfiguration
 import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkSingleJcefComponentProvider
+import com.sourceplusplus.marker.source.mark.api.component.jcef.config.BrowserLoadingListener
+import com.sourceplusplus.marker.source.mark.api.component.jcef.config.SourceMarkJcefComponentConfiguration
 import com.sourceplusplus.marker.source.mark.gutter.config.GutterMarkConfiguration
-import com.sourceplusplus.monitor.skywalking.SkywalkingMonitor
 import com.sourceplusplus.portal.server.PortalServer
+import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.sourcemarker.listeners.PluginSourceMarkEventListener
-import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.core.json.JsonObject
 import io.vertx.core.json.jackson.DatabindCodec
@@ -103,10 +104,15 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
                     return Dimension(portalWidth, 250)
                 }
             }
+            defaultConfiguration.browserLoadingListener = object : BrowserLoadingListener() {
+                override fun beforeBrowserCreated(configuration: SourceMarkJcefComponentConfiguration) {
+                    configuration.initialUrl =
+                        "http://localhost:8080/overview?portal_uuid=${SourcePortal.getPortals()[0].portalUuid}"
+                }
+            }
         }
         configuration.componentProvider = componentProvider
 
-        componentProvider.defaultConfiguration.initialUrl = "http://localhost:8080/overview"
         SourceMarkerPlugin.configuration.defaultGutterMarkConfiguration = configuration
     }
 

@@ -7,6 +7,7 @@ dependencies {
     val vertxVersion = "3.9.2"
     implementation(kotlin("stdlib-jdk8"))
     implementation(project(":protocol"))
+    implementation("org.slf4j:slf4j-api:1.7.30")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.1.0")
     implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.6.10")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
