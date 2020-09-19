@@ -17,9 +17,12 @@ import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkSingle
 import com.sourceplusplus.marker.source.mark.api.component.jcef.config.BrowserLoadingListener
 import com.sourceplusplus.marker.source.mark.api.component.jcef.config.SourceMarkJcefComponentConfiguration
 import com.sourceplusplus.marker.source.mark.gutter.config.GutterMarkConfiguration
+import com.sourceplusplus.monitor.skywalking.SkywalkingMonitor
 import com.sourceplusplus.portal.server.PortalServer
 import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.sourcemarker.listeners.PluginSourceMarkEventListener
+import com.sourceplusplus.sourcemarker.listeners.PortalEventListener
+import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
 import io.vertx.core.json.JsonObject
 import io.vertx.core.json.jackson.DatabindCodec
@@ -27,22 +30,37 @@ import io.vertx.ext.bridge.PermittedOptions
 import io.vertx.ext.web.Router
 import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions
 import io.vertx.ext.web.handler.sockjs.SockJSHandler
+import org.slf4j.LoggerFactory
 import java.awt.Dimension
 
 class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposable {
 
     companion object {
+        private val log = LoggerFactory.getLogger(PluginSourceMarkerStartupActivity::class.java)
         val vertx: Vertx = Vertx.vertx()
+
+        fun registerCodecs(vertx: Vertx) {
+            log.info("Registering SourceMarker Protocol codecs")
+            registerCodec(vertx, SourcePortal::class.java)
+
+            DatabindCodec.mapper().registerModule(GuavaModule())
+            DatabindCodec.mapper().registerModule(Jdk8Module())
+            DatabindCodec.mapper().registerModule(JavaTimeModule())
+            DatabindCodec.mapper().propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
+            DatabindCodec.mapper().enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
+            DatabindCodec.mapper().enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
+        }
+
+        private fun <T> registerCodec(vertx: Vertx, type: Class<T>) {
+            vertx.eventBus().registerDefaultCodec(type, LocalMessageCodec(type))
+        }
+    }
+
+    init {
+        registerCodecs(vertx)
     }
 
     override fun runActivity(project: Project) {
-        DatabindCodec.mapper().registerModule(GuavaModule())
-        DatabindCodec.mapper().registerModule(Jdk8Module())
-        DatabindCodec.mapper().registerModule(JavaTimeModule())
-        DatabindCodec.mapper().propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
-        DatabindCodec.mapper().enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
-        DatabindCodec.mapper().enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
-
         initPortal()
         initMarker()
         initMapper()
@@ -70,6 +88,7 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
     private fun initPortal() {
         //todo: load portal config (custom themes, etc)
         vertx.deployVerticle(PortalServer())
+        vertx.deployVerticle(PortalEventListener())
 
         //todo: portal should be connected to event bus without bridge
         val sockJSHandler = SockJSHandler.create(vertx)
@@ -80,7 +99,6 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
 
         val router = Router.router(vertx)
         router.route("/eventbus/*").handler(sockJSHandler)
-
         vertx.createHttpServer().requestHandler(router).listen(8888, "localhost")
     }
 

@@ -1,6 +1,7 @@
 package com.sourceplusplus.portal.server.display
 
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedViewAsExternalPortal
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClosePortal
 import io.vertx.core.AbstractVerticle
 import io.vertx.core.json.JsonObject
 
@@ -46,9 +47,12 @@ class PortalViewTracker : AbstractVerticle() {
         }
 
         //user wants a new external portal
-        vertx.eventBus().consumer<JsonObject>(ClickedViewAsExternalPortal) { messageHandler ->
-            val portal = SourcePortal.getPortal(JsonObject.mapFrom(messageHandler.body()).getString("portal_uuid"))!!
-            messageHandler.reply(JsonObject().put("portal_uuid", portal.createExternalPortal().portalUuid))
+        vertx.eventBus().consumer<JsonObject>(ClickedViewAsExternalPortal) {
+            val portal = SourcePortal.getPortal(JsonObject.mapFrom(it.body()).getString("portal_uuid"))!!
+            //close internal portal
+            if (!portal.external) vertx.eventBus().send(ClosePortal, portal)
+            //open external portal
+            it.reply(JsonObject().put("portal_uuid", portal.createExternalPortal().portalUuid))
         }
 
 //        //user opened portal

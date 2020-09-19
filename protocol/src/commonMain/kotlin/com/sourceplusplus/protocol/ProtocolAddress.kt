@@ -3,6 +3,8 @@ package com.sourceplusplus.protocol
 class ProtocolAddress {
     class Global {
         companion object {
+            const val ClosePortal = "ClosePortal"
+
             const val OverviewTabOpened = "OverviewTabOpened"
             const val TracesTabOpened = "TracesTabOpened"
             const val ConfigurationTabOpened = "ConfigurationTabOpened"

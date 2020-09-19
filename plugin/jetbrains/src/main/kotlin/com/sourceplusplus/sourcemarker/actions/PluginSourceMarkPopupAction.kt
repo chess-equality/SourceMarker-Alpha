@@ -55,11 +55,11 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         //todo: likely need to unregister old portal handlers
         val jcefComponent = sourceMark.sourceMarkComponent as SourceMarkJcefComponent
 //        if (ThreadLocalRandom.current().nextBoolean()) {
-//        jcefComponent.getBrowser().cefBrowser.executeJavaScript(
-//            """
-//                  window.location.href = 'http://localhost:8080/overview?portal_uuid=${sourcePortal.portalUuid}';
-//            """.trimIndent(), "", 0
-//        )
+        jcefComponent.getBrowser().cefBrowser.executeJavaScript(
+            """
+                  window.location.href = 'http://localhost:8080/overview?portal_uuid=${sourcePortal.portalUuid}';
+            """.trimIndent(), "", 0
+        )
 //        } else {
 //        jcefComponent.getBrowser().cefBrowser.executeJavaScript(
 //            """

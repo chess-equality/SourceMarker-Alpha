@@ -7,8 +7,6 @@ import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
 import com.sourceplusplus.monitor.skywalking.model.GetEndpointTraces
 import com.sourceplusplus.protocol.artifact.trace.TraceResult
 import io.vertx.core.Vertx
-import io.vertx.core.buffer.Buffer
-import io.vertx.core.eventbus.MessageCodec
 import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
 import monitor.skywalking.protocol.metadata.SearchEndpointQuery
@@ -44,7 +42,7 @@ class SkywalkingClient(
         }
 
         private fun <T> registerCodec(vertx: Vertx, type: Class<T>) {
-            vertx.eventBus().registerDefaultCodec(type, SkywalkingMessageCodec(type))
+            vertx.eventBus().registerDefaultCodec(type, LocalMessageCodec(type))
         }
     }
 
@@ -140,31 +138,5 @@ class SkywalkingClient(
         HOUR(DateTimeFormatter.ofPattern("yyyy-MM-dd HH")),
         MINUTE(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")),
         SECOND(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmmss"))
-    }
-
-    class SkywalkingMessageCodec<T> internal constructor(private val type: Class<T>) : MessageCodec<T, T> {
-        override fun encodeToWire(buffer: Buffer, o: T) {
-            throw UnsupportedOperationException("Not supported yet.")
-        }
-
-        override fun decodeFromWire(pos: Int, buffer: Buffer): T {
-            throw UnsupportedOperationException("Not supported yet.")
-        }
-
-        override fun transform(o: T): T {
-            return o
-        }
-
-        override fun name(): String {
-            return UUID.randomUUID().toString()
-        }
-
-        override fun systemCodecID(): Byte {
-            return -1
-        }
-
-        fun type(): Class<T> {
-            return type
-        }
     }
 }
