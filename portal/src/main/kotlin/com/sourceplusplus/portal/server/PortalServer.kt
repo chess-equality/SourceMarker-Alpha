@@ -27,6 +27,7 @@ import kotlinx.html.visitAndFinalize
 
 @Suppress("unused")
 class PortalServer : CoroutineVerticle() {
+    //todo: backend/frontend packages
 
     companion object {
         @JvmStatic
@@ -49,6 +50,7 @@ class PortalServer : CoroutineVerticle() {
 //        // Static handler
 //        router.route("/*").handler(StaticHandler.create())
         // Routes
+        router.get("/").coroutineHandler { ctx -> getOverview(ctx) } //todo: could make whole application overview
         router.get("/overview").coroutineHandler { ctx -> getOverview(ctx) }
         router.get("/traces").coroutineHandler { ctx -> getTraces(ctx) }
         router.get("/configuration").coroutineHandler { ctx -> getConfiguration(ctx) }
