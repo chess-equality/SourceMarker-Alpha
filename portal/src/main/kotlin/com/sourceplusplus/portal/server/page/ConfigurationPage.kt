@@ -13,6 +13,12 @@ import kotlinx.html.body
 import kotlinx.html.head
 import kotlinx.html.stream.appendHTML
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class ConfigurationPage {
     fun renderPage(): String {
         return buildString {

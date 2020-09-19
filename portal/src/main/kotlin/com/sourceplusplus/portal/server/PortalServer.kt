@@ -26,7 +26,12 @@ import kotlinx.html.HTML
 import kotlinx.html.TagConsumer
 import kotlinx.html.visitAndFinalize
 
-@Suppress("unused")
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class PortalServer : CoroutineVerticle() {
     //todo: backend/frontend packages
 

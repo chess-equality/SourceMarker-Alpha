@@ -29,7 +29,7 @@ import java.util.regex.Pattern
  * Displays traces (and the underlying spans) for a given source code artifact.
  *
  * @since 0.0.1
- * @author <a href="mailto:bfergerson@apache.org">Brandon Fergerson</a>
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class TracesTab : AbstractTab(PageType.TRACES) {
 

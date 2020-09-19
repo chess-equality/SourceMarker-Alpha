@@ -35,7 +35,7 @@ import kotlin.collections.ArrayList
  *  - Average SLA
  *
  * @since 0.0.1
- * @author <a href="mailto:bfergerson@apache.org">Brandon Fergerson</a>
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class OverviewTab : AbstractTab(PageType.OVERVIEW) {
 

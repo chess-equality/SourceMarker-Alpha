@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory
  * Used to display and configure a given source code artifact.
  *
  * @since 0.0.1
- * @author <a href="mailto:bfergerson@apache.org">Brandon Fergerson</a>
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class ConfigurationTab(private val pluginAvailable: Boolean) : AbstractTab(PageType.CONFIGURATION) {
 

@@ -10,6 +10,12 @@ import com.sourceplusplus.protocol.artifact.trace.TraceTableType.*
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class TracesPage {
     fun renderPage(): String {
         return buildString {

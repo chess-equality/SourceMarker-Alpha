@@ -9,6 +9,12 @@ import com.sourceplusplus.protocol.artifact.trace.TraceOrderType.*
 import kotlinx.html.*
 import kotlinx.html.stream.appendHTML
 
+/**
+ * todo: description
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class OverviewPage {
     fun renderPage(): String {
         return buildString {

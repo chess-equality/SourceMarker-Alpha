@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap
  * Holds the current view for the Overview portal tab.
  *
  * @since 0.0.1
- * @author <a href="mailto:bfergerson@apache.org">Brandon Fergerson</a>
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class OverviewView(
     val portal: SourcePortal
