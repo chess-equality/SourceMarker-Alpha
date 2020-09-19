@@ -21,7 +21,7 @@ class TracesPage {
                         navItem(TRACES, isActive = true) {
                             navSubItem(LATEST_TRACES, SLOWEST_TRACES, FAILED_TRACES)
                         }
-                        //navItem(CONFIGURATION)
+                        navItem(CONFIGURATION)
                     }
                     tracesContent {
                         tracesNavBar {

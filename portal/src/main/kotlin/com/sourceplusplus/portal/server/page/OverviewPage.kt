@@ -20,7 +20,7 @@ class OverviewPage {
                         navItem(TRACES) {
                             navSubItem(LATEST_TRACES, SLOWEST_TRACES, FAILED_TRACES)
                         }
-                        //navItem(CONFIGURATION)
+                        navItem(CONFIGURATION)
                     }
                     overviewContent {
                         overviewNavBar {
