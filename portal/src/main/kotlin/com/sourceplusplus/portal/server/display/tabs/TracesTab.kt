@@ -213,7 +213,8 @@ class TracesTab : AbstractTab(PageType.TRACES) {
             val globalTraceId = request.getString("trace_id")
             log.trace(
                 "Getting trace spans. Artifact qualified name: {} - Trace id: {}",
-                getShortQualifiedFunctionName(artifactQualifiedName), globalTraceId
+                getShortQualifiedFunctionName(artifactQualifiedName),
+                globalTraceId
             )
 
             val portal = SourcePortal.getPortal(portalUuid)!!
@@ -229,9 +230,8 @@ class TracesTab : AbstractTab(PageType.TRACES) {
                         log.error("Failed to get trace spans", it.cause())
                     } else {
                         representation.cacheTraceStack(
-                            globalTraceId, handleTraceStack(
-                                appUuid, artifactQualifiedName, it.result().body()
-                            )
+                            globalTraceId,
+                            handleTraceStack(appUuid, artifactQualifiedName, it.result().body())
                         )
                         messageHandler.reply(representation.getTraceStack(globalTraceId))
 //                        context.stop()
@@ -278,7 +278,8 @@ class TracesTab : AbstractTab(PageType.TRACES) {
             log.debug(
                 "Displayed traces for artifact: {} - Type: {} - Trace size: {}",
                 getShortQualifiedFunctionName(artifactTraceResult.artifactQualifiedName),
-                artifactTraceResult.orderType, artifactTraceResult.traces.size
+                artifactTraceResult.orderType,
+                artifactTraceResult.traces.size
             )
         }
     }
@@ -437,7 +438,8 @@ class TracesTab : AbstractTab(PageType.TRACES) {
     }
 
     fun handleTraceStack(
-        appUuid: String, rootArtifactQualifiedName: String,
+        appUuid: String,
+        rootArtifactQualifiedName: String,
         spanQueryResult: TraceSpanStackQueryResult
     ): JsonArray {
         val spanInfos = ArrayList<TraceSpanInfo>()
