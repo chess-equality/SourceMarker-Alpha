@@ -77,8 +77,9 @@ open class SourceInlayProvider : InlayHintsProvider<NoSettings> {
         private fun createInlayMarkIfNecessary(element: PsiElement): InlayMark? {
             val parent = element.parent
             if ((parent is PsiMethod && element === parent.nameIdentifier)
-                    || (parent is GrMethod && element === parent.nameIdentifierGroovy)
-                    || (parent is KtNamedFunction && element === parent.nameIdentifier)) {
+                || (parent is GrMethod && element === parent.nameIdentifierGroovy)
+                || (parent is KtNamedFunction && element === parent.nameIdentifier)
+            ) {
                 val fileMarker = SourceMarkerPlugin.getSourceFileMarker(element.containingFile)!!
                 currentProject = fileMarker.project
 
@@ -93,7 +94,8 @@ open class SourceInlayProvider : InlayHintsProvider<NoSettings> {
                 currentProject = fileMarker.project
 
                 val artifactQualifiedName = MarkerUtils.getFullyQualifiedName(
-                        MarkerUtils.getUniversalExpression(element).toUElement() as UExpression)
+                    MarkerUtils.getUniversalExpression(element).toUElement() as UExpression
+                )
                 return if (!SourceMarkerPlugin.configuration.createSourceMarkFilter.test(artifactQualifiedName)) {
                     null
                 } else {
@@ -114,7 +116,12 @@ open class SourceInlayProvider : InlayHintsProvider<NoSettings> {
         override fun createComponent(listener: ChangeListener): JComponent = JPanel()
     }
 
-    override fun getCollectorFor(file: PsiFile, editor: Editor, settings: NoSettings, sink: InlayHintsSink): InlayHintsCollector? {
+    override fun getCollectorFor(
+        file: PsiFile,
+        editor: Editor,
+        settings: NoSettings,
+        sink: InlayHintsSink
+    ): InlayHintsCollector? {
         if (!SourceMarkerPlugin.enabled) {
             return null
         }
@@ -128,7 +135,9 @@ open class SourceInlayProvider : InlayHintsProvider<NoSettings> {
                 val virtualText = inlayMark.configuration.virtualText ?: return true
                 virtualText.inlayMark = inlayMark
 
-                var representation = AttributesTransformerPresentation((DynamicTextInlayPresentation(editor, virtualText))) {
+                var representation = AttributesTransformerPresentation(
+                    (DynamicTextInlayPresentation(editor, virtualText))
+                ) {
                     it.withDefault(editor.colorsScheme.getAttributes(INLINE_PARAMETER_HINT) ?: TextAttributes())
                 } as InlayPresentation
                 if (inlayMark.configuration.activateOnMouseClick) {
@@ -139,16 +148,22 @@ open class SourceInlayProvider : InlayHintsProvider<NoSettings> {
 
                 if (virtualText.useInlinePresentation) {
                     if (virtualText.showAfterLastChildWhenInline) {
-                        sink.addInlineElement(element.lastChild.textRange.endOffset, virtualText.relatesToPrecedingText,
-                                representation)
+                        sink.addInlineElement(
+                            element.lastChild.textRange.endOffset,
+                            virtualText.relatesToPrecedingText,
+                            representation
+                        )
                     } else {
-                        sink.addInlineElement(element.textRange.startOffset, virtualText.relatesToPrecedingText,
-                                representation)
+                        sink.addInlineElement(
+                            element.textRange.startOffset,
+                            virtualText.relatesToPrecedingText,
+                            representation
+                        )
                     }
                 } else {
                     if (element.parent is PsiMethod) {
                         virtualText.spacingTillMethodText = element.parent.prevSibling.text
-                                .replace("\n", "").count { it == ' ' }
+                            .replace("\n", "").count { it == ' ' }
                     }
 
                     var startOffset = element.textRange.startOffset
@@ -160,8 +175,13 @@ open class SourceInlayProvider : InlayHintsProvider<NoSettings> {
                             }
                         }
                     }
-                    sink.addBlockElement(startOffset, virtualText.relatesToPrecedingText,
-                            virtualText.showAbove, CODE_VISION, representation)
+                    sink.addBlockElement(
+                        startOffset,
+                        virtualText.relatesToPrecedingText,
+                        virtualText.showAbove,
+                        CODE_VISION,
+                        representation
+                    )
                 }
                 latestInlayMarkAddedAt = System.currentTimeMillis()
                 return true
@@ -169,7 +189,8 @@ open class SourceInlayProvider : InlayHintsProvider<NoSettings> {
         }
     }
 
-    private inner class DynamicTextInlayPresentation(val editor: Editor, val virtualText: InlayMarkVirtualText) : BasePresentation() {
+    private inner class DynamicTextInlayPresentation(val editor: Editor, val virtualText: InlayMarkVirtualText) :
+        BasePresentation() {
 
         private val font = editor.colorsScheme.getFont(EditorFontType.PLAIN)
         override val width: Int
