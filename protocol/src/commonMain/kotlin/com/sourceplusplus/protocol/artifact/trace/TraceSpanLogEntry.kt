@@ -1,7 +1,5 @@
 package com.sourceplusplus.protocol.artifact.trace
 
-import kotlinx.datetime.Instant
-
 /**
  * todo: description
  *
@@ -9,6 +7,6 @@ import kotlinx.datetime.Instant
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 data class TraceSpanLogEntry(
-    val time: Instant,
+    val time: Long, //todo: Instant
     val data: String
 )

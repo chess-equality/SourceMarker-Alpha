@@ -112,7 +112,7 @@ fun main() {
                 "thing5" to UUID.randomUUID().toString()
             ),
             logs = listOf(
-                TraceSpanLogEntry(time = Clock.System.now(), data = UUID.randomUUID().toString())
+                TraceSpanLogEntry(time = Clock.System.now().epochSeconds, data = UUID.randomUUID().toString())
             )
         )
         vertx.eventBus().displaySpanInfo("null", span)

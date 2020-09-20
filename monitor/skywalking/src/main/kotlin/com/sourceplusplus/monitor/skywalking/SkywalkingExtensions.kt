@@ -3,7 +3,10 @@ package com.sourceplusplus.monitor.skywalking
 import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.ArtifactMetrics
-import com.sourceplusplus.protocol.artifact.trace.*
+import com.sourceplusplus.protocol.artifact.trace.Trace
+import com.sourceplusplus.protocol.artifact.trace.TraceSpan
+import com.sourceplusplus.protocol.artifact.trace.TraceSpanLogEntry
+import com.sourceplusplus.protocol.artifact.trace.TraceSpanRef
 import com.sourceplusplus.protocol.portal.MetricType
 import com.sourceplusplus.protocol.portal.QueryTimeFrame
 import kotlinx.datetime.Instant
@@ -53,10 +56,17 @@ fun QueryBasicTracesQuery.Trace.toProtocol(): Trace {
     )
 }
 
+//todo: correctly
 fun QueryTraceQuery.Log.toProtocol(): TraceSpanLogEntry {
+    if (data!!.find { it.key == "stack"} != null) {
+        return TraceSpanLogEntry(
+            time = Instant.fromEpochMilliseconds((time as BigDecimal).toLong()).epochSeconds,
+            data = data.find { it.key == "stack"}!!.value!! //todo: correctly
+        )
+    }
     return TraceSpanLogEntry(
-        time = Instant.fromEpochMilliseconds(time as Long),
-        data = "todo" //todo:
+        time = Instant.fromEpochMilliseconds((time as BigDecimal).toLong()).epochSeconds,
+        data = data.joinToString(separator = "\n") { it.key + " : " + it.value!! }
     )
 }
 
