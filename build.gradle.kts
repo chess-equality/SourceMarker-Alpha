@@ -45,7 +45,6 @@ subprojects {
         withType<io.gitlab.arturbosch.detekt.Detekt> {
             parallel = true
             buildUponDefaultConfig = true
-            autoCorrect = true
         }
     }
 }

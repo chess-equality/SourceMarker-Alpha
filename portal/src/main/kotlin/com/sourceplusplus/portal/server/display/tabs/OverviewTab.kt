@@ -232,8 +232,8 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
             60 -> {
                 for (i in artifactMetrics.values.indices) {
                     metricArr.add(
-                        artifactMetrics.values[i] + artifactMetrics.values[i + 1]
-                                + artifactMetrics.values[i + 2] + artifactMetrics.values[i + 3]
+                        artifactMetrics.values[i] + artifactMetrics.values[i + 1] +
+                                artifactMetrics.values[i + 2] + artifactMetrics.values[i + 3]
                     )
                 }
             }

@@ -60,8 +60,14 @@ open class InlayMarkVirtualText {
             val previousVirtualText = this.virtualText
             this.virtualText = virtualText
 
-            inlayMark!!.triggerEvent(SourceMarkEvent(inlayMark!!, InlayMarkEventCode.VIRTUAL_TEXT_UPDATED,
-                    previousVirtualText, virtualText))
+            inlayMark!!.triggerEvent(
+                SourceMarkEvent(
+                    inlayMark!!,
+                    InlayMarkEventCode.VIRTUAL_TEXT_UPDATED,
+                    previousVirtualText,
+                    virtualText
+                )
+            )
         }
     }
 }

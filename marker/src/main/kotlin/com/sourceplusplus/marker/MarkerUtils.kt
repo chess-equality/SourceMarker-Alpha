@@ -45,7 +45,8 @@ class MarkerUtils private constructor() {
         @JvmStatic
         @JvmOverloads
         fun getOrCreateExpressionInlayMark(
-            fileMarker: SourceFileMarker, lineNumber: Int,
+            fileMarker: SourceFileMarker,
+            lineNumber: Int,
             autoApply: Boolean = false
         ): ExpressionInlayMark? {
             val element = getElementAtLine(fileMarker.psiFile, lineNumber)
@@ -58,7 +59,8 @@ class MarkerUtils private constructor() {
         @JvmOverloads
         @Synchronized
         fun getOrCreateExpressionInlayMark(
-            fileMarker: SourceFileMarker, element: PsiStatement,
+            fileMarker: SourceFileMarker,
+            element: PsiStatement,
             autoApply: Boolean = false
         ): ExpressionInlayMark? {
             log.trace("getOrCreateExpressionInlayMark: $element")
@@ -71,7 +73,10 @@ class MarkerUtils private constructor() {
 
             var inlayMark = lookupExpression.getUserData(SourceKey.InlayMark) as ExpressionInlayMark?
             if (inlayMark == null) {
-                inlayMark = fileMarker.getExpressionSourceMark(lookupExpression, SourceMark.Type.INLAY) as ExpressionInlayMark?
+                inlayMark = fileMarker.getExpressionSourceMark(
+                    lookupExpression,
+                    SourceMark.Type.INLAY
+                ) as ExpressionInlayMark?
                 if (inlayMark != null) {
                     if (inlayMark.updatePsiExpression(statementExpression.toUElement() as UExpression)) {
                         statementExpression.putUserData(SourceKey.InlayMark, inlayMark)
@@ -83,7 +88,8 @@ class MarkerUtils private constructor() {
 
             return if (inlayMark == null) {
                 inlayMark = fileMarker.createSourceMark(
-                    statementExpression.toUElement() as UExpression, SourceMark.Type.INLAY
+                    statementExpression.toUElement() as UExpression,
+                    SourceMark.Type.INLAY
                 ) as ExpressionInlayMark
                 return if (autoApply) {
                     if (inlayMark.canApply()) {
@@ -118,7 +124,8 @@ class MarkerUtils private constructor() {
         @JvmOverloads
         @Synchronized
         fun getOrCreateMethodInlayMark(
-            fileMarker: SourceFileMarker, element: PsiElement,
+            fileMarker: SourceFileMarker,
+            element: PsiElement,
             autoApply: Boolean = false
         ): MethodInlayMark? {
             var inlayMark = element.getUserData(SourceKey.InlayMark) as MethodInlayMark?
@@ -135,7 +142,8 @@ class MarkerUtils private constructor() {
 
             return if (inlayMark == null) {
                 inlayMark = fileMarker.createSourceMark(
-                    element.parent.toUElement() as UMethod, SourceMark.Type.INLAY
+                    element.parent.toUElement() as UMethod,
+                    SourceMark.Type.INLAY
                 ) as MethodInlayMark
                 return if (autoApply) {
                     if (inlayMark.canApply()) {
@@ -161,7 +169,8 @@ class MarkerUtils private constructor() {
         @JvmOverloads
         @Synchronized
         fun getOrCreateMethodGutterMark(
-            fileMarker: SourceFileMarker, element: PsiElement,
+            fileMarker: SourceFileMarker,
+            element: PsiElement,
             autoApply: Boolean = true
         ): MethodGutterMark? {
             var gutterMark = element.getUserData(SourceKey.GutterMark) as MethodGutterMark?
@@ -178,7 +187,8 @@ class MarkerUtils private constructor() {
 
             if (gutterMark == null) {
                 gutterMark = fileMarker.createSourceMark(
-                    element.parent.toUElement() as UMethod, SourceMark.Type.GUTTER
+                    element.parent.toUElement() as UMethod,
+                    SourceMark.Type.GUTTER
                 ) as MethodGutterMark
                 return if (autoApply) {
                     if (gutterMark.canApply()) {
@@ -212,7 +222,8 @@ class MarkerUtils private constructor() {
         @JvmOverloads
         @Synchronized
         fun getOrCreateClassGutterMark(
-            fileMarker: SourceFileMarker, element: PsiElement,
+            fileMarker: SourceFileMarker,
+            element: PsiElement,
             autoApply: Boolean = true
         ): ClassGutterMark? {
             var gutterMark = element.getUserData(SourceKey.GutterMark) as ClassGutterMark?
@@ -229,7 +240,8 @@ class MarkerUtils private constructor() {
 
             if (gutterMark == null) {
                 gutterMark = fileMarker.createSourceMark(
-                    element.parent.toUElement() as UClass, SourceMark.Type.GUTTER
+                    element.parent.toUElement() as UClass,
+                    SourceMark.Type.GUTTER
                 ) as ClassGutterMark
                 return if (autoApply) {
                     if (gutterMark.canApply()) {
@@ -294,13 +306,13 @@ class MarkerUtils private constructor() {
 
             if (expression is UDeclarationsExpression) {
                 //todo: support for multi-declaration statements
-                return """$qualifiedMethodName#${document.getLineNumber(expression.declarations[0].sourcePsi!!.textOffset)}#${
-                    Base64.getEncoder().encodeToString(expression.toString().toByteArray())
-                }"""
+                return """$qualifiedMethodName#${
+                    document.getLineNumber(expression.declarations[0].sourcePsi!!.textOffset)
+                }#${Base64.getEncoder().encodeToString(expression.toString().toByteArray())}"""
             } else {
-                return """$qualifiedMethodName#${document.getLineNumber(expression.sourcePsi!!.textOffset)}#${
-                    Base64.getEncoder().encodeToString(expression.toString().toByteArray())
-                }"""
+                return """$qualifiedMethodName#${
+                    document.getLineNumber(expression.sourcePsi!!.textOffset)
+                }#${Base64.getEncoder().encodeToString(expression.toString().toByteArray())}"""
             }
         }
 
