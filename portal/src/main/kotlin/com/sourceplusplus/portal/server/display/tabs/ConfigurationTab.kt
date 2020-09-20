@@ -26,7 +26,6 @@ class ConfigurationTab(private val pluginAvailable: Boolean) : AbstractTab(PageT
         super.start()
 
         updateConfigurationPermitted = pluginAvailable
-                //|| config().getJsonObject("permissions").getBoolean("update_artifact_configuration")
 
         vertx.eventBus().consumer<JsonObject>(ConfigurationTabOpened) {
             log.info("Configuration tab opened")
