@@ -11,8 +11,6 @@ import org.slf4j.LoggerFactory
 import java.io.Closeable
 import java.util.*
 
-import java.util.concurrent.TimeUnit
-
 /**
  * Represents a view into a specific source artifact.
  *
@@ -50,8 +48,7 @@ class SourcePortal(
 
         fun getSimilarPortals(portal: SourcePortal): List<SourcePortal> {
             return portalMap.asMap().values.filter {
-                it.appUuid == portal.appUuid &&
-                        it.viewingPortalArtifact == portal.viewingPortalArtifact &&
+                it.appUuid == portal.appUuid && it.viewingPortalArtifact == portal.viewingPortalArtifact &&
                         it.currentTab == portal.currentTab
             }
         }
@@ -87,7 +84,9 @@ class SourcePortal(
             portal.viewingPortalArtifact = Objects.requireNonNull(artifactQualifiedName)
 
             portalMap.put(portalUuid, portal)
-            log.info("Registered external SourceMarker Portal. Portal UUID: $portalUuid - App UUID: $appUuid - Artifact: $artifactQualifiedName")
+            log.info(
+                "Registered external SourceMarker Portal. Portal UUID: $portalUuid - App UUID: $appUuid - Artifact: $artifactQualifiedName"
+            )
             log.info("Active portals: " + portalMap.size())
             return portalUuid
         }

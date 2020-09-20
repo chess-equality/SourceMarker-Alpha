@@ -100,7 +100,8 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
 
     @JvmOverloads
     open fun removeSourceMark(
-        sourceMark: SourceMark, autoRefresh: Boolean = false,
+        sourceMark: SourceMark,
+        autoRefresh: Boolean = false,
         autoDispose: Boolean = true
     ): Boolean {
         log.trace("Removing source mark for artifact: $sourceMark")
@@ -114,16 +115,26 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
 
     @JvmOverloads
     open fun applySourceMark(
-        sourceMark: SourceMark, autoRefresh: Boolean = false,
+        sourceMark: SourceMark,
+        autoRefresh: Boolean = false,
         overrideFilter: Boolean = false
     ): Boolean {
         if (overrideFilter || sourceMark.canApply()) {
             log.trace("Applying source mark for artifact: $sourceMark")
             if (sourceMarks.add(sourceMark)) {
                 when (sourceMark) {
-                    is ClassGutterMark -> sourceMark.getPsiElement().nameIdentifier!!.putUserData(SourceKey.GutterMark, sourceMark)
-                    is MethodGutterMark -> sourceMark.getPsiElement().nameIdentifier!!.putUserData(SourceKey.GutterMark, sourceMark)
-                    is MethodInlayMark -> sourceMark.getPsiElement().nameIdentifier!!.putUserData(SourceKey.InlayMark, sourceMark)
+                    is ClassGutterMark -> sourceMark.getPsiElement().nameIdentifier!!.putUserData(
+                        SourceKey.GutterMark,
+                        sourceMark
+                    )
+                    is MethodGutterMark -> sourceMark.getPsiElement().nameIdentifier!!.putUserData(
+                        SourceKey.GutterMark,
+                        sourceMark
+                    )
+                    is MethodInlayMark -> sourceMark.getPsiElement().nameIdentifier!!.putUserData(
+                        SourceKey.InlayMark,
+                        sourceMark
+                    )
                     is ExpressionInlayMark -> sourceMark.getPsiElement().putUserData(SourceKey.InlayMark, sourceMark)
                 }
 
