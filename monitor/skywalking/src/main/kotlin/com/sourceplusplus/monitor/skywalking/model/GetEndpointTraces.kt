@@ -5,7 +5,7 @@ import monitor.skywalking.protocol.type.QueryOrder
 import monitor.skywalking.protocol.type.TraceState
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)

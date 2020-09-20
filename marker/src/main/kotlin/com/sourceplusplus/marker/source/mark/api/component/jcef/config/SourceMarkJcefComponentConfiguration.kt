@@ -5,7 +5,7 @@ import com.sourceplusplus.marker.source.mark.api.component.api.config.SourceMark
 import java.awt.Dimension
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -25,9 +25,6 @@ class SourceMarkJcefComponentConfiguration : SourceMarkComponentConfiguration() 
         componentHeight = size.height
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun copy(): SourceMarkJcefComponentConfiguration {
         val copy = SourceMarkJcefComponentConfiguration()
         copy.useHeavyPopup = useHeavyPopup

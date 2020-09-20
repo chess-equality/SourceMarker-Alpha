@@ -10,7 +10,7 @@ import com.sourceplusplus.marker.source.mark.gutter.event.GutterMarkEventCode
 import com.sourceplusplus.marker.source.mark.inlay.InlayMark
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -19,17 +19,11 @@ open class SourceMarkJcefComponentProvider : SourceMarkComponentProvider(), Sour
 
     override val defaultConfiguration = SourceMarkJcefComponentConfiguration()
 
-    /**
-     * {@inheritDoc}
-     */
     override fun getComponent(sourceMark: SourceMark): SourceMarkJcefComponent {
         sourceMark.addEventListener(this)
         return SourceMarkJcefComponent(defaultConfiguration.copy())
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun disposeComponent(sourceMark: SourceMark) {
         sourceMark.sourceMarkComponent.dispose()
     }
@@ -41,9 +35,6 @@ open class SourceMarkJcefComponentProvider : SourceMarkComponentProvider(), Sour
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun handleEvent(event: SourceMarkEvent) {
         when (event.eventCode) {
             SourceMarkEventCode.MARK_REMOVED -> {

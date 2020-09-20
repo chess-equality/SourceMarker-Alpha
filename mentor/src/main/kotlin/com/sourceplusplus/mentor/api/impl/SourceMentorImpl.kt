@@ -1,12 +1,12 @@
 package com.sourceplusplus.mentor.api.impl
 
 import com.sourceplusplus.mentor.api.SourceMentor
-import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
 import com.sourceplusplus.protocol.advice.method.MethodAdvice
+import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
 import org.slf4j.LoggerFactory
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)

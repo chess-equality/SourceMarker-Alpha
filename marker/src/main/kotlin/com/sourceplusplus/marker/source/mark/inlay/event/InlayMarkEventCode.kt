@@ -3,7 +3,7 @@ package com.sourceplusplus.marker.source.mark.inlay.event
 import com.sourceplusplus.marker.source.mark.api.event.IEventCode
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -11,9 +11,6 @@ import com.sourceplusplus.marker.source.mark.api.event.IEventCode
 enum class InlayMarkEventCode(private val code: Int) : IEventCode {
     VIRTUAL_TEXT_UPDATED(3000);
 
-    /**
-     * {@inheritDoc}
-     */
     override fun code(): Int {
         return this.code
     }

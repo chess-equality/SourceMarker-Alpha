@@ -13,13 +13,13 @@ import java.util.concurrent.atomic.AtomicBoolean
 import javax.swing.JComponent
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class SourceMarkJcefComponent(
-        override val configuration: SourceMarkJcefComponentConfiguration
+    override val configuration: SourceMarkJcefComponentConfiguration
 ) : SourceMarkComponent {
 
     companion object {
@@ -62,9 +62,6 @@ class SourceMarkJcefComponent(
         getBrowser().loadHTML(html)
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun getComponent(): JComponent {
         if (component == null) {
             component = getBrowser().component
@@ -73,9 +70,6 @@ class SourceMarkJcefComponent(
         return component!!
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun dispose() {
         if (configuration.autoDisposeBrowser) {
             browser?.dispose()

@@ -3,20 +3,17 @@ package com.sourceplusplus.marker.source.mark.api.event
 import com.sourceplusplus.marker.source.mark.api.SourceMark
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 open class SourceMarkEvent(
-        val sourceMark: SourceMark,
-        val eventCode: IEventCode,
-        vararg val params: Any
+    val sourceMark: SourceMark,
+    val eventCode: IEventCode,
+    vararg val params: Any
 ) {
 
-    /**
-     * {@inheritDoc}
-     */
     override fun toString(): String {
         return if (params.isEmpty()) {
             "Event: $eventCode - Source: $sourceMark"

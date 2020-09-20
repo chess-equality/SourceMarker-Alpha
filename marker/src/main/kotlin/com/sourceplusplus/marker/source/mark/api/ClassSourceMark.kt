@@ -18,7 +18,7 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -116,9 +116,6 @@ abstract class ClassSourceMark(
         eventListeners += listener
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -126,15 +123,9 @@ abstract class ClassSourceMark(
         return true
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun hashCode(): Int {
         return Objects.hash(artifactQualifiedName, type)
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun toString(): String = "${javaClass.simpleName}: $artifactQualifiedName"
 }

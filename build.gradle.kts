@@ -1,16 +1,14 @@
 plugins {
     id("com.avast.gradle.docker-compose") version "0.12.1"
 
-    val kotlinVersion = "1.4.0"
+    val kotlinVersion = "1.4.10"
     kotlin("jvm") version kotlinVersion apply false
     kotlin("multiplatform") version kotlinVersion apply false
     kotlin("js") version kotlinVersion apply false
 
-    id("io.gitlab.arturbosch.detekt") version "1.11.0"
-//    id("org.jlleitschuh.gradle.ktlint") version "9.3.0"
+    id("io.gitlab.arturbosch.detekt") version "1.13.1"
 }
 
-// Import variables from gradle.properties file
 val pluginGroup: String by project
 val pluginName: String by project
 val pluginVersion: String by project
@@ -24,27 +22,31 @@ val platformDownloadSources: String by project
 group = pluginGroup
 version = pluginVersion
 
+repositories {
+    mavenCentral()
+    jcenter()
+    maven(url = "https://kotlin.bintray.com/kotlinx/")
+}
+
 subprojects {
     repositories {
         mavenCentral()
         jcenter()
         maven(url = "https://kotlin.bintray.com/kotlinx/")
     }
-}
 
-dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.11.0")
-}
+    apply(plugin = "io.gitlab.arturbosch.detekt")
+    dependencies {
+        detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.13.1")
+    }
 
-detekt {
-    failFast = true
-    config = files("config/detekt/detekt.yml")
-    buildUponDefaultConfig = true
-
-    reports {
-        html.enabled = false
-        xml.enabled = false
-        txt.enabled = true
+    apply<io.gitlab.arturbosch.detekt.DetektPlugin>()
+    tasks {
+        withType<io.gitlab.arturbosch.detekt.Detekt> {
+            parallel = true
+            buildUponDefaultConfig = true
+            autoCorrect = true
+        }
     }
 }
 

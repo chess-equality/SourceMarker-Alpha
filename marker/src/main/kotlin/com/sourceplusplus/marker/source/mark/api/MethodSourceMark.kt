@@ -19,15 +19,15 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 abstract class MethodSourceMark(
-        override val sourceFileMarker: SourceFileMarker,
-        internal open var psiMethod: UMethod,
-        override var artifactQualifiedName: String = MarkerUtils.getFullyQualifiedName(psiMethod)
+    override val sourceFileMarker: SourceFileMarker,
+    internal open var psiMethod: UMethod,
+    override var artifactQualifiedName: String = MarkerUtils.getFullyQualifiedName(psiMethod)
 ) : SourceMark {
 
     override var editor: Editor? = null
@@ -45,7 +45,7 @@ abstract class MethodSourceMark(
 
     override val moduleName: String
         get() = ProjectRootManager.getInstance(sourceFileMarker.project).fileIndex
-                .getModuleForFile(psiMethod.containingFile.virtualFile)!!.name
+            .getModuleForFile(psiMethod.containingFile.virtualFile)!!.name
 
     /**
      * Line number of the gutter mark.
@@ -78,9 +78,6 @@ abstract class MethodSourceMark(
         apply(configuration.componentProvider.getComponent(this), addToMarker)
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun dispose(removeFromMarker: Boolean) {
         val nameIdentifierOwner = MarkerUtils.getNameIdentifier(psiMethod.sourcePsi as PsiNameIdentifierOwner)!!
         nameIdentifierOwner.putUserData(SourceKey.GutterMark, null)
@@ -132,9 +129,6 @@ abstract class MethodSourceMark(
         eventListeners += listener
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -142,15 +136,9 @@ abstract class MethodSourceMark(
         return true
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun hashCode(): Int {
         return Objects.hash(artifactQualifiedName, type)
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun toString(): String = "${javaClass.simpleName}: $artifactQualifiedName"
 }

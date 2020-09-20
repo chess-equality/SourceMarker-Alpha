@@ -3,7 +3,7 @@ package com.sourceplusplus.protocol.artifact
 import com.sourceplusplus.protocol.portal.MetricType
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)

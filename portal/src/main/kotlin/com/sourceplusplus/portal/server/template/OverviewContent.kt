@@ -35,7 +35,7 @@ fun FlowContent.chartItem(chartItemType: ChartItemType, isActive: Boolean = fals
     val isActiveClass = if (isActive) "spp_red_color" else ""
     div("item") {
         div("ui mini statistic") {
-            onClick = "clickedView${chartItemType.type.capitalize()+chartItemType.description}Chart()"
+            onClick = "clickedView${chartItemType.type.capitalize() + chartItemType.description}Chart()"
             div("value align_left $isActiveClass".trim()) {
                 id = "card_${chartItemType.id}_${chartItemType.type}_header"
                 +"n/a"

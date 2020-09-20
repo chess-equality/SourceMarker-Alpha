@@ -5,7 +5,7 @@ import monitor.skywalking.protocol.type.Duration
 import java.time.ZonedDateTime
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)

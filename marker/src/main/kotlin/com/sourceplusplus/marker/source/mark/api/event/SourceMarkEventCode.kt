@@ -1,7 +1,7 @@
 package com.sourceplusplus.marker.source.mark.api.event
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -11,9 +11,6 @@ enum class SourceMarkEventCode(private val code: Int) : IEventCode {
     MARK_REMOVED(1001),
     NAME_CHANGED(1002);
 
-    /**
-     * {@inheritDoc}
-     */
     override fun code(): Int {
         return this.code
     }

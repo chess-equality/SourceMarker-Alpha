@@ -42,7 +42,7 @@ fun FlowContent.artifactInformation(vararg artifactInfoTypes: ArtifactInfoType =
         div("ui segments secondary_background_color margin_right_white") {
             table("ui small very compact very basic collapsing celled table margin_left_no_padding") {
                 tbody {
-                    for(artifactInfoType in artifactInfoTypes) {
+                    for (artifactInfoType in artifactInfoTypes) {
                         tr {
                             td {
                                 h4("ui header secondary_background_color") {

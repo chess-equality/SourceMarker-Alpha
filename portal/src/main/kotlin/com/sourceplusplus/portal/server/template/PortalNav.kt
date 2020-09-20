@@ -1,8 +1,10 @@
 package com.sourceplusplus.portal.server.template
 
-import com.sourceplusplus.protocol.portal.PageType
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType
-import kotlinx.html.*
+import com.sourceplusplus.protocol.portal.PageType
+import kotlinx.html.FlowContent
+import kotlinx.html.div
+import kotlinx.html.style
 
 class PortalNavigationConfiguration(private val flowContent: FlowContent) {
 

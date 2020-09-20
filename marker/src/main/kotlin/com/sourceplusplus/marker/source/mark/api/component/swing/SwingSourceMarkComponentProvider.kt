@@ -7,7 +7,7 @@ import com.sourceplusplus.marker.source.mark.api.component.api.config.SourceMark
 import javax.swing.JComponent
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -18,9 +18,6 @@ abstract class SwingSourceMarkComponentProvider : SourceMarkComponentProvider() 
 
     abstract fun makeSwingComponent(sourceMark: SourceMark): JComponent
 
-    /**
-     * {@inheritDoc}
-     */
     override fun getComponent(sourceMark: SourceMark): SourceMarkComponent {
         val component = makeSwingComponent(sourceMark)
         return object : SourceMarkComponent {
@@ -36,9 +33,6 @@ abstract class SwingSourceMarkComponentProvider : SourceMarkComponentProvider() 
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun disposeComponent(sourceMark: SourceMark) {
         //do nothing
     }

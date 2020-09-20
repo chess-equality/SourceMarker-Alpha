@@ -10,7 +10,7 @@ import org.jetbrains.uast.UClass
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -24,16 +24,10 @@ open class ClassGutterMark(
         SourceMarkerPlugin.configuration.defaultGutterMarkConfiguration
     private var visible: AtomicBoolean = AtomicBoolean()
 
-    /**
-     * {@inheritDoc}
-     */
     override fun isVisible(): Boolean {
         return visible.get()
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun setVisible(visible: Boolean) {
         val previousVisibility = this.visible.getAndSet(visible)
         if (visible && !previousVisibility) {

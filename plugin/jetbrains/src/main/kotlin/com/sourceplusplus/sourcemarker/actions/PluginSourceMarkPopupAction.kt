@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -38,9 +38,8 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         //register source portal (if necessary)
         if (sourceMark.getUserData(SOURCE_PORTAL) == null) {
             val sourcePortal = SourcePortal.getPortal(
-                SourcePortal.register( //todo: appUuid
-                    "null", sourceMark.artifactQualifiedName, false
-                )
+                //todo: appUuid
+                SourcePortal.register("null", sourceMark.artifactQualifiedName, false)
             )
             sourceMark.putUserData(SOURCE_PORTAL, sourcePortal)
 
@@ -65,8 +64,9 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         if (sourcePortal != lastDisplayedInternalPortal) {
             jcefComponent.getBrowser().cefBrowser.executeJavaScript(
                 """
-                  window.location.href = 'http://localhost:8080/overview?portal_uuid=${sourcePortal.portalUuid}';
-            """.trimIndent(), "", 0
+                    window.location.href = 'http://localhost:8080/overview?portal_uuid=${sourcePortal.portalUuid}';
+                """.trimIndent(),
+                "", 0
             )
         }
 //        } else {

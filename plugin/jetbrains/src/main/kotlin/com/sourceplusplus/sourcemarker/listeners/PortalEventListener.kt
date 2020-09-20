@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 import java.time.ZonedDateTime
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -96,7 +96,7 @@ class PortalEventListener : CoroutineVerticle() {
             }
         }
 
-        vertx.eventBus().consumer<String>(QueryTraceStack) {handler ->
+        vertx.eventBus().consumer<String>(QueryTraceStack) { handler ->
             val traceId = handler.body()
             GlobalScope.launch(vertx.dispatcher()) {
                 handler.reply(EndpointTracesTracker.getTraceStack(traceId, vertx))

@@ -2,16 +2,22 @@ package com.sourceplusplus.portal.server.page
 
 import com.sourceplusplus.portal.server.portal
 import com.sourceplusplus.portal.server.template.*
-import com.sourceplusplus.protocol.portal.PageType.*
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType.*
-import com.sourceplusplus.protocol.artifact.trace.TraceSpanInfoType.*
-import com.sourceplusplus.protocol.artifact.trace.TraceStackHeaderType.*
+import com.sourceplusplus.protocol.artifact.trace.TraceSpanInfoType.END_TIME
+import com.sourceplusplus.protocol.artifact.trace.TraceSpanInfoType.START_TIME
+import com.sourceplusplus.protocol.artifact.trace.TraceStackHeaderType.TIME_OCCURRED
+import com.sourceplusplus.protocol.artifact.trace.TraceStackHeaderType.TRACE_ID
 import com.sourceplusplus.protocol.artifact.trace.TraceTableType.*
-import kotlinx.html.*
+import com.sourceplusplus.protocol.portal.PageType.OVERVIEW
+import com.sourceplusplus.protocol.portal.PageType.TRACES
+import kotlinx.html.FlowContent
+import kotlinx.html.HTML
+import kotlinx.html.body
+import kotlinx.html.head
 import kotlinx.html.stream.appendHTML
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)

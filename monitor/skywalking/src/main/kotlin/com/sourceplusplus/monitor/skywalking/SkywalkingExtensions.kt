@@ -58,10 +58,10 @@ fun QueryBasicTracesQuery.Trace.toProtocol(): Trace {
 
 //todo: correctly
 fun QueryTraceQuery.Log.toProtocol(): TraceSpanLogEntry {
-    if (data!!.find { it.key == "stack"} != null) {
+    if (data!!.find { it.key == "stack" } != null) {
         return TraceSpanLogEntry(
             time = Instant.fromEpochMilliseconds((time as BigDecimal).toLong()).epochSeconds,
-            data = data.find { it.key == "stack"}!!.value!! //todo: correctly
+            data = data.find { it.key == "stack" }!!.value!! //todo: correctly
         )
     }
     return TraceSpanLogEntry(

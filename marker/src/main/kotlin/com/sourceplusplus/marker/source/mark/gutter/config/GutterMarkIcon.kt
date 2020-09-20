@@ -3,7 +3,7 @@ package com.sourceplusplus.marker.source.mark.gutter.config
 import com.intellij.openapi.util.IconLoader
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)

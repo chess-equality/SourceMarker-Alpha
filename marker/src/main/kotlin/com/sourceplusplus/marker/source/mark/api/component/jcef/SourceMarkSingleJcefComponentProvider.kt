@@ -7,7 +7,7 @@ import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventListener
 import com.sourceplusplus.marker.source.mark.gutter.event.GutterMarkEventCode
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -18,24 +18,15 @@ class SourceMarkSingleJcefComponentProvider : SourceMarkJcefComponentProvider(),
         SourceMarkJcefComponent(defaultConfiguration.copy())
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun getComponent(sourceMark: SourceMark): SourceMarkJcefComponent {
         sourceMark.addEventListener(this)
         return jcefComponent
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun disposeComponent(sourceMark: SourceMark) {
         //do nothing
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun handleEvent(event: SourceMarkEvent) {
         when (event.eventCode) {
             GutterMarkEventCode.GUTTER_MARK_VISIBLE -> super.handleEvent(event)

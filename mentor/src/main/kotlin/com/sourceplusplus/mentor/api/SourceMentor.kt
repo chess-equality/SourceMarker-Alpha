@@ -1,10 +1,10 @@
 package com.sourceplusplus.mentor.api
 
-import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
 import com.sourceplusplus.protocol.advice.method.MethodAdvice
+import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)

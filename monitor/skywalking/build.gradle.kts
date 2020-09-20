@@ -29,10 +29,6 @@ tasks {
             kotlinOptions.jvmTarget = "1.8"
         }
     }
-
-//    withType<io.gitlab.arturbosch.detekt.Detekt> {
-//        jvmTarget = "1.8"
-//    }
 }
 
 apollo {

@@ -10,29 +10,23 @@ import java.util.concurrent.atomic.AtomicBoolean
 import com.sourceplusplus.marker.plugin.SourceMarkerPlugin.configuration as pluginConfiguration
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 open class MethodGutterMark(
-        override val sourceFileMarker: SourceFileMarker,
-        override var psiMethod: UMethod
+    override val sourceFileMarker: SourceFileMarker,
+    override var psiMethod: UMethod
 ) : MethodSourceMark(sourceFileMarker, psiMethod), GutterMark {
 
     override val configuration: GutterMarkConfiguration = pluginConfiguration.defaultGutterMarkConfiguration.copy()
     private var visible: AtomicBoolean = AtomicBoolean()
 
-    /**
-     * {@inheritDoc}
-     */
     override fun isVisible(): Boolean {
         return visible.get()
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun setVisible(visible: Boolean) {
         val previousVisibility = this.visible.getAndSet(visible)
         if (visible && !previousVisibility) {

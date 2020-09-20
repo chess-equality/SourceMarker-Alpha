@@ -5,7 +5,7 @@ import org.jetbrains.uast.expressions.UInjectionHost
 import org.jetbrains.uast.java.JavaUQualifiedReferenceExpression
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -20,9 +20,9 @@ class EndpointNameDetector {
             sourceMark.getPsiMethod().findAnnotation(requestMappingAnnotation)
         if (requestMappingAnnotation != null) {
             val value = (requestMappingAnnotation.findAttributeValue("value") as UInjectionHost).evaluateToString()
-            val method =
-                (requestMappingAnnotation.findAttributeValue("method") as JavaUQualifiedReferenceExpression).selector
-            return "{${method}}$value"
+            val method = (requestMappingAnnotation.findAttributeValue("method")
+                    as JavaUQualifiedReferenceExpression).selector
+            return "{$method}$value"
         }
         return null
     }

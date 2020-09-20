@@ -4,7 +4,7 @@ import com.intellij.openapi.editor.Editor
 import java.awt.Dimension
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)

@@ -7,7 +7,7 @@ import java.time.Period
 import java.time.ZonedDateTime
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)

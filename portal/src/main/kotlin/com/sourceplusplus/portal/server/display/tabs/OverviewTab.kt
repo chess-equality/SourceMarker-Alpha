@@ -118,7 +118,8 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
         if (log.isTraceEnabled) {
             log.trace(
                 "Artifact metrics updated. Portal uuid: {} - App uuid: {} - Artifact qualified name: {} - Time frame: {}",
-                portal.portalUuid, artifactMetricResult.appUuid,
+                portal.portalUuid,
+                artifactMetricResult.appUuid,
                 getShortQualifiedFunctionName(artifactMetricResult.artifactQualifiedName),
                 artifactMetricResult.timeFrame
             )
