@@ -23,7 +23,7 @@ fun FlowContent.topTraceTable(vararg traceTableTypes: TraceTableType = arrayOf()
             tr {
                 for (traceTableType in traceTableTypes) {
                     th(classes = "secondary_background_color ${if (traceTableType.isCentered) "trace_th_center" else "trace_th"}") {
-                        + traceTableType.description
+                        +traceTableType.description
                     }
                 }
             }
@@ -41,7 +41,7 @@ fun FlowContent.traceStackTable(vararg traceTableTypes: TraceTableType = arrayOf
             tr {
                 for (traceTableType in traceTableTypes) {
                     th(classes = "secondary_background_color ${if (traceTableType.isCentered) "trace_th_center" else "trace_th"}") {
-                        + traceTableType.description
+                        +traceTableType.description
                     }
                 }
             }
@@ -59,15 +59,15 @@ fun FlowContent.spanInfoPanel(vararg traceSpanInfoTypes: TraceSpanInfoType = arr
             div("ui segment span_segment_background") {
                 for (traceSpanInfoType in traceSpanInfoTypes) {
                     p {
-                        + "${traceSpanInfoType.description}:"
+                        +"${traceSpanInfoType.description}:"
                         span {
                             id = "span_info_${traceSpanInfoType.id1}"
                         }
-                        + "("
+                        +"("
                         span("trace_time") {
                             id = "span_info_${traceSpanInfoType.id2}"
                         }
-                        + ")"
+                        +")"
                     }
                 }
             }
@@ -77,8 +77,8 @@ fun FlowContent.spanInfoPanel(vararg traceSpanInfoTypes: TraceSpanInfoType = arr
                     id = "span_tag_table"
                     thead {
                         tr {
-                            th { + "Tag"}
-                            th { + "Value"}
+                            th { +"Tag" }
+                            th { +"Value" }
                         }
                     }
                     tbody {
@@ -92,7 +92,7 @@ fun FlowContent.spanInfoPanel(vararg traceSpanInfoTypes: TraceSpanInfoType = arr
                     id = "log_tag_table"
                     thead {
                         tr {
-                            th { + "Trace Logs"}
+                            th { +"Trace Logs" }
                         }
                     }
                     tbody {
