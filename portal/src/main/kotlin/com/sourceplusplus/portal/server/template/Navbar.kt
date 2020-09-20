@@ -5,8 +5,8 @@ import com.sourceplusplus.protocol.portal.TimeIntervalType
 import kotlinx.html.*
 
 fun FlowContent.navBar(attached: Boolean = true, block: FlowContent.() -> Unit) {
-    div("ui menu top ${if(attached){"attached"}else{""}} background_color") {
-       block()
+    div("ui menu top ${if (attached) "attached" else ""} background_color") {
+        block()
     }
 }
 
@@ -42,7 +42,7 @@ fun FlowContent.tracesHeader(vararg traceStackHeaderTypes: TraceStackHeaderType 
         onClick = "clickedBackToTraces()"
         span {
             id = "latest_traces_header_text"
-            + "Latest Traces"
+            +"Latest Traces"
         }
     }
     a(classes = "ui item dropdown visibility_hidden") {
@@ -50,7 +50,7 @@ fun FlowContent.tracesHeader(vararg traceStackHeaderTypes: TraceStackHeaderType 
         onClick = "clickedBackToTraceStack()"
         span {
             id = "trace_stack_header_text"
-            + "Trace Stack"
+            +"Trace Stack"
         }
         div("menu") {
             id = "trace_stack_menu"
@@ -71,7 +71,7 @@ fun FlowContent.tracesHeader(vararg traceStackHeaderTypes: TraceStackHeaderType 
         id = "span_info_header"
         span {
             id = "span_info_header_text"
-            + "Span Info"
+            +"Span Info"
         }
     }
 }
