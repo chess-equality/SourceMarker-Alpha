@@ -35,7 +35,10 @@ object ArtifactNameUtils {
     }
 
     fun getClassName(qualifiedMethodName: String?): String? {
-        return if (qualifiedMethodName == null || qualifiedMethodName.isEmpty() || !qualifiedMethodName.contains(".")) {
+        return if (qualifiedMethodName == null
+            || qualifiedMethodName.isEmpty()
+            || !qualifiedMethodName.contains(".")
+        ) {
             qualifiedMethodName
         } else qualifiedMethodName.substring(
             0, qualifiedMethodName.substring(

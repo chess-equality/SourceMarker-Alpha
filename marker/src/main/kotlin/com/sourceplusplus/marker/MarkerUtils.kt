@@ -22,7 +22,7 @@ import java.awt.Point
 import java.util.*
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -31,6 +31,11 @@ class MarkerUtils private constructor() {
     companion object {
         private val log = LoggerFactory.getLogger(MarkerUtils::class.java)
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         fun getElementAtLine(file: PsiFile, line: Int): PsiElement? {
             val document: Document = PsiDocumentManager.getInstance(file.project).getDocument(file)!!
@@ -42,6 +47,11 @@ class MarkerUtils private constructor() {
             return element
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         @JvmOverloads
         fun getOrCreateExpressionInlayMark(
@@ -55,6 +65,11 @@ class MarkerUtils private constructor() {
             } else null
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         @JvmOverloads
         @Synchronized
@@ -111,6 +126,11 @@ class MarkerUtils private constructor() {
             }
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         fun getUniversalExpression(element: PsiStatement): PsiElement {
             var statementExpression: PsiElement = element
@@ -120,6 +140,11 @@ class MarkerUtils private constructor() {
             return statementExpression
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         @JvmOverloads
         @Synchronized
@@ -165,6 +190,11 @@ class MarkerUtils private constructor() {
             }
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         @JvmOverloads
         @Synchronized
@@ -218,6 +248,11 @@ class MarkerUtils private constructor() {
             }
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         @JvmOverloads
         @Synchronized
@@ -271,6 +306,11 @@ class MarkerUtils private constructor() {
             }
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         fun getNameIdentifier(nameIdentifierOwner: PsiNameIdentifierOwner): PsiElement? {
             return when {
@@ -287,6 +327,11 @@ class MarkerUtils private constructor() {
             }
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         fun getQualifiedClassName(qualifiedName: String): String {
             var withoutArgs = qualifiedName.substring(0, qualifiedName.indexOf("("))
@@ -298,6 +343,11 @@ class MarkerUtils private constructor() {
             }
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         fun getFullyQualifiedName(expression: UExpression): String {
             val qualifiedMethodName = expression.getContainingUMethod()?.let { getFullyQualifiedName(it) }
@@ -316,23 +366,43 @@ class MarkerUtils private constructor() {
             }
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         fun getFullyQualifiedName(method: PsiMethod): String {
             return getFullyQualifiedName(method.toUElement() as UMethod)
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         fun getFullyQualifiedName(method: UMethod): String {
             //todo: PsiUtil.getMemberQualifiedName(method)!!
             return "${method.containingClass!!.qualifiedName}.${getQualifiedName(method)}"
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         fun getFullyQualifiedName(theClass: UClass): String {
             //todo: PsiUtil.getMemberQualifiedName(method)!!
             return "${theClass.qualifiedName}"
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         fun getQualifiedName(method: UMethod): String {
             val methodName = method.nameIdentifier!!.text
@@ -359,6 +429,11 @@ class MarkerUtils private constructor() {
             return "$methodName($methodParams)"
         }
 
+        /**
+         * todo: description.
+         *
+         * @since 0.0.1
+         */
         @JvmStatic
         fun convertPointToLineNumber(project: Project, p: Point): Int {
             val myEditor = FileEditorManager.getInstance(project).selectedTextEditor

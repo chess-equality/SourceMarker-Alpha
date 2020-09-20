@@ -22,7 +22,7 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
                         return str;
                     }
                 }
-            """.trimIndent()
+                """.trimIndent()
             File(git.repository.directory.parent, "GetterMethod.java").writeText(code)
             git.add().addFilepattern(".").call()
             git.commit().setMessage("Initial commit").call()
@@ -51,7 +51,7 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
             str
             ;
             }
-        """.trimIndent(), finerMethodFile.readText().trimIndent()
+            """.trimIndent(), finerMethodFile.readText().trimIndent()
         )
     }
 
@@ -66,7 +66,7 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
                         return str
                     }
                 }
-            """.trimIndent()
+                """.trimIndent()
             File(git.repository.directory.parent, "GetterMethod.groovy").writeText(code)
             git.add().addFilepattern(".").call()
             git.commit().setMessage("Initial commit").call()
@@ -93,7 +93,7 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
             return
             str
             }
-        """.trimIndent(), finerMethodFile.readText().trimIndent()
+            """.trimIndent(), finerMethodFile.readText().trimIndent()
         )
     }
 

@@ -19,7 +19,7 @@ import org.jetbrains.uast.UMethod
 import org.jetbrains.uast.toUElement
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
@@ -107,18 +107,33 @@ abstract class SourceLineMarkerProvider : LineMarkerProviderDescriptor() {
         }
     }
 
+    /**
+     * todo: description.
+     *
+     * @since 0.0.1
+     */
     class GroovyDescriptor : SourceLineMarkerProvider() {
         override fun getName(): String {
             return "Groovy source line markers"
         }
     }
 
+    /**
+     * todo: description.
+     *
+     * @since 0.0.1
+     */
     class JavaDescriptor : SourceLineMarkerProvider() {
         override fun getName(): String {
             return "Java source line markers"
         }
     }
 
+    /**
+     * todo: description.
+     *
+     * @since 0.0.1
+     */
     class KotlinDescriptor : SourceLineMarkerProvider() {
         override fun getName(): String {
             return "Kotlin source line markers"

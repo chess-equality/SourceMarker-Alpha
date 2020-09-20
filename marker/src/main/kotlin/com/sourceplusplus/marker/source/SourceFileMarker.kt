@@ -180,9 +180,6 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
         } as ExpressionSourceMark?
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun createSourceMark(psiExpression: UExpression, type: SourceMark.Type): ExpressionSourceMark {
         log.trace("Creating source mark. Expression: $psiExpression - Type: $type")
         return when (type) {
@@ -195,9 +192,6 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun createSourceMark(psiMethod: UMethod, type: SourceMark.Type): MethodSourceMark {
         log.trace("Creating source mark. Method: ${psiMethod.name} - Type: $type")
         return when (type) {
@@ -210,9 +204,6 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun createSourceMark(psiClass: UClass, type: SourceMark.Type): ClassSourceMark {
         log.trace("Creating source mark. Class: ${psiClass.qualifiedName} - Type: $type")
         return when (type) {
@@ -232,9 +223,6 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -243,16 +231,10 @@ open class SourceFileMarker(val psiFile: PsiFile) : SourceMarkProvider {
         return true
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun hashCode(): Int {
         return psiFile.hashCode()
     }
 
-    /**
-     * {@inheritDoc}
-     */
     override fun toString(): String {
         return "SourceFileMarker:${psiFile.name}"
     }

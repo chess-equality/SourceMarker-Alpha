@@ -25,24 +25,24 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
         if (File("/tmp/git-repo").exists()) File("/tmp/git-repo").deleteRecursively()
         val git = Git.init().setDirectory(File("/tmp/git-repo")).call()
         @Language("Java") val code = """
-                public class GetterMethod {
-                    private String str;
-                    public String getStr() {
-                        return str;
-                    }
+            public class GetterMethod {
+                private String str;
+                public String getStr() {
+                    return str;
                 }
+            }
             """.trimIndent()
         File(git.repository.directory.parent, "GetterMethod.java").writeText(code)
         git.add().addFilepattern(".").call()
         git.commit().setMessage("Initial commit").call()
 
         @Language("Java") val renamedCode = """
-                public class GetterMethod {
-                    private String str;
-                    public String getStr2() {
-                        return str;
-                    }
+            public class GetterMethod {
+                private String str;
+                public String getStr2() {
+                    return str;
                 }
+            }
             """.trimIndent()
         File(git.repository.directory.parent, "GetterMethod.java").writeText(renamedCode)
         git.add().addFilepattern(".").call()

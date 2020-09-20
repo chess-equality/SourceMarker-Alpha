@@ -39,13 +39,16 @@ import kotlin.collections.ArrayList
 import kotlin.concurrent.schedule
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 interface SourceMark : JBPopupListener, MouseMotionListener, VisibleAreaListener {
 
+    /**
+     * todo: description.
+     */
     enum class Type {
         GUTTER,
         INLAY

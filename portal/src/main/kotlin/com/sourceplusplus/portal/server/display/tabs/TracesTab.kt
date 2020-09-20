@@ -422,7 +422,9 @@ class TracesTab : AbstractTab(PageType.TRACES) {
         }
         val updatedArtifactTraceResult = artifactTraceResult.copy(
             traces = traces,
-            artifactSimpleName = removePackageAndClassName(removePackageNames(artifactTraceResult.artifactQualifiedName))
+            artifactSimpleName = removePackageAndClassName(
+                removePackageNames(artifactTraceResult.artifactQualifiedName)
+            )
         )
 
         portals.forEach {

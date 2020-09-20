@@ -13,7 +13,7 @@ import com.sourceplusplus.marker.source.mark.api.SourceMark
 import org.jetbrains.annotations.NotNull
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)

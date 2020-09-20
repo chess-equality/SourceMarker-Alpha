@@ -10,7 +10,7 @@ import org.jetbrains.uast.UMethod
 import org.jetbrains.uast.toUElement
 
 /**
- * todo: description
+ * todo: description.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
