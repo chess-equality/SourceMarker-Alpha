@@ -49,17 +49,27 @@ abstract class SourceLineMarkerProvider : LineMarkerProviderDescriptor() {
                     elt!!.getUserData(SourceKey.GutterMark)!!.displayPopup()
                 }
             }
-            return LineMarkerInfo(element, element.textRange, gutterMark.configuration.icon,
-                null, navigationHandler, CENTER)
-        } else  if ((parent is PsiMethod && element === parent.nameIdentifier)
-                || (parent is GrMethod && element === parent.nameIdentifierGroovy)
-                || (parent is KtNamedFunction && element === parent.nameIdentifier)) {
+            return LineMarkerInfo(
+                element,
+                element.textRange,
+                gutterMark.configuration.icon,
+                null,
+                navigationHandler,
+                CENTER
+            )
+        } else if ((parent is PsiMethod && element === parent.nameIdentifier)
+            || (parent is GrMethod && element === parent.nameIdentifierGroovy)
+            || (parent is KtNamedFunction && element === parent.nameIdentifier)
+        ) {
             val fileMarker = SourceMarkerPlugin.getSourceFileMarker(element.containingFile) ?: return null
             val artifactQualifiedName = MarkerUtils.getFullyQualifiedName(element.parent.toUElement() as UMethod)
             if (!SourceMarkerPlugin.configuration.createSourceMarkFilter.test(artifactQualifiedName)) return null
 
             //check by artifact name first due to user can erroneously name same method twice
-            var gutterMark = fileMarker.getSourceMark(artifactQualifiedName, SourceMark.Type.GUTTER) as MethodGutterMark?
+            var gutterMark = fileMarker.getSourceMark(
+                artifactQualifiedName,
+                SourceMark.Type.GUTTER
+            ) as MethodGutterMark?
             if (gutterMark == null) {
                 gutterMark = MarkerUtils.getOrCreateMethodGutterMark(fileMarker, element) ?: return null
             }
@@ -70,15 +80,24 @@ abstract class SourceLineMarkerProvider : LineMarkerProviderDescriptor() {
                     elt!!.getUserData(SourceKey.GutterMark)!!.displayPopup()
                 }
             }
-            return LineMarkerInfo(element, element.textRange, gutterMark.configuration.icon,
-                    null, navigationHandler, CENTER)
+            return LineMarkerInfo(
+                element,
+                element.textRange,
+                gutterMark.configuration.icon,
+                null,
+                navigationHandler,
+                CENTER
+            )
         }
         //todo: class mark
 
         return null
     }
 
-    override fun collectSlowLineMarkers(elements: MutableList<out PsiElement>, result: MutableCollection<in LineMarkerInfo<*>>) {
+    override fun collectSlowLineMarkers(
+        elements: MutableList<out PsiElement>,
+        result: MutableCollection<in LineMarkerInfo<*>>
+    ) {
         if (!SourceMarkerPlugin.enabled) {
             return
         }
