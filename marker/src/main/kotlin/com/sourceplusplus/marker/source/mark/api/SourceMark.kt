@@ -174,32 +174,34 @@ interface SourceMark : JBPopupListener, MouseMotionListener, VisibleAreaListener
         this.editor = editor
 
         SwingUtilities.invokeLater {
-            val displayPoint = editor.visualPositionToXY(editor.offsetToVisualPosition(
-                    editor.document.getLineStartOffset(lineNumber)))
+            val displayPoint = editor.visualPositionToXY(
+                editor.offsetToVisualPosition(editor.document.getLineStartOffset(lineNumber))
+            )
 
             val popup: Disposable
             val popupComponent = sourceMarkComponent.getComponent()
-            val dynamicSize = sourceMarkComponent.configuration.componentSizeEvaluator.getDynamicSize(
-                    editor, sourceMarkComponent.configuration)
+            val dynamicSize = sourceMarkComponent.configuration.componentSizeEvaluator
+                .getDynamicSize(editor, sourceMarkComponent.configuration)
             if (dynamicSize != null && popupComponent.preferredSize != dynamicSize) {
                 popupComponent.preferredSize = dynamicSize
             }
             val popupComponentSize = popupComponent.preferredSize
 
             if (sourceMarkComponent.configuration.useHeavyPopup) {
-                if ((this is ClassSourceMark && sourceMarkComponent.configuration.showAboveClass) ||
-                        (this is MethodSourceMark && sourceMarkComponent.configuration.showAboveMethod) ||
-                        (this is ExpressionSourceMark && sourceMarkComponent.configuration.showAboveExpression)) {
+                if ((this is ClassSourceMark && sourceMarkComponent.configuration.showAboveClass)
+                    || (this is MethodSourceMark && sourceMarkComponent.configuration.showAboveMethod)
+                    || (this is ExpressionSourceMark && sourceMarkComponent.configuration.showAboveExpression)
+                ) {
                     displayPoint.y -= popupComponentSize.height + 4
                 }
 
                 popup = JBPopupFactory.getInstance()
-                        .createComponentPopupBuilder(popupComponent, popupComponent)
-                        .setShowBorder(false)
-                        .setShowShadow(false)
-                        .setRequestFocus(true)
-                        .setCancelOnWindowDeactivation(false)
-                        .createPopup()
+                    .createComponentPopupBuilder(popupComponent, popupComponent)
+                    .setShowBorder(false)
+                    .setShowShadow(false)
+                    .setRequestFocus(true)
+                    .setCancelOnWindowDeactivation(false)
+                    .createPopup()
                 popup.addListener(this)
                 popup.show(RelativePoint(editor.contentComponent, displayPoint))
             } else {
@@ -208,12 +210,12 @@ interface SourceMark : JBPopupListener, MouseMotionListener, VisibleAreaListener
                 displayPoint.x = (displayPoint.getX() + width).toInt()
                 displayPoint.y = (displayPoint.getY() - height).toInt()
                 popup = JBPopupFactory.getInstance()
-                        .createBalloonBuilder(popupComponent)
-                        .setBorderInsets(JBUI.emptyInsets())
-                        .setDialogMode(true)
-                        .setFillColor(JBColor.background())
-                        .setAnimationCycle(0)
-                        .createBalloon() as BalloonImpl
+                    .createBalloonBuilder(popupComponent)
+                    .setBorderInsets(JBUI.emptyInsets())
+                    .setDialogMode(true)
+                    .setFillColor(JBColor.background())
+                    .setAnimationCycle(0)
+                    .createBalloon() as BalloonImpl
                 popup.addListener(this)
                 popup.setShowPointer(false)
                 popup.show(RelativePoint(editor.contentComponent, displayPoint), Balloon.Position.atRight)
