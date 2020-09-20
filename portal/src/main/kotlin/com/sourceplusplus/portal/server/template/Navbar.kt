@@ -1,36 +1,19 @@
 package com.sourceplusplus.portal.server.template
 
-import com.sourceplusplus.protocol.portal.TimeIntervalType
 import com.sourceplusplus.protocol.artifact.trace.TraceStackHeaderType
+import com.sourceplusplus.protocol.portal.TimeIntervalType
 import kotlinx.html.*
 
-fun FlowContent.overviewNavBar(block: FlowContent.() -> Unit) {
-    div("ui menu fixed asd marginlefting middle aligned content menu_style") {
-        div("ui sidebar horizontal top menu fixed overlay visible very thin icon background_color webkit_transition") {
-            style = "overflow: visible !important;"
-            block()
-        }
-    }
-}
-
-fun FlowContent.tracesNavBar(block: FlowContent.() -> Unit) {
-    div("ui menu borderless marginlefting background_color menu_style_2") {
-        block()
-    }
-}
-
-fun FlowContent.configurationNavBar(block: FlowContent.() -> Unit) {
-    div("ui menu marginlefting aligned content menu_style_3") {
-        div("ui sidebar horizontal top menu fixed overlay visible very thin icon background_color overflow_visible") {
-            block()
-        }
+fun FlowContent.navBar(attached: Boolean = true, block: FlowContent.() -> Unit) {
+    div("ui menu top ${if(attached){"attached"}else{""}} background_color") {
+       block()
     }
 }
 
 fun FlowContent.timeDropdown(vararg timeIntervalTypes: TimeIntervalType = arrayOf()) {
-    div("marginlefting align_content_center") {
-        div("ui icon top left pointing dropdown") {
-            i("clock outline icon spp_red_color spp_font_margin")
+    div("first_menu_button_margin align_content_center") {
+        div("ui icon basic button top left pointing dropdown") {
+            i("clock outline icon spp_red_color")
             div("menu secondary_background_color no_top_margin") {
                 for (timeIntervalType in timeIntervalTypes) {
                     div("item") {
@@ -44,8 +27,17 @@ fun FlowContent.timeDropdown(vararg timeIntervalTypes: TimeIntervalType = arrayO
     }
 }
 
+fun FlowContent.calendar() {
+    div("ui calendar align_content_center") {
+        id = "button_calendar"
+        button(classes = "ui icon basic button spp_blue_color") {
+            i("icon calendar")
+        }
+    }
+}
+
 fun FlowContent.tracesHeader(vararg traceStackHeaderTypes: TraceStackHeaderType = arrayOf()) {
-    a(classes = "ui item dropdown active_sub_tab") {
+    a(classes = "marginlefting ui item dropdown active_sub_tab") {
         id = "latest_traces_header"
         onClick = "clickedBackToTraces()"
         span {
@@ -85,11 +77,11 @@ fun FlowContent.tracesHeader(vararg traceStackHeaderTypes: TraceStackHeaderType 
 }
 
 fun FlowContent.externalPortalButton() {
-    a {
-        id = "current_page_external"
-        href = "#"
-        onClick = "clickedViewAsExternalPortal()"
-        i("external link icon spp_red_color spp_font_margin")
+    div("first_menu_button_margin align_content_center") {
+        div("ui icon basic button") {
+            onClick = "clickedViewAsExternalPortal()"
+            i("icon external link spp_red_color")
+        }
     }
 }
 

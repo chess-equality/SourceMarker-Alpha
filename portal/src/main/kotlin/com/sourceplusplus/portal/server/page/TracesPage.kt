@@ -30,7 +30,7 @@ class TracesPage {
                         //navItem(CONFIGURATION)
                     }
                     tracesContent {
-                        tracesNavBar {
+                        navBar {
                             tracesHeader(TRACE_ID, TIME_OCCURRED)
                             rightAlign {
                                 externalPortalButton()

@@ -1,4 +1,5 @@
 $(document).ready(function () {
+    $('.ui.calendar').calendar();
     $('.ui.dropdown').dropdown();
     $('.ui.sidebar').sidebar('setting', 'transition', 'overlay');
 

@@ -11,7 +11,7 @@ fun FlowContent.overviewContent(block: FlowContent.() -> Unit) {
 
 fun FlowContent.areaChart(block: (FlowContent.() -> Unit)? = null) {
     div("ui padded equal height grid background_color") {
-        style = "min-height: 100vh; margin-left: 60px !important"
+        style = "min-height: 95vh; margin-left: 60px !important" //todo: has to be better way to do this
         div("twelve wide stretched column") {
             div("ui equal height grid") {
                 div("one column row padding_top_bottom") {

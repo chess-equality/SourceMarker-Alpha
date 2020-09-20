@@ -52,13 +52,13 @@ fun main() {
     vertx.createHttpServer().requestHandler(router).listen(8888, "localhost")
 
     vertx.eventBus().consumer<String>(ClickedViewAsExternalPortal) {
-        it.reply(JsonObject().put("portal_uuid", "1"))
+        it.reply(JsonObject().put("portal_uuid", "null"))
     }
 
     vertx.eventBus().consumer<Void>(OverviewTabOpened) {
         updateCards(vertx)
 
-        vertx.eventBus().publish(ClearOverview("1"), "")
+        vertx.eventBus().publish(ClearOverview("null"), "")
         displayChart(vertx)
     }
     vertx.setPeriodic(2500) {
@@ -88,7 +88,7 @@ fun main() {
             )
             val spanInfo = TraceSpanInfo(
                 span = span,
-                appUuid = "1",
+                appUuid = "null",
                 rootArtifactQualifiedName = UUID.randomUUID().toString(),
                 operationName = UUID.randomUUID().toString(),
                 timeTook = "10s",
@@ -96,7 +96,7 @@ fun main() {
             )
             traceSpans.add(spanInfo)
         }
-        vertx.eventBus().displayTraceStack("1", traceSpans)
+        vertx.eventBus().displayTraceStack("null", traceSpans)
     }
 
     vertx.eventBus().consumer<Void>(ClickedDisplaySpanInfo) {
@@ -115,12 +115,12 @@ fun main() {
                 TraceSpanLogEntry(time = Clock.System.now(), data = UUID.randomUUID().toString())
             )
         )
-        vertx.eventBus().displaySpanInfo("1", span)
+        vertx.eventBus().displaySpanInfo("null", span)
     }
 
     vertx.eventBus().consumer<Void>(ConfigurationTabOpened) {
         vertx.eventBus().publish(
-            DisplayArtifactConfiguration("1"), JsonObject()
+            DisplayArtifactConfiguration("null"), JsonObject()
                 .put("artifact_qualified_name", UUID.randomUUID().toString())
                 .put("create_date", Instant.now().epochSecond)
                 .put("last_updated", Instant.now().epochSecond)
@@ -145,7 +145,7 @@ fun displayChart(vertx: Vertx) {
             doubleArrayOf(current().nextDouble(10.0), current().nextDouble(10.0))
         )
     val splineChart = SplineChart(MetricType.ResponseTime_Average, QueryTimeFrame.LAST_15_MINUTES, listOf(seriesData))
-    vertx.eventBus().updateChart("1", splineChart)
+    vertx.eventBus().updateChart("null", splineChart)
 }
 
 fun displayTraces(vertx: Vertx) {
@@ -163,7 +163,7 @@ fun displayTraces(vertx: Vertx) {
     }
 
     val tracesResult = TraceResult(
-        appUuid = "1",
+        appUuid = "null",
         artifactQualifiedName = UUID.randomUUID().toString(),
         artifactSimpleName = UUID.randomUUID().toString(),
         start = Clock.System.now().toEpochMilliseconds(),
@@ -172,7 +172,7 @@ fun displayTraces(vertx: Vertx) {
         traces = traces.toList(),
         orderType = TraceOrderType.LATEST_TRACES
     )
-    vertx.eventBus().displayTraces("1", tracesResult)
+    vertx.eventBus().displayTraces("null", tracesResult)
 }
 
 fun updateCards(vertx: Vertx) {
@@ -182,7 +182,7 @@ fun updateCards(vertx: Vertx) {
         BarTrendCard(meta = "responsetime_average", header = current().nextInt(100).toString())
     val slaAverageCard =
         BarTrendCard(meta = "servicelevelagreement_average", header = current().nextInt(100).toString())
-    vertx.eventBus().displayCard("1", throughputAverageCard)
-    vertx.eventBus().displayCard("1", responseTimeAverageCard)
-    vertx.eventBus().displayCard("1", slaAverageCard)
+    vertx.eventBus().displayCard("null", throughputAverageCard)
+    vertx.eventBus().displayCard("null", responseTimeAverageCard)
+    vertx.eventBus().displayCard("null", slaAverageCard)
 }

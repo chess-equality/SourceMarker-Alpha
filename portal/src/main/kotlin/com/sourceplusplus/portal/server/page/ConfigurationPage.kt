@@ -33,7 +33,7 @@ class ConfigurationPage {
                         navItem(CONFIGURATION, isActive = true)
                     }
                     configurationContent {
-                        configurationNavBar {
+                        navBar(false) {
                             rightAlign {
                                 externalPortalButton()
                             }

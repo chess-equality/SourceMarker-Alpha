@@ -29,8 +29,10 @@ class OverviewPage {
                         //navItem(CONFIGURATION)
                     }
                     overviewContent {
-                        overviewNavBar {
+                        navBar {
                             timeDropdown(FIVE_MINUTES, FIFTEEN_MINUTES, THIRTY_MINUTES, ONE_HOUR, THREE_HOURS)
+                            calendar()
+
                             rightAlign {
                                 externalPortalButton()
                             }

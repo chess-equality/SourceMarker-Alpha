@@ -38,7 +38,7 @@ fun FlowContent.artifactConfiguration(vararg artifactConfigTypes: ArtifactConfig
 }
 
 fun FlowContent.artifactInformation(vararg artifactInfoTypes: ArtifactInfoType = arrayOf()) {
-    div("ten wide column background_color min_height") {
+    div("ten wide column min_height") {
         div("ui segments secondary_background_color margin_right_white") {
             table("ui small very compact very basic collapsing celled table margin_left_no_padding") {
                 tbody {
