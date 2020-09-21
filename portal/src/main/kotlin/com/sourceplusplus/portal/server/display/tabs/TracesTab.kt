@@ -18,6 +18,7 @@ import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.RefreshTrace
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.TracesTabOpened
 import com.sourceplusplus.protocol.artifact.trace.*
 import com.sourceplusplus.protocol.portal.PageType
+import io.vertx.core.eventbus.Message
 import io.vertx.core.json.Json
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
@@ -52,39 +53,7 @@ class TracesTab : AbstractTab(PageType.TRACES) {
 
         //refresh with traces from cache (if avail)
         vertx.eventBus().consumer<JsonObject>(TracesTabOpened) {
-            log.info("Traces tab opened")
-            val message = JsonObject.mapFrom(it.body())
-            val portalUuid = message.getString("portal_uuid")
-            val portal = SourcePortal.getPortal(portalUuid)
-            if (portal == null) {
-                log.warn("Ignoring traces tab opened event. Unable to find portal: {}", portalUuid)
-                return@consumer
-            }
-
-            val orderType = message.getString("trace_order_type")
-            if (orderType != null) {
-                //user possibly changed current trace order type; todo: create event
-                portal.tracesView.orderType = TraceOrderType.valueOf(orderType.toUpperCase())
-            }
-            portal.currentTab = thisTab
-            SourcePortal.ensurePortalActive(portal)
-            updateUI(portal)
-
-            vertx.eventBus().send(RefreshTraces, portal)
-            //subscribe (re-subscribe) to get traces as they are created
-//            val subscribeRequest = ArtifactTraceSubscribeRequest.builder()
-//                    .appUuid(portal.appUuid)
-//                    .artifactQualifiedName(portal.portalUI.viewingPortalArtifact)
-//                    .addOrderTypes(portal.portalUI.tracesView.orderType)
-//                    .timeFrame(QueryTimeFrame.LAST_5_MINUTES)
-//                    .build()
-//            SourcePortalConfig.current.getCoreClient(portal.appUuid).subscribeToArtifact(subscribeRequest, {
-//                if (it.succeeded()) {
-//                    log.info("Successfully subscribed to traces with request: {}", subscribeRequest)
-//                } else {
-//                    log.error("Failed to subscribe to artifact traces", it.cause())
-//                }
-//            })
+            tracesTabOpened(it)
         }
         vertx.eventBus().consumer<TraceResult>(ArtifactTraceUpdated) {
             handleArtifactTraceResult(it.body())
@@ -257,6 +226,42 @@ class TracesTab : AbstractTab(PageType.TRACES) {
             }
         }
         log.info("{} started", javaClass.simpleName)
+    }
+
+    private fun tracesTabOpened(it: Message<JsonObject>) {
+        log.info("Traces tab opened")
+        val message = JsonObject.mapFrom(it.body())
+        val portalUuid = message.getString("portal_uuid")
+        val portal = SourcePortal.getPortal(portalUuid)
+        if (portal == null) {
+            log.warn("Ignoring traces tab opened event. Unable to find portal: {}", portalUuid)
+            return
+        }
+
+        val orderType = message.getString("trace_order_type")
+        if (orderType != null) {
+            //user possibly changed current trace order type; todo: create event
+            portal.tracesView.orderType = TraceOrderType.valueOf(orderType.toUpperCase())
+        }
+        portal.currentTab = thisTab
+        SourcePortal.ensurePortalActive(portal)
+        updateUI(portal)
+
+        vertx.eventBus().send(RefreshTraces, portal)
+        //subscribe (re-subscribe) to get traces as they are created
+        //            val subscribeRequest = ArtifactTraceSubscribeRequest.builder()
+        //                    .appUuid(portal.appUuid)
+        //                    .artifactQualifiedName(portal.portalUI.viewingPortalArtifact)
+        //                    .addOrderTypes(portal.portalUI.tracesView.orderType)
+        //                    .timeFrame(QueryTimeFrame.LAST_5_MINUTES)
+        //                    .build()
+        //            SourcePortalConfig.current.getCoreClient(portal.appUuid).subscribeToArtifact(subscribeRequest, {
+        //                if (it.succeeded()) {
+        //                    log.info("Successfully subscribed to traces with request: {}", subscribeRequest)
+        //                } else {
+        //                    log.error("Failed to subscribe to artifact traces", it.cause())
+        //                }
+        //            })
     }
 
     override fun updateUI(portal: SourcePortal) {
