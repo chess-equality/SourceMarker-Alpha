@@ -12,6 +12,7 @@ import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
 import com.sourceplusplus.portal.server.display.SourcePortal
 import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity.Companion.vertx
 import com.sourceplusplus.sourcemarker.psi.EndpointNameDetector
+import io.vertx.kotlin.coroutines.await
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -103,7 +104,7 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
             return cachedEndpointId
         } else {
             log.debug("Determining endpoint name")
-            val endpointName = endpointDetector.determineEndpointName(sourceMark)
+            val endpointName = endpointDetector.determineEndpointName(sourceMark).await().orElse(null)
 
             if (endpointName != null) {
                 log.debug("Detected endpoint name: $endpointName")
