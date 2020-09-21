@@ -1,7 +1,7 @@
 console.log("Overview tab started");
 
-var currentMetricType = "Throughput_Average";
-var currentTimeFrame = "LAST_5_MINUTES";
+var currentMetricType = "Throughput_Average"; //todo-chess-equality: currentMetricType = OverviewView.activeChartMetric
+var currentTimeFrame = "LAST_5_MINUTES"; //todo-chess-equality: currentTimeFrame = OverviewView.timeFrame
 
 console.log("Connecting portal");
 eb.onopen = function () {
