@@ -10,7 +10,7 @@ import com.sourceplusplus.monitor.skywalking.model.ZonedDuration
 import com.sourceplusplus.monitor.skywalking.toProtocol
 import com.sourceplusplus.monitor.skywalking.track.EndpointMetricsTracker
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracesTracker
-import com.sourceplusplus.portal.server.display.SourcePortal
+import com.sourceplusplus.portal.frontend.SourcePortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ArtifactMetricUpdated
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ArtifactTraceUpdated
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClosePortal

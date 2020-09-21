@@ -33,7 +33,6 @@ import kotlinx.html.visitAndFinalize
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class PortalServer : CoroutineVerticle() {
-    //todo: backend/frontend packages
 
     companion object {
         @JvmStatic

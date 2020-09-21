@@ -9,7 +9,7 @@ import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkJcefCo
 import com.sourceplusplus.marker.source.mark.api.event.SourceMarkEventCode
 import com.sourceplusplus.marker.source.mark.api.key.SourceKey
 import com.sourceplusplus.monitor.skywalking.track.EndpointTracker
-import com.sourceplusplus.portal.server.display.SourcePortal
+import com.sourceplusplus.portal.frontend.SourcePortal
 import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity.Companion.vertx
 import com.sourceplusplus.sourcemarker.psi.EndpointNameDetector
 import io.vertx.kotlin.coroutines.await
