@@ -9,8 +9,8 @@ import com.sourceplusplus.marker.source.mark.api.filter.ApplySourceMarkFilter
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-abstract class SourceMarkConfiguration {
-    abstract var applySourceMarkFilter: ApplySourceMarkFilter
-    abstract var activateOnKeyboardShortcut: Boolean
-    abstract var componentProvider: SourceMarkComponentProvider
+interface SourceMarkConfiguration {
+    var applySourceMarkFilter: ApplySourceMarkFilter
+    var activateOnKeyboardShortcut: Boolean
+    var componentProvider: SourceMarkComponentProvider
 }

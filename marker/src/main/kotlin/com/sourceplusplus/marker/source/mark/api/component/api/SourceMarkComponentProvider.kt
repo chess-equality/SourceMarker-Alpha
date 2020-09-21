@@ -9,10 +9,10 @@ import com.sourceplusplus.marker.source.mark.api.component.api.config.SourceMark
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-abstract class SourceMarkComponentProvider {
+interface SourceMarkComponentProvider {
 
-    abstract val defaultConfiguration: SourceMarkComponentConfiguration
+    val defaultConfiguration: SourceMarkComponentConfiguration
 
-    abstract fun getComponent(sourceMark: SourceMark): SourceMarkComponent
-    abstract fun disposeComponent(sourceMark: SourceMark)
+    fun getComponent(sourceMark: SourceMark): SourceMarkComponent
+    fun disposeComponent(sourceMark: SourceMark)
 }

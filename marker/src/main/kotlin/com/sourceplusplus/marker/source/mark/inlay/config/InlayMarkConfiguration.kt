@@ -17,4 +17,4 @@ data class InlayMarkConfiguration(
     var activateOnMouseClick: Boolean = true,
     override var activateOnKeyboardShortcut: Boolean = false, //todo: remove
     override var componentProvider: SourceMarkComponentProvider = SourceMarkJcefComponentProvider()
-) : SourceMarkConfiguration()
+) : SourceMarkConfiguration

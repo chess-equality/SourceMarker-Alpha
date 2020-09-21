@@ -35,11 +35,6 @@ subprojects {
         maven(url = "https://kotlin.bintray.com/kotlinx/")
     }
 
-    apply(plugin = "io.gitlab.arturbosch.detekt")
-    dependencies {
-        detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.13.1")
-    }
-
     apply<io.gitlab.arturbosch.detekt.DetektPlugin>()
     tasks {
         withType<io.gitlab.arturbosch.detekt.Detekt> {

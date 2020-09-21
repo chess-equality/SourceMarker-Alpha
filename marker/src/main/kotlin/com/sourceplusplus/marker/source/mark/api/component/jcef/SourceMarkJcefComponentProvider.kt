@@ -15,7 +15,7 @@ import com.sourceplusplus.marker.source.mark.inlay.InlayMark
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-open class SourceMarkJcefComponentProvider : SourceMarkComponentProvider(), SourceMarkEventListener {
+open class SourceMarkJcefComponentProvider : SourceMarkComponentProvider, SourceMarkEventListener {
 
     override val defaultConfiguration = SourceMarkJcefComponentConfiguration()
 

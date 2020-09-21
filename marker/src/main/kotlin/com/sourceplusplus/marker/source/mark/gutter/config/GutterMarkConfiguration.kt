@@ -19,4 +19,4 @@ data class GutterMarkConfiguration(
     var activateOnMouseClick: Boolean = false,
     override var activateOnKeyboardShortcut: Boolean = false,
     override var componentProvider: SourceMarkComponentProvider = SourceMarkJcefComponentProvider()
-) : SourceMarkConfiguration()
+) : SourceMarkConfiguration

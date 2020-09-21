@@ -354,13 +354,13 @@ class MarkerUtils private constructor() {
             val psiFile = expression.getContainingUFile()!!.sourcePsi
             val document: Document = PsiDocumentManager.getInstance(psiFile.project).getDocument(psiFile)!!
 
-            if (expression is UDeclarationsExpression) {
+            return if (expression is UDeclarationsExpression) {
                 //todo: support for multi-declaration statements
-                return """$qualifiedMethodName#${
+                """$qualifiedMethodName#${
                     document.getLineNumber(expression.declarations[0].sourcePsi!!.textOffset)
                 }#${Base64.getEncoder().encodeToString(expression.toString().toByteArray())}"""
             } else {
-                return """$qualifiedMethodName#${
+                """$qualifiedMethodName#${
                     document.getLineNumber(expression.sourcePsi!!.textOffset)
                 }#${Base64.getEncoder().encodeToString(expression.toString().toByteArray())}"""
             }

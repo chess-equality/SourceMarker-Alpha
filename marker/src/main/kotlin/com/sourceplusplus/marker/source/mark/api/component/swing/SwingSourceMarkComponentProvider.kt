@@ -12,7 +12,7 @@ import javax.swing.JComponent
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-abstract class SwingSourceMarkComponentProvider : SourceMarkComponentProvider() {
+abstract class SwingSourceMarkComponentProvider : SourceMarkComponentProvider {
 
     override val defaultConfiguration = SourceMarkComponentConfiguration()
 
