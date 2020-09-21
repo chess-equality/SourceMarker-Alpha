@@ -59,57 +59,15 @@ class TracesTab : AbstractTab(PageType.TRACES) {
         log.info("{} started", javaClass.simpleName)
     }
 
-    private fun getTraceStack(messageHandler: Message<JsonObject>) {
-        //            val timer = PortalBootstrap.portalMetrics.timer(GET_TRACE_STACK)
-        //            val context = timer.time()
-        val request = messageHandler.body() as JsonObject
-        val portalUuid = request.getString("portal_uuid")
-        val appUuid = request.getString("app_uuid")
-        val artifactQualifiedName = request.getString("artifact_qualified_name")
-        val globalTraceId = request.getString("trace_id")
-        log.trace(
-            "Getting trace spans. Artifact qualified name: {} - Trace id: {}",
-            getShortQualifiedFunctionName(artifactQualifiedName),
-            globalTraceId
-        )
+    override fun updateUI(portal: SourcePortal) {
+        if (portal.currentTab != thisTab) {
+            return
+        }
 
-        val portal = SourcePortal.getPortal(portalUuid)!!
-        val representation = portal.tracesView
-        val traceStack = representation.getTraceStack(globalTraceId)
-        if (traceStack != null) {
-            log.trace("Got trace spans: {} from cache - Stack size: {}", globalTraceId, traceStack.size())
-            messageHandler.reply(traceStack)
-            //                context.stop()
-        } else {
-            vertx.eventBus().request<TraceSpanStackQueryResult>(QueryTraceStack, globalTraceId) {
-                if (it.failed()) {
-                    log.error("Failed to get trace spans", it.cause())
-                } else {
-                    representation.cacheTraceStack(
-                        globalTraceId,
-                        handleTraceStack(appUuid, artifactQualifiedName, it.result().body())
-                    )
-                    messageHandler.reply(representation.getTraceStack(globalTraceId))
-                    //                        context.stop()
-                }
-            }
-            //                val traceStackQuery = TraceSpanStackQuery.builder()
-            //                    .oneLevelDeep(true)
-            //                    .traceId(globalTraceId).build()
-            //                SourcePortalConfig.current.getCoreClient(appUuid)
-            //                    .getTraceSpans(appUuid, artifactQualifiedName, traceStackQuery) {
-            //                        if (it.failed()) {
-            ////                        log.error("Failed to get trace spans", it.cause())
-            //                        } else {
-            //                            representation.cacheTraceStack(
-            //                                globalTraceId, handleTraceStack(
-            //                                    appUuid, artifactQualifiedName, it.result()
-            //                                )
-            //                            )
-            //                            messageHandler.reply(representation.getTraceStack(globalTraceId))
-            ////                        context.stop()
-            //                        }
-            //                    }
+        when (portal.tracesView.viewType) {
+            TracesView.Companion.ViewType.TRACES -> displayTraces(portal)
+            TracesView.Companion.ViewType.TRACE_STACK -> displayTraceStack(portal)
+            TracesView.Companion.ViewType.SPAN_INFO -> displaySpanInfo(portal)
         }
     }
 
@@ -200,19 +158,7 @@ class TracesTab : AbstractTab(PageType.TRACES) {
         vertx.eventBus().send(RefreshTraces, portal)
     }
 
-    override fun updateUI(portal: SourcePortal) {
-        if (portal.currentTab != thisTab) {
-            return
-        }
-
-        when (portal.tracesView.viewType) {
-            TracesView.Companion.ViewType.TRACES -> displayTraces(portal)
-            TracesView.Companion.ViewType.TRACE_STACK -> displayTraceStack(portal)
-            TracesView.Companion.ViewType.SPAN_INFO -> displaySpanInfo(portal)
-        }
-    }
-
-    fun displayTraces(portal: SourcePortal) {
+    private fun displayTraces(portal: SourcePortal) {
         if (portal.tracesView.artifactTraceResult != null) {
             val artifactTraceResult = portal.tracesView.artifactTraceResult!!
             vertx.eventBus().displayTraces(portal.portalUuid, artifactTraceResult)
@@ -225,7 +171,7 @@ class TracesTab : AbstractTab(PageType.TRACES) {
         }
     }
 
-    fun displayTraceStack(portal: SourcePortal) {
+    private fun displayTraceStack(portal: SourcePortal) {
         val representation = portal.tracesView
         val traceId = representation.traceId
         val traceStack = representation.traceStack
@@ -246,7 +192,7 @@ class TracesTab : AbstractTab(PageType.TRACES) {
         }
     }
 
-    fun displaySpanInfo(portal: SourcePortal) {
+    private fun displaySpanInfo(portal: SourcePortal) {
         val traceId = portal.tracesView.traceId!!
         val spanId = portal.tracesView.spanId
         val representation = portal.tracesView
@@ -420,6 +366,60 @@ class TracesTab : AbstractTab(PageType.TRACES) {
             )
         }
         return JsonArray(Json.encode(spanInfos))
+    }
+
+    private fun getTraceStack(messageHandler: Message<JsonObject>) {
+        //            val timer = PortalBootstrap.portalMetrics.timer(GET_TRACE_STACK)
+        //            val context = timer.time()
+        val request = messageHandler.body() as JsonObject
+        val portalUuid = request.getString("portal_uuid")
+        val appUuid = request.getString("app_uuid")
+        val artifactQualifiedName = request.getString("artifact_qualified_name")
+        val globalTraceId = request.getString("trace_id")
+        log.trace(
+            "Getting trace spans. Artifact qualified name: {} - Trace id: {}",
+            getShortQualifiedFunctionName(artifactQualifiedName),
+            globalTraceId
+        )
+
+        val portal = SourcePortal.getPortal(portalUuid)!!
+        val representation = portal.tracesView
+        val traceStack = representation.getTraceStack(globalTraceId)
+        if (traceStack != null) {
+            log.trace("Got trace spans: {} from cache - Stack size: {}", globalTraceId, traceStack.size())
+            messageHandler.reply(traceStack)
+            //                context.stop()
+        } else {
+            vertx.eventBus().request<TraceSpanStackQueryResult>(QueryTraceStack, globalTraceId) {
+                if (it.failed()) {
+                    log.error("Failed to get trace spans", it.cause())
+                } else {
+                    representation.cacheTraceStack(
+                        globalTraceId,
+                        handleTraceStack(appUuid, artifactQualifiedName, it.result().body())
+                    )
+                    messageHandler.reply(representation.getTraceStack(globalTraceId))
+                    //                        context.stop()
+                }
+            }
+            //                val traceStackQuery = TraceSpanStackQuery.builder()
+            //                    .oneLevelDeep(true)
+            //                    .traceId(globalTraceId).build()
+            //                SourcePortalConfig.current.getCoreClient(appUuid)
+            //                    .getTraceSpans(appUuid, artifactQualifiedName, traceStackQuery) {
+            //                        if (it.failed()) {
+            ////                        log.error("Failed to get trace spans", it.cause())
+            //                        } else {
+            //                            representation.cacheTraceStack(
+            //                                globalTraceId, handleTraceStack(
+            //                                    appUuid, artifactQualifiedName, it.result()
+            //                                )
+            //                            )
+            //                            messageHandler.reply(representation.getTraceStack(globalTraceId))
+            ////                        context.stop()
+            //                        }
+            //                    }
+        }
     }
 
     fun humanReadableDuration(duration: Duration): String {
