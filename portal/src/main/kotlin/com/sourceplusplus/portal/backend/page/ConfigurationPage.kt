@@ -2,7 +2,6 @@ package com.sourceplusplus.portal.backend.page
 
 import com.sourceplusplus.portal.backend.portal
 import com.sourceplusplus.portal.backend.template.*
-import com.sourceplusplus.portal.server.template.*
 import com.sourceplusplus.protocol.artifact.ArtifactConfigType.AUTO_SUBSCRIBE
 import com.sourceplusplus.protocol.artifact.ArtifactConfigType.ENTRY_METHOD
 import com.sourceplusplus.protocol.artifact.ArtifactInfoType.*
