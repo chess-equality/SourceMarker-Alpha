@@ -86,10 +86,6 @@ function displayTraces(traceResult) { //todo-chess-equality: [traceResult: Trace
         $('#latest_traces_header_text').text('Failed Traces');
     }
 
-    $('#traces_start_field').val(moment.unix(Number(traceResult.start)).format());
-    $('#traces_stop_field').val(moment.unix(Number(traceResult.stop)).format());
-    $('#traces_total_label').text("Total: " + traceResult.total);
-
     for (let i = 0; i < traceResult.traces.length; i++) {
         let trace = traceResult.traces[i];
         let globalTraceId = trace.trace_ids[0];
