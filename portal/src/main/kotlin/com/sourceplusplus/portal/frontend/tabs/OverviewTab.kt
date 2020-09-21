@@ -1,8 +1,8 @@
-package com.sourceplusplus.portal.server.display.tabs
+package com.sourceplusplus.portal.frontend.tabs
 
 import com.codahale.metrics.Histogram
 import com.codahale.metrics.UniformReservoir
-import com.sourceplusplus.portal.server.display.SourcePortal
+import com.sourceplusplus.portal.frontend.SourcePortal
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ArtifactMetricUpdated
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened

@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.display
+package com.sourceplusplus.portal.frontend
 
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.CanOpenPortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ChangedPortalArtifact

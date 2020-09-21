@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.display.tabs.views
+package com.sourceplusplus.portal.frontend.tabs.views
 
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType
 import com.sourceplusplus.protocol.artifact.trace.TraceResult
