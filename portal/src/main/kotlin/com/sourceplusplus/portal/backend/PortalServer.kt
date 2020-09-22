@@ -1,12 +1,12 @@
 package com.sourceplusplus.portal.backend
 
+import com.sourceplusplus.portal.backend.page.ConfigurationPage
+import com.sourceplusplus.portal.backend.page.OverviewPage
+import com.sourceplusplus.portal.backend.page.TracesPage
 import com.sourceplusplus.portal.frontend.PortalViewTracker
 import com.sourceplusplus.portal.frontend.display.ConfigurationDisplay
 import com.sourceplusplus.portal.frontend.display.OverviewDisplay
 import com.sourceplusplus.portal.frontend.display.TracesDisplay
-import com.sourceplusplus.portal.backend.page.ConfigurationPage
-import com.sourceplusplus.portal.backend.page.OverviewPage
-import com.sourceplusplus.portal.backend.page.TracesPage
 import io.netty.buffer.Unpooled
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
