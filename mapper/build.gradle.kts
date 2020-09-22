@@ -10,7 +10,6 @@ repositories {
 
 dependencies {
     val intellijVersion = "202.6948.69"
-    val kotlinVersion = "1.4.0"
 
     implementation(project(":protocol"))
     compileOnly(project(":marker")) //todo: only need MarkerUtils
