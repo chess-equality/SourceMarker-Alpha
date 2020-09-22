@@ -1,10 +1,10 @@
-package com.sourceplusplus.portal.server.display.tabs
+package com.sourceplusplus.portal.frontend.tabs
 
 import com.sourceplusplus.portal.extensions.displaySpanInfo
 import com.sourceplusplus.portal.extensions.displayTraceStack
 import com.sourceplusplus.portal.extensions.displayTraces
-import com.sourceplusplus.portal.server.display.SourcePortal
-import com.sourceplusplus.portal.server.display.tabs.views.TracesView
+import com.sourceplusplus.portal.frontend.SourcePortal
+import com.sourceplusplus.portal.frontend.tabs.views.TracesView
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
 import com.sourceplusplus.protocol.ArtifactNameUtils.removePackageAndClassName
 import com.sourceplusplus.protocol.ArtifactNameUtils.removePackageNames

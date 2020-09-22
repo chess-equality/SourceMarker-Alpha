@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.template
+package com.sourceplusplus.portal.backend.template
 
 import com.sourceplusplus.protocol.artifact.trace.TraceSpanInfoType
 import com.sourceplusplus.protocol.artifact.trace.TraceTableType

@@ -1,6 +1,6 @@
-package com.sourceplusplus.portal.server.display.tabs.views
+package com.sourceplusplus.portal.frontend.tabs.views
 
-import com.sourceplusplus.portal.server.display.SourcePortal
+import com.sourceplusplus.portal.frontend.SourcePortal
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.portal.MetricType
 import com.sourceplusplus.protocol.portal.QueryTimeFrame

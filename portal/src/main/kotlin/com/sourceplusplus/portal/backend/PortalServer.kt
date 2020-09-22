@@ -1,12 +1,12 @@
-package com.sourceplusplus.portal.server
+package com.sourceplusplus.portal.backend
 
-import com.sourceplusplus.portal.server.display.PortalViewTracker
-import com.sourceplusplus.portal.server.display.tabs.ConfigurationTab
-import com.sourceplusplus.portal.server.display.tabs.OverviewTab
-import com.sourceplusplus.portal.server.display.tabs.TracesTab
-import com.sourceplusplus.portal.server.page.ConfigurationPage
-import com.sourceplusplus.portal.server.page.OverviewPage
-import com.sourceplusplus.portal.server.page.TracesPage
+import com.sourceplusplus.portal.frontend.PortalViewTracker
+import com.sourceplusplus.portal.frontend.tabs.ConfigurationTab
+import com.sourceplusplus.portal.frontend.tabs.OverviewTab
+import com.sourceplusplus.portal.frontend.tabs.TracesTab
+import com.sourceplusplus.portal.backend.page.ConfigurationPage
+import com.sourceplusplus.portal.backend.page.OverviewPage
+import com.sourceplusplus.portal.backend.page.TracesPage
 import io.netty.buffer.Unpooled
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
@@ -33,7 +33,6 @@ import kotlinx.html.visitAndFinalize
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class PortalServer : CoroutineVerticle() {
-    //todo: backend/frontend packages
 
     companion object {
         @JvmStatic

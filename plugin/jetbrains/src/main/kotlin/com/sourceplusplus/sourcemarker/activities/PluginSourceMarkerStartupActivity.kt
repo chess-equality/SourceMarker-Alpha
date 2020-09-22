@@ -19,8 +19,8 @@ import com.sourceplusplus.marker.source.mark.api.component.jcef.config.BrowserLo
 import com.sourceplusplus.marker.source.mark.api.component.jcef.config.SourceMarkJcefComponentConfiguration
 import com.sourceplusplus.marker.source.mark.gutter.config.GutterMarkConfiguration
 import com.sourceplusplus.monitor.skywalking.SkywalkingMonitor
-import com.sourceplusplus.portal.server.PortalServer
-import com.sourceplusplus.portal.server.display.SourcePortal
+import com.sourceplusplus.portal.backend.PortalServer
+import com.sourceplusplus.portal.frontend.SourcePortal
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.trace.TraceResult
 import com.sourceplusplus.protocol.artifact.trace.TraceSpanStackQueryResult

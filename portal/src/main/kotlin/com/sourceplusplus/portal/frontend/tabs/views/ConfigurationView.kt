@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.display.tabs.views
+package com.sourceplusplus.portal.frontend.tabs.views
 
 import io.vertx.core.json.JsonObject
 

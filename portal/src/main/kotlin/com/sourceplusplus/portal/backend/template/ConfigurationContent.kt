@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.server.template
+package com.sourceplusplus.portal.backend.template
 
 import com.sourceplusplus.protocol.artifact.ArtifactConfigType
 import com.sourceplusplus.protocol.artifact.ArtifactInfoType
