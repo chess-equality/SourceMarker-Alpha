@@ -31,6 +31,7 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
 
     companion object {
         private val log = LoggerFactory.getLogger(GitRepositoryMapper::class.java)
+        private val supportedFileTypes = hashSetOf("java", "groovy", "kotlin", "scala")
     }
 
     init {
@@ -43,7 +44,7 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
         }
 
         val fileType = FileTypeRegistry.getInstance().getFileTypeByFileName(entry.name)
-        if (fileType !is JavaFileType && fileType !is GroovyFileType && fileType !is KotlinFileType) {
+        if (!supportedFileTypes.contains(fileType.name.toLowerCase())) {
             return Entry.EMPTY //unsupported file type
         }
 
