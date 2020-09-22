@@ -22,7 +22,7 @@ class ConfigurationTab(private val pluginAvailable: Boolean) : AbstractTab(PageT
 
     private var updateConfigurationPermitted: Boolean = false
 
-    override fun start() {
+    override suspend fun start() {
         super.start()
 
         updateConfigurationPermitted = pluginAvailable

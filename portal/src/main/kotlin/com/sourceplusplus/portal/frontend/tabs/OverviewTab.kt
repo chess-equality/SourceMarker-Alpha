@@ -41,11 +41,10 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
 
     companion object {
         private val log = LoggerFactory.getLogger(OverviewTab::class.java)
+        private val decimalFormat = DecimalFormat(".#")
     }
 
-    val decimalFormat = DecimalFormat(".#")
-
-    override fun start() {
+    override suspend fun start() {
         super.start()
 
         vertx.setPeriodic(5000) {
@@ -84,19 +83,6 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
             updateUI(portal)
 
             vertx.eventBus().send(RefreshOverview, portal)
-//            //subscribe (re-subscribe) to get latest stats
-//            val subscribeRequest = ArtifactMetricSubscribeRequest.builder()
-//                .appUuid(portal.appUuid)
-//                .artifactQualifiedName(portal.portalUI.viewingPortalArtifact)
-//                .timeFrame(view.timeFrame)
-//                .metricTypes([Throughput_Average, ResponseTime_Average, ServiceLevelAgreement_Average]).build()
-//            SourcePortalConfig.current.getCoreClient(portal.appUuid).subscribeToArtifact(subscribeRequest, {
-//                if (it.succeeded()) {
-//                    log.info("Successfully subscribed to metrics with request: " + subscribeRequest)
-//                } else {
-//                    log.error("Failed to subscribe to artifact metrics", it.cause())
-//                }
-//            })
         }
         vertx.eventBus().consumer<JsonObject>(SetActiveChartMetric) {
             val request = JsonObject.mapFrom(it.body())
@@ -139,8 +125,8 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
         times.add(current)
         while (current.toJavaInstant().isBefore(metricResult.stop.toJavaInstant())) {
             if (metricResult.step == "MINUTE") {
-                current =
-                    Instant.fromEpochMilliseconds(current.toJavaInstant().plus(1, ChronoUnit.MINUTES).toEpochMilli())
+                current = Instant.fromEpochMilliseconds(current.toJavaInstant()
+                    .plus(1, ChronoUnit.MINUTES).toEpochMilli())
                 times.add(current)
             } else {
                 throw UnsupportedOperationException("Invalid step: " + metricResult.step)
@@ -226,7 +212,7 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
         return histogram.snapshot.mean
     }
 
-    fun calculatePercents(artifactMetrics: ArtifactMetrics): DoubleArray {
+    private fun calculatePercents(artifactMetrics: ArtifactMetrics): DoubleArray {
         val metricArr = ArrayList<Int>()
         when (artifactMetrics.values.size) {
             60 -> {
@@ -287,62 +273,4 @@ class OverviewTab : AbstractTab(PageType.OVERVIEW) {
             else -> "${(perSecond * 60.0).toInt()}/min"
         }
     }
-
-//    private fun updateOverview(endpointId: String) {
-//        GlobalScope.launch(vertx.dispatcher()) {
-//            val metricsRequest = GetEndpointMetrics(
-//                listOf("endpoint_cpm", "endpoint_avg", "endpoint_sla", "endpoint_percentile"),
-//                endpointId,
-//                ZonedDuration(
-//                    ZonedDateTime.now().minusMinutes(15),
-//                    ZonedDateTime.now(),
-//                    SkywalkingClient.DurationStep.MINUTE
-//                ) toInt
-//            )
-//            val metrics = EndpointMetricsTracker.getMetrics(metricsRequest, vertx)
-//
-//            val seriesData =
-//                SplineSeriesData(
-//                    0,
-//                    metricsRequest.toInstantTimes().map { it.toEpochMilliseconds() }, //todo: toInstantTimes() only
-//                    metrics[0].toDoubleArray()
-//                )
-//            val splineChart =
-//                SplineChart(
-//                    Throughput_Average,
-//                    QueryTimeFrame.LAST_15_MINUTES,
-//                    listOf(seriesData)
-//                )
-//            vertx.eventBus().publish(ProtocolAddress.Portal.UpdateChart("null"), JsonObject(Json.encode(splineChart)))
-//
-//            val throughputAverageCard =
-//                BarTrendCard(
-//                    meta = "throughput_average",
-//                    header = toPrettyFrequency(calculateAverage(metrics[0].toDoubleArray()) / 60.0)
-//                )
-//            vertx.eventBus()
-//                .publish(ProtocolAddress.Portal.DisplayCard("null"), JsonObject(Json.encode(throughputAverageCard)))
-//
-//            val responseTimeAverageCard =
-//                BarTrendCard(
-//                    meta = "responsetime_average",
-//                    header = toPrettyDuration(calculateAverage(metrics[1].toDoubleArray()).toInt())
-//                )
-//            vertx.eventBus()
-//                .publish(ProtocolAddress.Portal.DisplayCard("null"), JsonObject(Json.encode(responseTimeAverageCard)))
-//
-//            val slaAvg = calculateAverage(metrics[2].toDoubleArray())
-//            val slaAverageCard =
-//                BarTrendCard(
-//                    meta = "servicelevelagreement_average",
-//                    header = if (slaAvg == 0.0) {
-//                        "0%"
-//                    } else {
-//                        decimalFormat.format(slaAvg / 100.0) + "%"
-//                    }
-//                )
-//            vertx.eventBus()
-//                .publish(ProtocolAddress.Portal.DisplayCard("null"), JsonObject(Json.encode(slaAverageCard)))
-//        }
-//    }
 }

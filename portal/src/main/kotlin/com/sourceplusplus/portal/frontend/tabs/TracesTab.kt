@@ -39,7 +39,7 @@ class TracesTab : AbstractTab(PageType.TRACES) {
         val QUALIFIED_NAME_PATTERN = Pattern.compile(".+\\..+\\(.*\\)")!!
     }
 
-    override fun start() {
+    override suspend fun start() {
         super.start()
 
         vertx.setPeriodic(5000) {
@@ -369,8 +369,6 @@ class TracesTab : AbstractTab(PageType.TRACES) {
     }
 
     private fun getTraceStack(messageHandler: Message<JsonObject>) {
-        //            val timer = PortalBootstrap.portalMetrics.timer(GET_TRACE_STACK)
-        //            val context = timer.time()
         val request = messageHandler.body() as JsonObject
         val portalUuid = request.getString("portal_uuid")
         val appUuid = request.getString("app_uuid")
@@ -388,7 +386,6 @@ class TracesTab : AbstractTab(PageType.TRACES) {
         if (traceStack != null) {
             log.trace("Got trace spans: {} from cache - Stack size: {}", globalTraceId, traceStack.size())
             messageHandler.reply(traceStack)
-            //                context.stop()
         } else {
             vertx.eventBus().request<TraceSpanStackQueryResult>(QueryTraceStack, globalTraceId) {
                 if (it.failed()) {
@@ -399,7 +396,6 @@ class TracesTab : AbstractTab(PageType.TRACES) {
                         handleTraceStack(appUuid, artifactQualifiedName, it.result().body())
                     )
                     messageHandler.reply(representation.getTraceStack(globalTraceId))
-                    //                        context.stop()
                 }
             }
             //                val traceStackQuery = TraceSpanStackQuery.builder()
@@ -422,7 +418,7 @@ class TracesTab : AbstractTab(PageType.TRACES) {
         }
     }
 
-    fun humanReadableDuration(duration: Duration): String {
+    private fun humanReadableDuration(duration: Duration): String {
         if (duration.seconds < 1) {
             return duration.toMillis().toString() + "ms"
         }

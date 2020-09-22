@@ -3,8 +3,8 @@ package com.sourceplusplus.portal.frontend.tabs
 import com.sourceplusplus.portal.frontend.SourcePortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OpenedPortal
 import com.sourceplusplus.protocol.portal.PageType
-import io.vertx.core.AbstractVerticle
 import io.vertx.core.json.JsonObject
+import io.vertx.kotlin.coroutines.CoroutineVerticle
 
 /**
  * Contains common portal tab functionality.
@@ -12,11 +12,12 @@ import io.vertx.core.json.JsonObject
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-abstract class AbstractTab(val thisTab: PageType) : AbstractVerticle() {
+abstract class AbstractTab(val thisTab: PageType) : CoroutineVerticle() {
 
-    override fun start() {
+    override suspend fun start() {
         vertx.eventBus().consumer<JsonObject>(OpenedPortal) {
-            val portal = SourcePortal.getPortal(JsonObject.mapFrom(it.body()).getString("portal_uuid"))!!
+            val portalUuid = JsonObject.mapFrom(it.body()).getString("portal_uuid")
+            val portal = SourcePortal.getPortal(portalUuid)!!
             if (portal.currentTab == thisTab) {
                 updateUI(portal)
             }

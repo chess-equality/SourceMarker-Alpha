@@ -6,8 +6,8 @@ import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedViewA
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClosePortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.KeepAlivePortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.UpdatePortalArtifact
-import io.vertx.core.AbstractVerticle
 import io.vertx.core.json.JsonObject
+import io.vertx.kotlin.coroutines.CoroutineVerticle
 import org.slf4j.LoggerFactory
 
 /**
@@ -20,13 +20,13 @@ import org.slf4j.LoggerFactory
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-class PortalViewTracker : AbstractVerticle() {
+class PortalViewTracker : CoroutineVerticle() {
 
     companion object {
         private val log = LoggerFactory.getLogger(PortalViewTracker::class.java)
     }
 
-    override fun start() {
+    override suspend fun start() {
         //get portal from cache to ensure it remains active
         vertx.eventBus().consumer<JsonObject>(KeepAlivePortal) { messageHandler ->
             val portalUuid = JsonObject.mapFrom(messageHandler.body()).getString("portal_uuid")
@@ -53,25 +53,6 @@ class PortalViewTracker : AbstractVerticle() {
             //open external portal
             it.reply(JsonObject().put("portal_uuid", portal.createExternalPortal().portalUuid))
         }
-
-//        //user opened portal
-//        vertx.eventBus().consumer<Any>(OPENED_PORTAL) {
-//            println("here")
-////            if (it.body() is SourceArtifact) {
-////                val artifact = it.body() as SourceArtifact
-//////                log.info("Showing SourceMarker Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
-////                //todo: reset ui if artifact different than last artifact
-////            }
-//        }
-//
-//        //user closed portal
-//        vertx.eventBus().consumer<Any>(CLOSED_PORTAL) {
-//            println("here")
-////            if (it.body() is SourceArtifact) {
-////                val artifact = it.body() as SourceArtifact
-//////                log.info("Hiding SourceMarker Portal for artifact: {}", getShortQualifiedFunctionName(artifact.artifactQualifiedName()))
-////            }
-//        }
 
         vertx.eventBus().consumer<JsonObject>(UpdatePortalArtifact) {
             val request = JsonObject.mapFrom(it.body())
