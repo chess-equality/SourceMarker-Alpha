@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.frontend.tabs.views
+package com.sourceplusplus.portal.frontend.display.views
 
 import com.sourceplusplus.portal.frontend.SourcePortal
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult

@@ -1,10 +1,10 @@
-package com.sourceplusplus.portal.frontend.tabs
+package com.sourceplusplus.portal.frontend.display
 
 import com.sourceplusplus.portal.extensions.displaySpanInfo
 import com.sourceplusplus.portal.extensions.displayTraceStack
 import com.sourceplusplus.portal.extensions.displayTraces
 import com.sourceplusplus.portal.frontend.SourcePortal
-import com.sourceplusplus.portal.frontend.tabs.views.TracesView
+import com.sourceplusplus.portal.frontend.display.views.TracesView
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
 import com.sourceplusplus.protocol.ArtifactNameUtils.removePackageAndClassName
 import com.sourceplusplus.protocol.ArtifactNameUtils.removePackageNames
@@ -32,10 +32,10 @@ import java.util.regex.Pattern
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-class TracesTab : AbstractTab(PageType.TRACES) {
+class TracesDisplay : AbstractDisplay(PageType.TRACES) {
 
     companion object {
-        private val log = LoggerFactory.getLogger(TracesTab::class.java)
+        private val log = LoggerFactory.getLogger(TracesDisplay::class.java)
         val QUALIFIED_NAME_PATTERN = Pattern.compile(".+\\..+\\(.*\\)")!!
     }
 
@@ -50,12 +50,12 @@ class TracesTab : AbstractTab(PageType.TRACES) {
                 }
             }
         }
-        vertx.eventBus().consumer(TracesTabOpened, this@TracesTab::tracesTabOpened)
+        vertx.eventBus().consumer(TracesTabOpened, this@TracesDisplay::tracesTabOpened)
         vertx.eventBus().consumer<TraceResult>(ArtifactTraceUpdated) { handleArtifactTraceResult(it.body()) }
-        vertx.eventBus().consumer(ClickedDisplayTraceStack, this@TracesTab::clickedDisplayTraceStack)
-        vertx.eventBus().consumer(ClickedDisplayTraces, this@TracesTab::clickedDisplayTraces)
-        vertx.eventBus().consumer(ClickedDisplaySpanInfo, this@TracesTab::clickedDisplaySpanInfo)
-        vertx.eventBus().consumer(GetTraceStack, this@TracesTab::getTraceStack)
+        vertx.eventBus().consumer(ClickedDisplayTraceStack, this@TracesDisplay::clickedDisplayTraceStack)
+        vertx.eventBus().consumer(ClickedDisplayTraces, this@TracesDisplay::clickedDisplayTraces)
+        vertx.eventBus().consumer(ClickedDisplaySpanInfo, this@TracesDisplay::clickedDisplaySpanInfo)
+        vertx.eventBus().consumer(GetTraceStack, this@TracesDisplay::getTraceStack)
         log.info("{} started", javaClass.simpleName)
     }
 

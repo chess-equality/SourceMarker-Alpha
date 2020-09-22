@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.frontend.tabs
+package com.sourceplusplus.portal.frontend.display
 
 import com.codahale.metrics.Histogram
 import com.codahale.metrics.UniformReservoir
@@ -37,10 +37,10 @@ import kotlin.collections.ArrayList
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-class OverviewTab : AbstractTab(PageType.OVERVIEW) {
+class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
 
     companion object {
-        private val log = LoggerFactory.getLogger(OverviewTab::class.java)
+        private val log = LoggerFactory.getLogger(OverviewDisplay::class.java)
         private val decimalFormat = DecimalFormat(".#")
     }
 

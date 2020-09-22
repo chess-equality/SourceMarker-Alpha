@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.frontend.tabs
+package com.sourceplusplus.portal.frontend.display
 
 import com.sourceplusplus.portal.frontend.SourcePortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ConfigurationTabOpened
@@ -14,10 +14,10 @@ import org.slf4j.LoggerFactory
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-class ConfigurationTab(private val pluginAvailable: Boolean) : AbstractTab(PageType.CONFIGURATION) {
+class ConfigurationDisplay(private val pluginAvailable: Boolean) : AbstractDisplay(PageType.CONFIGURATION) {
 
     companion object {
-        private val log = LoggerFactory.getLogger(ConfigurationTab::class.java)
+        private val log = LoggerFactory.getLogger(ConfigurationDisplay::class.java)
     }
 
     private var updateConfigurationPermitted: Boolean = false

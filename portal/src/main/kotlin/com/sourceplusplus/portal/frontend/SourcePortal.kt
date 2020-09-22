@@ -3,9 +3,9 @@ package com.sourceplusplus.portal.frontend
 import com.google.common.cache.CacheBuilder
 import com.google.common.cache.CacheLoader
 import com.google.common.cache.LoadingCache
-import com.sourceplusplus.portal.frontend.tabs.views.ConfigurationView
-import com.sourceplusplus.portal.frontend.tabs.views.OverviewView
-import com.sourceplusplus.portal.frontend.tabs.views.TracesView
+import com.sourceplusplus.portal.frontend.display.views.ConfigurationView
+import com.sourceplusplus.portal.frontend.display.views.OverviewView
+import com.sourceplusplus.portal.frontend.display.views.TracesView
 import com.sourceplusplus.protocol.portal.PageType
 import org.slf4j.LoggerFactory
 import java.io.Closeable

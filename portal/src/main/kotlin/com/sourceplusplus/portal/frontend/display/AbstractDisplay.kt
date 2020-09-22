@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.frontend.tabs
+package com.sourceplusplus.portal.frontend.display
 
 import com.sourceplusplus.portal.frontend.SourcePortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OpenedPortal
@@ -12,7 +12,7 @@ import io.vertx.kotlin.coroutines.CoroutineVerticle
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-abstract class AbstractTab(val thisTab: PageType) : CoroutineVerticle() {
+abstract class AbstractDisplay(val thisTab: PageType) : CoroutineVerticle() {
 
     override suspend fun start() {
         vertx.eventBus().consumer<JsonObject>(OpenedPortal) {

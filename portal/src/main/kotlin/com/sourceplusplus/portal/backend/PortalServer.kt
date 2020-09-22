@@ -1,9 +1,9 @@
 package com.sourceplusplus.portal.backend
 
 import com.sourceplusplus.portal.frontend.PortalViewTracker
-import com.sourceplusplus.portal.frontend.tabs.ConfigurationTab
-import com.sourceplusplus.portal.frontend.tabs.OverviewTab
-import com.sourceplusplus.portal.frontend.tabs.TracesTab
+import com.sourceplusplus.portal.frontend.display.ConfigurationDisplay
+import com.sourceplusplus.portal.frontend.display.OverviewDisplay
+import com.sourceplusplus.portal.frontend.display.TracesDisplay
 import com.sourceplusplus.portal.backend.page.ConfigurationPage
 import com.sourceplusplus.portal.backend.page.OverviewPage
 import com.sourceplusplus.portal.backend.page.TracesPage
@@ -43,9 +43,9 @@ class PortalServer : CoroutineVerticle() {
     }
 
     override suspend fun start() {
-        vertx.deployVerticleAwait(OverviewTab())
-        vertx.deployVerticleAwait(TracesTab())
-        vertx.deployVerticleAwait(ConfigurationTab(false)) //todo: dynamic
+        vertx.deployVerticleAwait(OverviewDisplay())
+        vertx.deployVerticleAwait(TracesDisplay())
+        vertx.deployVerticleAwait(ConfigurationDisplay(false)) //todo: dynamic
         vertx.deployVerticleAwait(PortalViewTracker())
 
         // Build Vert.x Web router
