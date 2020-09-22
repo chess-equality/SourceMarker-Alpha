@@ -16,6 +16,7 @@ dependencies {
     implementation("com.github.sh5i:git-stein:v0.5.0")
     implementation("org.apache.commons:commons-lang3:3.11")
     implementation("org.eclipse.jgit:org.eclipse.jgit:5.8.0.202006091008-r")
+    implementation("com.google.guava:guava:29.0-jre")
 
     compileOnly("com.jetbrains.intellij.platform:core:$intellijVersion") { isTransitive = false }
     compileOnly("com.jetbrains.intellij.platform:core-impl:$intellijVersion") { isTransitive = false }
