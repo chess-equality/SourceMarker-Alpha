@@ -1,6 +1,5 @@
 package com.sourceplusplus.mapper.vcs.git
 
-import com.intellij.ide.highlighter.JavaFileType
 import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaRecursiveElementVisitor
@@ -13,8 +12,6 @@ import jp.ac.titech.c.se.stein.core.EntrySet
 import jp.ac.titech.c.se.stein.core.EntrySet.Entry
 import jp.ac.titech.c.se.stein.core.EntrySet.EntryList
 import jp.ac.titech.c.se.stein.core.RepositoryRewriter
-import org.jetbrains.kotlin.idea.KotlinFileType
-import org.jetbrains.plugins.groovy.GroovyFileType
 import org.jetbrains.uast.UFile
 import org.jetbrains.uast.toUElement
 import org.slf4j.LoggerFactory
