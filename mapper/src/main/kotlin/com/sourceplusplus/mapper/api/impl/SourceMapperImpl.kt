@@ -2,8 +2,8 @@ package com.sourceplusplus.mapper.api.impl
 
 import com.google.common.base.Preconditions
 import com.sourceplusplus.mapper.api.SourceMapper
+import com.sourceplusplus.mapper.vcs.git.GitRepositoryMapper
 import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
-import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.diff.RenameDetector
 import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
@@ -18,21 +18,18 @@ import org.eclipse.jgit.treewalk.CanonicalTreeParser
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-class SourceMapperImpl(
-    private val git: Git,
-    private val repository: Repository
-) : SourceMapper {
+class SourceMapperImpl(private val mapper: GitRepositoryMapper) : SourceMapper {
 
     override fun getMethodQualifiedName(
         methodQualifiedName: ArtifactQualifiedName,
         targetCommitId: String
     ): ArtifactQualifiedName {
-        var diffs = git.diff()
-            .setOldTree(prepareTreeParser(repository, methodQualifiedName.commitId))
-            .setNewTree(prepareTreeParser(repository, targetCommitId))
+        var diffs = mapper.targetGit.diff()
+            .setOldTree(prepareTreeParser(mapper.targetRepo, methodQualifiedName.commitId))
+            .setNewTree(prepareTreeParser(mapper.targetRepo, targetCommitId))
 //            .setPathFilter(PathFilterGroup.createFromStrings("new/b.txt", "b.txt")) //todo: to path
             .call()
-        val rd = RenameDetector(repository)
+        val rd = RenameDetector(mapper.targetRepo)
         rd.addAll(diffs)
         diffs = rd.compute()
         return if (diffs.isNotEmpty()) {
@@ -46,7 +43,7 @@ class SourceMapperImpl(
         }
     }
 
-    private fun prepareTreeParser(repository: Repository, objectId: String): AbstractTreeIterator? {
+    private fun prepareTreeParser(repository: Repository, objectId: String): AbstractTreeIterator {
         RevWalk(repository).use { walk ->
             val commit: RevCommit = walk.parseCommit(repository.resolve(objectId))
             val tree: RevTree = walk.parseTree(commit.tree.id)

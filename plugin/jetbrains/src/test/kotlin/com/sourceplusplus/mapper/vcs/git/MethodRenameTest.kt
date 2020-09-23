@@ -4,11 +4,9 @@ import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixture4TestC
 import com.sourceplusplus.mapper.api.impl.SourceMapperImpl
 import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
 import com.sourceplusplus.protocol.artifact.ArtifactType
-import jp.ac.titech.c.se.stein.PorcelainAPI
-import jp.ac.titech.c.se.stein.core.Context
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.internal.storage.file.FileRepository
-import org.eclipse.jgit.lib.*
+import org.eclipse.jgit.lib.Constants
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 import java.io.File
@@ -18,8 +16,8 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
     @Test
     fun `java get original method name`() {
         if (File("/tmp/git-repo").exists()) File("/tmp/git-repo").deleteRecursively()
-        val git = Git.init().setDirectory(File("/tmp/git-repo")).call()
-        @Language("Java") val code = """
+        Git.init().setDirectory(File("/tmp/git-repo")).call().use { git ->
+            @Language("Java") val code = """
             public class GetterMethod {
                 private String str;
                 public String getStr() {
@@ -27,11 +25,11 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
                 }
             }
             """.trimIndent()
-        File(git.repository.directory.parent, "GetterMethod.java").writeText(code)
-        git.add().addFilepattern(".").call()
-        git.commit().setMessage("Initial commit").call()
+            File(git.repository.directory.parent, "GetterMethod.java").writeText(code)
+            git.add().addFilepattern(".").call()
+            git.commit().setMessage("Initial commit").call()
 
-        @Language("Java") val renamedCode = """
+            @Language("Java") val renamedCode = """
             public class GetterMethod {
                 private String str;
                 public String getStr2() {
@@ -39,27 +37,22 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
                 }
             }
             """.trimIndent()
-        File(git.repository.directory.parent, "GetterMethod.java").writeText(renamedCode)
-        git.add().addFilepattern(".").call()
-        git.commit().setMessage("Renamed method").call()
-
-        val fileRepo = FileRepository("/tmp/git-repo/.git")
-        val mapper = GitRepositoryMapper(project)
-        mapper.initialize(fileRepo, fileRepo)
-        mapper.rewrite(Context.init())
-        PorcelainAPI(fileRepo).use {
-            it.resetHard()
-            it.clean()
+            File(git.repository.directory.parent, "GetterMethod.java").writeText(renamedCode)
+            git.add().addFilepattern(".").call()
+            git.commit().setMessage("Renamed method").call()
         }
 
-        val newCommitId = fileRepo.resolve(Constants.HEAD).name
-        val oldCommitId = fileRepo.resolve("$newCommitId^1").name
+        val gitMapper = GitRepositoryMapper(project)
+        gitMapper.initialize(FileRepository("/tmp/git-repo/.git"))
+
+        val newCommitId = gitMapper.targetRepo.resolve(Constants.HEAD).name
+        val oldCommitId = gitMapper.targetRepo.resolve("$newCommitId^1").name
         val oldName = ArtifactQualifiedName(
             identifier = "GetterMethod.getStr()",
             commitId = oldCommitId,
             type = ArtifactType.METHOD
         )
-        val newName = SourceMapperImpl(git, fileRepo)
+        val newName = SourceMapperImpl(gitMapper)
             .getMethodQualifiedName(oldName, newCommitId)
 
         assertNotNull(newName)
@@ -67,13 +60,15 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
         assertEquals(newCommitId, newName.commitId)
         assertEquals("GetterMethod.getStr()", oldName.identifier)
         assertEquals(oldCommitId, oldName.commitId)
+        gitMapper.targetGit.close()
+        gitMapper.targetSourceDirectory.deleteRecursively()
     }
 
     @Test
     fun `java get updated method name`() {
         if (File("/tmp/git-repo").exists()) File("/tmp/git-repo").deleteRecursively()
-        val git = Git.init().setDirectory(File("/tmp/git-repo")).call()
-        @Language("Java") val code = """
+        Git.init().setDirectory(File("/tmp/git-repo")).call().use { git ->
+            @Language("Java") val code = """
             public class GetterMethod {
                 private String str;
                 public String getStr() {
@@ -81,11 +76,11 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
                 }
             }
             """.trimIndent()
-        File(git.repository.directory.parent, "GetterMethod.java").writeText(code)
-        git.add().addFilepattern(".").call()
-        git.commit().setMessage("Initial commit").call()
+            File(git.repository.directory.parent, "GetterMethod.java").writeText(code)
+            git.add().addFilepattern(".").call()
+            git.commit().setMessage("Initial commit").call()
 
-        @Language("Java") val renamedCode = """
+            @Language("Java") val renamedCode = """
             public class GetterMethod {
                 private String str;
                 public String getStr2() {
@@ -93,27 +88,22 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
                 }
             }
             """.trimIndent()
-        File(git.repository.directory.parent, "GetterMethod.java").writeText(renamedCode)
-        git.add().addFilepattern(".").call()
-        git.commit().setMessage("Renamed method").call()
-
-        val fileRepo = FileRepository("/tmp/git-repo/.git")
-        val mapper = GitRepositoryMapper(project)
-        mapper.initialize(fileRepo, fileRepo)
-        mapper.rewrite(Context.init())
-        PorcelainAPI(fileRepo).use {
-            it.resetHard()
-            it.clean()
+            File(git.repository.directory.parent, "GetterMethod.java").writeText(renamedCode)
+            git.add().addFilepattern(".").call()
+            git.commit().setMessage("Renamed method").call()
         }
 
-        val newCommitId = fileRepo.resolve(Constants.HEAD).name
-        val oldCommitId = fileRepo.resolve("$newCommitId^1").name
+        val gitMapper = GitRepositoryMapper(project)
+        gitMapper.initialize(FileRepository("/tmp/git-repo/.git"))
+
+        val newCommitId = gitMapper.targetRepo.resolve(Constants.HEAD).name
+        val oldCommitId = gitMapper.targetRepo.resolve("$newCommitId^1").name
         val newName = ArtifactQualifiedName(
             identifier = "GetterMethod.getStr2()",
             commitId = newCommitId,
             type = ArtifactType.METHOD
         )
-        val oldName = SourceMapperImpl(git, fileRepo)
+        val oldName = SourceMapperImpl(gitMapper)
             .getMethodQualifiedName(newName, oldCommitId)
 
         assertNotNull(oldName)
@@ -121,5 +111,7 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
         assertEquals(oldCommitId, oldName.commitId)
         assertEquals("GetterMethod.getStr2()", newName.identifier)
         assertEquals(newCommitId, newName.commitId)
+        gitMapper.targetGit.close()
+        gitMapper.targetSourceDirectory.deleteRecursively()
     }
 }

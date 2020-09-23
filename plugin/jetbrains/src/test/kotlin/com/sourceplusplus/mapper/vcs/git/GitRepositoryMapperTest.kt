@@ -1,8 +1,6 @@
 package com.sourceplusplus.mapper.vcs.git
 
 import com.intellij.testFramework.fixtures.LightPlatformCodeInsightFixture4TestCase
-import jp.ac.titech.c.se.stein.PorcelainAPI
-import jp.ac.titech.c.se.stein.core.Context
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.internal.storage.file.FileRepository
 import org.intellij.lang.annotations.Language
@@ -29,15 +27,10 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
         }
 
         val fileRepo = FileRepository("/tmp/git-repo/.git")
-        val mapper = GitRepositoryMapper(project)
-        mapper.initialize(fileRepo, fileRepo)
-        mapper.rewrite(Context.init())
-        PorcelainAPI(fileRepo).use {
-            it.resetHard()
-            it.clean()
-        }
+        val gitMapper = GitRepositoryMapper(project)
+        gitMapper.initialize(fileRepo)
 
-        val finerMethodFile = File("/tmp/git-repo/GetterMethod.getStr().mjava")
+        val finerMethodFile = File(gitMapper.targetSourceDirectory, "GetterMethod.getStr().mjava")
         assertExists(finerMethodFile)
         assertEquals(
             """
@@ -53,6 +46,8 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
             }
             """.trimIndent(), finerMethodFile.readText().trimIndent()
         )
+        gitMapper.targetGit.close()
+        gitMapper.targetSourceDirectory.deleteRecursively()
     }
 
     @Test
@@ -73,15 +68,10 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
         }
 
         val fileRepo = FileRepository("/tmp/git-repo/.git")
-        val mapper = GitRepositoryMapper(project)
-        mapper.initialize(fileRepo, fileRepo)
-        mapper.rewrite(Context.init())
-        PorcelainAPI(fileRepo).use {
-            it.resetHard()
-            it.clean()
-        }
+        val gitMapper = GitRepositoryMapper(project)
+        gitMapper.initialize(fileRepo)
 
-        val finerMethodFile = File("/tmp/git-repo/GetterMethod.getStr().mgroovy")
+        val finerMethodFile = File(gitMapper.targetSourceDirectory, "GetterMethod.getStr().mgroovy")
         assertExists(finerMethodFile)
         assertEquals(
             """
@@ -95,6 +85,8 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
             }
             """.trimIndent(), finerMethodFile.readText().trimIndent()
         )
+        gitMapper.targetGit.close()
+        gitMapper.targetSourceDirectory.deleteRecursively()
     }
 
 //    @Test
@@ -159,15 +151,10 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
         }
 
         val fileRepo = FileRepository("/tmp/git-repo/.git")
-        val mapper = GitRepositoryMapper(project)
-        mapper.initialize(fileRepo, fileRepo)
-        mapper.rewrite(Context.init())
-        PorcelainAPI(fileRepo).use {
-            it.resetHard()
-            it.clean()
-        }
+        val gitMapper = GitRepositoryMapper(project)
+        gitMapper.initialize(fileRepo)
 
-        val finerMethodFile = File("/tmp/git-repo/GetterMethod.getStr().mscala")
+        val finerMethodFile = File(gitMapper.targetSourceDirectory, "GetterMethod.getStr().mscala")
         assertExists(finerMethodFile)
         assertEquals(
             """
@@ -183,5 +170,7 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
             }
             """.trimIndent(), finerMethodFile.readText().trimIndent()
         )
+        gitMapper.targetGit.close()
+        gitMapper.targetSourceDirectory.deleteRecursively()
     }
 }

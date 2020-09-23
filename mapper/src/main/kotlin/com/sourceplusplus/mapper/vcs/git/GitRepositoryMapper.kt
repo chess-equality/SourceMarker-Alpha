@@ -1,5 +1,6 @@
 package com.sourceplusplus.mapper.vcs.git
 
+import com.google.common.base.Preconditions
 import com.intellij.openapi.fileTypes.FileTypeRegistry
 import com.intellij.openapi.project.Project
 import com.intellij.psi.JavaRecursiveElementVisitor
@@ -7,15 +8,21 @@ import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiFileFactory
 import com.intellij.psi.impl.source.tree.LeafPsiElement
 import com.sourceplusplus.marker.MarkerUtils.Companion.getFullyQualifiedName
+import jp.ac.titech.c.se.stein.PorcelainAPI
 import jp.ac.titech.c.se.stein.core.Context
 import jp.ac.titech.c.se.stein.core.EntrySet
 import jp.ac.titech.c.se.stein.core.EntrySet.Entry
 import jp.ac.titech.c.se.stein.core.EntrySet.EntryList
 import jp.ac.titech.c.se.stein.core.RepositoryRewriter
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.internal.storage.file.FileRepository
+import org.eclipse.jgit.lib.Repository
 import org.jetbrains.uast.UFile
 import org.jetbrains.uast.toUElement
 import org.slf4j.LoggerFactory
+import java.io.File
 import java.nio.charset.StandardCharsets
+import java.util.*
 
 /**
  * Based off FinerGit.
@@ -33,6 +40,33 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
 
     init {
         isPathSensitive = true
+    }
+
+    lateinit var sourceRepo: Repository
+    lateinit var targetRepo: Repository
+    lateinit var targetSourceDirectory: File
+    lateinit var targetGit: Git
+
+    fun initialize(sourceRepo: Repository) {
+        val tempDir = File("/tmp/tmp-repo-${UUID.randomUUID()}/.git")
+        Preconditions.checkArgument(tempDir.mkdirs())
+        sourceRepo.directory.copyRecursively(tempDir, true)
+
+        initialize(sourceRepo, FileRepository(tempDir))
+    }
+
+    override fun initialize(sourceRepo: Repository, targetRepo: Repository) {
+        this.sourceRepo = sourceRepo
+        this.targetRepo = targetRepo
+        targetSourceDirectory = targetRepo.directory.parentFile
+        targetGit = Git.wrap(targetRepo)
+
+        super.initialize(targetRepo, targetRepo)
+        rewrite(Context.init())
+        PorcelainAPI(targetRepo).use {
+            it.resetHard()
+            it.clean()
+        }
     }
 
     override fun rewriteEntry(entry: Entry, c: Context): EntrySet {
