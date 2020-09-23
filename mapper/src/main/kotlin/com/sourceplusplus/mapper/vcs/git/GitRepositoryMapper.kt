@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import java.nio.charset.StandardCharsets
 import java.util.*
+import java.util.regex.Pattern
 
 /**
  * Based off FinerGit.
@@ -36,6 +37,7 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
     companion object {
         private val log = LoggerFactory.getLogger(GitRepositoryMapper::class.java)
         private val supportedFileTypes = hashSetOf("java", "groovy", "kotlin", "scala")
+        val originalCommitIdPattern = Pattern.compile("<OriginalCommitID:(.+)>")!!
     }
 
     init {
@@ -50,12 +52,14 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
     fun initialize(sourceRepo: Repository) {
         val tempDir = File("/tmp/tmp-repo-${UUID.randomUUID()}/.git")
         Preconditions.checkArgument(tempDir.mkdirs())
-        sourceRepo.directory.copyRecursively(tempDir, true)
+        val fileRepo = FileRepository(tempDir)
+        fileRepo.create()
 
-        initialize(sourceRepo, FileRepository(tempDir))
+        initialize(sourceRepo, fileRepo)
     }
 
     fun reinitialize() {
+        super.initialize(sourceRepo, targetRepo)
         rewrite(Context.init())
         PorcelainAPI(targetRepo).use {
             it.resetHard()
@@ -69,7 +73,7 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
         targetSourceDirectory = targetRepo.directory.parentFile
         targetGit = Git.wrap(targetRepo)
 
-        super.initialize(targetRepo, targetRepo)
+        super.initialize(sourceRepo, targetRepo)
         rewrite(Context.init())
         PorcelainAPI(targetRepo).use {
             it.resetHard()

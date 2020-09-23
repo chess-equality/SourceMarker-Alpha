@@ -50,7 +50,7 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         val vertx: Vertx = Vertx.vertx()
 
         fun registerCodecs(vertx: Vertx) {
-            log.info("Registering SourceMarker Protocol codecs")
+            log.debug("Registering SourceMarker Protocol codecs")
             registerCodec(vertx, SourcePortal::class.java)
             registerCodec(vertx, ArtifactMetricResult::class.java)
             registerCodec(vertx, TraceResult::class.java)
