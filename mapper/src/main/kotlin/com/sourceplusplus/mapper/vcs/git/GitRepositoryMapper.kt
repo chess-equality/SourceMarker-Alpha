@@ -69,6 +69,10 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
         }
     }
 
+    override fun rewriteCommitMessage(message: String, c: Context): String {
+        return "<OriginalCommitID:${c.commitId}>"
+    }
+
     override fun rewriteEntry(entry: Entry, c: Context): EntrySet {
         if (entry.isTree) {
             return super.rewriteEntry(entry, c)
