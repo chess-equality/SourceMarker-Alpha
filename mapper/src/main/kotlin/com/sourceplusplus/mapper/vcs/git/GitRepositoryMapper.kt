@@ -55,6 +55,14 @@ class GitRepositoryMapper(private val project: Project) : RepositoryRewriter() {
         initialize(sourceRepo, FileRepository(tempDir))
     }
 
+    fun reinitialize() {
+        rewrite(Context.init())
+        PorcelainAPI(targetRepo).use {
+            it.resetHard()
+            it.clean()
+        }
+    }
+
     override fun initialize(sourceRepo: Repository, targetRepo: Repository) {
         this.sourceRepo = sourceRepo
         this.targetRepo = targetRepo

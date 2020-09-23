@@ -9,6 +9,7 @@ import org.eclipse.jgit.lib.Repository
 import org.eclipse.jgit.revwalk.RevCommit
 import org.eclipse.jgit.revwalk.RevTree
 import org.eclipse.jgit.revwalk.RevWalk
+import org.eclipse.jgit.revwalk.filter.RevFilter
 import org.eclipse.jgit.treewalk.AbstractTreeIterator
 import org.eclipse.jgit.treewalk.CanonicalTreeParser
 
@@ -45,6 +46,8 @@ class SourceMapperImpl(private val mapper: GitRepositoryMapper) : SourceMapper {
 
     private fun prepareTreeParser(repository: Repository, objectId: String): AbstractTreeIterator {
         RevWalk(repository).use { walk ->
+            walk.revFilter = RevFilter.NO_MERGES
+
             val commit: RevCommit = walk.parseCommit(repository.resolve(objectId))
             val tree: RevTree = walk.parseTree(commit.tree.id)
             val treeParser = CanonicalTreeParser()
