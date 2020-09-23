@@ -8,8 +8,10 @@ include 'mentor'
 include 'monitor'
 include 'plugin'
 include 'portal'
+include 'portal:backend'
+include 'portal:frontend'
 include 'protocol'
 
 //implementations
 include 'plugin:jetbrains'
-include "monitor:skywalking"
+include 'monitor:skywalking'
