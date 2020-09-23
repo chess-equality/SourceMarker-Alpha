@@ -11,7 +11,6 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
 
     @Test
     fun `tokenized java getter method`() {
-        if (File("/tmp/git-repo").exists()) File("/tmp/git-repo").deleteRecursively()
         Git.init().setDirectory(File("/tmp/git-repo")).call().use { git ->
             @Language("Java") val code = """
                 public class GetterMethod {
@@ -46,13 +45,13 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
             }
             """.trimIndent(), finerMethodFile.readText().trimIndent()
         )
+        gitMapper.sourceRepo.directory.parentFile.deleteRecursively()
         gitMapper.targetGit.close()
         gitMapper.targetSourceDirectory.deleteRecursively()
     }
 
     @Test
     fun `tokenized groovy getter method`() {
-        if (File("/tmp/git-repo").exists()) File("/tmp/git-repo").deleteRecursively()
         Git.init().setDirectory(File("/tmp/git-repo")).call().use { git ->
             @Language("Groovy") val code = """
                 class GetterMethod {
@@ -85,6 +84,7 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
             }
             """.trimIndent(), finerMethodFile.readText().trimIndent()
         )
+        gitMapper.sourceRepo.directory.parentFile.deleteRecursively()
         gitMapper.targetGit.close()
         gitMapper.targetSourceDirectory.deleteRecursively()
     }
@@ -133,7 +133,6 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
 
     @Test
     fun `tokenized scala getter method`() {
-        if (File("/tmp/git-repo").exists()) File("/tmp/git-repo").deleteRecursively()
         Git.init().setDirectory(File("/tmp/git-repo")).call().use { git ->
         //todo: @Language("Scala") doesn't work
             @Language("Scala") val code = """
@@ -170,6 +169,7 @@ class GitRepositoryMapperTest : LightPlatformCodeInsightFixture4TestCase() {
             }
             """.trimIndent(), finerMethodFile.readText().trimIndent()
         )
+        gitMapper.sourceRepo.directory.parentFile.deleteRecursively()
         gitMapper.targetGit.close()
         gitMapper.targetSourceDirectory.deleteRecursively()
     }

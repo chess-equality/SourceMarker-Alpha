@@ -15,7 +15,6 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
 
     @Test
     fun `java get original method name`() {
-        if (File("/tmp/git-repo").exists()) File("/tmp/git-repo").deleteRecursively()
         Git.init().setDirectory(File("/tmp/git-repo")).call().use { git ->
             @Language("Java") val code = """
             public class GetterMethod {
@@ -60,13 +59,13 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
         assertEquals(newCommitId, newName.commitId)
         assertEquals("GetterMethod.getStr()", oldName.identifier)
         assertEquals(oldCommitId, oldName.commitId)
+        gitMapper.sourceRepo.directory.parentFile.deleteRecursively()
         gitMapper.targetGit.close()
         gitMapper.targetSourceDirectory.deleteRecursively()
     }
 
     @Test
     fun `java get updated method name`() {
-        if (File("/tmp/git-repo").exists()) File("/tmp/git-repo").deleteRecursively()
         Git.init().setDirectory(File("/tmp/git-repo")).call().use { git ->
             @Language("Java") val code = """
             public class GetterMethod {
@@ -111,6 +110,7 @@ class MethodRenameTest : LightPlatformCodeInsightFixture4TestCase() {
         assertEquals(oldCommitId, oldName.commitId)
         assertEquals("GetterMethod.getStr2()", newName.identifier)
         assertEquals(newCommitId, newName.commitId)
+        gitMapper.sourceRepo.directory.parentFile.deleteRecursively()
         gitMapper.targetGit.close()
         gitMapper.targetSourceDirectory.deleteRecursively()
     }
