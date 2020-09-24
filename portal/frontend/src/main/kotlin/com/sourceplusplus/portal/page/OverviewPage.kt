@@ -115,7 +115,7 @@ class OverviewPage {
 
     private fun clickedViewAverageThroughputChart() {
         console.log("Clicked view average throughput")
-        currentMetricType = MetricType.valueOf("Throughput_Average")
+        currentMetricType = MetricType.Throughput_Average
         eb.send(
             "SetActiveChartMetric",
             JsonObject(
@@ -129,7 +129,7 @@ class OverviewPage {
 
     private fun clickedViewAverageResponseTimeChart() {
         console.log("Clicked view average response time")
-        currentMetricType = MetricType.valueOf("ResponseTime_Average")
+        currentMetricType = MetricType.ResponseTime_Average
         eb.send(
             "SetActiveChartMetric",
             JsonObject(
@@ -143,7 +143,7 @@ class OverviewPage {
 
     private fun clickedViewAverageSLAChart() {
         console.log("Clicked view average SLA")
-        currentMetricType = MetricType.valueOf("ServiceLevelAgreement_Average")
+        currentMetricType = MetricType.ServiceLevelAgreement_Average
         eb.send(
             "SetActiveChartMetric",
             JsonObject(
