@@ -1,7 +1,7 @@
-console.log("Overview tab started");
-
-var currentMetricType = "Throughput_Average"; //todo-chess-equality: currentMetricType = OverviewView.activeChartMetric
-var currentTimeFrame = "LAST_5_MINUTES"; //todo-chess-equality: currentTimeFrame = OverviewView.timeFrame
+// console.log("Overview tab started");
+//
+// var currentMetricType = "Throughput_Average"; //todo-chess-equality: currentMetricType = OverviewView.activeChartMetric
+// var currentTimeFrame = "LAST_5_MINUTES"; //todo-chess-equality: currentTimeFrame = OverviewView.timeFrame
 
 // console.log("Connecting portal");
 // eb.onopen = function () {
@@ -31,35 +31,35 @@ var currentTimeFrame = "LAST_5_MINUTES"; //todo-chess-equality: currentTimeFrame
 //     eb.publish('OverviewTabOpened', {'portal_uuid': portalUuid});
 // };
 
-function updateTime(interval) {
-    console.log("Update time: " + interval);
-    currentTimeFrame = interval.toUpperCase();
-    localStorage.setItem('spp.metric_time_frame', interval);
-    eb.send('SetMetricTimeFrame', {'portal_uuid': portalUuid, 'metric_time_frame': interval});
-
-    $('#last_5_minutes_time').removeClass('active');
-    $('#last_15_minutes_time').removeClass('active');
-    $('#last_30_minutes_time').removeClass('active');
-    $('#last_hour_time').removeClass('active');
-    $('#last_3_hours_time').removeClass('active');
-
-    $('#' + interval.toLowerCase() + '_time').addClass('active');
-}
-
-function clickedViewAverageThroughputChart() {
-    console.log("Clicked view average throughput");
-    currentMetricType = "Throughput_Average";
-    eb.send('SetActiveChartMetric', {'portal_uuid': portalUuid, 'metric_type': currentMetricType});
-}
-
-function clickedViewAverageResponseTimeChart() {
-    console.log("Clicked view average response time");
-    currentMetricType = "ResponseTime_Average";
-    eb.send('SetActiveChartMetric', {'portal_uuid': portalUuid, 'metric_type': currentMetricType});
-}
-
-function clickedViewAverageSLAChart() {
-    console.log("Clicked view average SLA");
-    currentMetricType = "ServiceLevelAgreement_Average";
-    eb.send('SetActiveChartMetric', {'portal_uuid': portalUuid, 'metric_type': currentMetricType});
-}
+// function updateTime(interval) {
+//     console.log("Update time: " + interval);
+//     currentTimeFrame = interval.toUpperCase();
+//     localStorage.setItem('spp.metric_time_frame', interval);
+//     eb.send('SetMetricTimeFrame', {'portal_uuid': portalUuid, 'metric_time_frame': interval});
+//
+//     $('#last_5_minutes_time').removeClass('active');
+//     $('#last_15_minutes_time').removeClass('active');
+//     $('#last_30_minutes_time').removeClass('active');
+//     $('#last_hour_time').removeClass('active');
+//     $('#last_3_hours_time').removeClass('active');
+//
+//     $('#' + interval.toLowerCase() + '_time').addClass('active');
+// }
+//
+// function clickedViewAverageThroughputChart() {
+//     console.log("Clicked view average throughput");
+//     currentMetricType = "Throughput_Average";
+//     eb.send('SetActiveChartMetric', {'portal_uuid': portalUuid, 'metric_type': currentMetricType});
+// }
+//
+// function clickedViewAverageResponseTimeChart() {
+//     console.log("Clicked view average response time");
+//     currentMetricType = "ResponseTime_Average";
+//     eb.send('SetActiveChartMetric', {'portal_uuid': portalUuid, 'metric_type': currentMetricType});
+// }
+//
+// function clickedViewAverageSLAChart() {
+//     console.log("Clicked view average SLA");
+//     currentMetricType = "ServiceLevelAgreement_Average";
+//     eb.send('SetActiveChartMetric', {'portal_uuid': portalUuid, 'metric_type': currentMetricType});
+// }

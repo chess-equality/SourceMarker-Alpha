@@ -8,7 +8,7 @@ import extensions.eb
 class OverviewView {
 
     private val portalUuid = "null"
-    private var currentMetricType: MetricType = MetricType.Throughput_Average
+    var currentMetricType: MetricType = MetricType.Throughput_Average
     var currentTimeFrame = QueryTimeFrame.LAST_5_MINUTES
 
     fun clickedViewAverageThroughputChart() {
