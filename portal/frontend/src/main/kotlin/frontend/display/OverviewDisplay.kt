@@ -17,8 +17,6 @@ class OverviewDisplay {
             js("clickedViewAverageResponseTimeChart();") //default = avg resp time
 
             eb.registerHandler("$portalUuid-ClearOverview") { error: String, message: String ->
-                println("Error: $error")
-                println("Message: $message")
                 js("clearOverview();") as Unit
             }
 
