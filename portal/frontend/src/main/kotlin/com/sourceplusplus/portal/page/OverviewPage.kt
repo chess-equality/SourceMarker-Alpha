@@ -17,9 +17,8 @@ import com.sourceplusplus.protocol.portal.TimeIntervalType.*
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.html.dom.append
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
 import org.w3c.dom.Element
+import kotlin.js.json
 
 /**
  * todo: description.
@@ -101,11 +100,9 @@ class OverviewPage {
         localStorage.setItem("spp.metric_time_frame", interval.name)
         eb.send(
             "SetMetricTimeFrame",
-            JsonObject(
-                mapOf(
-                    "portal_uuid" to JsonPrimitive(portalUuid),
-                    "metric_time_frame" to JsonPrimitive(interval.name)
-                )
+            json(
+                "portal_uuid" to portalUuid,
+                "metric_time_frame" to interval.name
             )
         )
 
@@ -123,11 +120,9 @@ class OverviewPage {
         currentMetricType = MetricType.Throughput_Average
         eb.send(
             SetActiveChartMetric,
-            JsonObject(
-                mapOf(
-                    "portal_uuid" to JsonPrimitive(portalUuid),
-                    "metric_type" to JsonPrimitive(currentMetricType.name)
-                )
+            json(
+                "portal_uuid" to portalUuid,
+                "metric_type" to currentMetricType.name
             )
         )
     }
@@ -137,11 +132,9 @@ class OverviewPage {
         currentMetricType = MetricType.ResponseTime_Average
         eb.send(
             SetActiveChartMetric,
-            JsonObject(
-                mapOf(
-                    "portal_uuid" to JsonPrimitive(portalUuid),
-                    "metric_type" to JsonPrimitive(currentMetricType.name)
-                )
+            json(
+                "portal_uuid" to portalUuid,
+                "metric_type" to currentMetricType.name
             )
         )
     }
@@ -151,11 +144,9 @@ class OverviewPage {
         currentMetricType = MetricType.ServiceLevelAgreement_Average
         eb.send(
             SetActiveChartMetric,
-            JsonObject(
-                mapOf(
-                    "portal_uuid" to JsonPrimitive(portalUuid),
-                    "metric_type" to JsonPrimitive(currentMetricType.name)
-                )
+            json(
+                "portal_uuid" to portalUuid,
+                "metric_type" to currentMetricType.name
             )
         )
     }

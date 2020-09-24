@@ -1,6 +1,6 @@
 package com.sourceplusplus.portal.extensions
 
-import kotlinx.serialization.json.JsonObject
+import kotlin.js.Json
 
 val vertx: Vertx = Vertx()
 val eb: Vertx.EventBus = vertx.eventBus.init()
@@ -32,13 +32,13 @@ class Vertx {
             return this
         }
 
-        @Deprecated("Use jsonObject")
+        @Deprecated("Use send(address: String, json: Json)")
         fun send(address: String, json: String) {
             js("eb.send(address, (0, eval)('(' + json + ')'));")
         }
 
-        fun send(address: String, jsonObject: JsonObject) {
-            send(address, jsonObject.toString().replace("\"", "'"))
+        fun send(address: String, json: Json) {
+            js("eb.send(address, json);")
         }
 
         fun publish(address: String, json: String) {

@@ -11,6 +11,7 @@ import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedDispl
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ClickedViewAsExternalPortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ConfigurationTabOpened
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetActiveChartMetric
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.TracesTabOpened
 import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.ClearOverview
 import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplayArtifactConfiguration
@@ -30,6 +31,8 @@ import kotlinx.datetime.plus
 import java.time.Instant
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom.current
+
+var currentMetricType = MetricType.ResponseTime_Average
 
 fun main() {
     DatabindCodec.mapper().registerModule(GuavaModule())
@@ -62,6 +65,12 @@ fun main() {
         displayChart(vertx)
     }
     vertx.setPeriodic(2500) {
+        updateCards(vertx)
+        displayChart(vertx)
+    }
+
+    vertx.eventBus().consumer<JsonObject>(SetActiveChartMetric) {
+        currentMetricType = MetricType.valueOf(it.body().getString("metric_type"))
         updateCards(vertx)
         displayChart(vertx)
     }
@@ -144,7 +153,7 @@ fun displayChart(vertx: Vertx) {
             ),
             doubleArrayOf(current().nextDouble(10.0), current().nextDouble(10.0))
         )
-    val splineChart = SplineChart(MetricType.ResponseTime_Average, QueryTimeFrame.LAST_15_MINUTES, listOf(seriesData))
+    val splineChart = SplineChart(currentMetricType, QueryTimeFrame.LAST_15_MINUTES, listOf(seriesData))
     vertx.eventBus().updateChart("null", splineChart)
 }
 
