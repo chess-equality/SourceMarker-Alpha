@@ -33,4 +33,19 @@ tasks {
             kotlinOptions.jvmTarget = "1.8"
         }
     }
+
+    //todo: should be a way to just add implementation() to dependencies
+    getByName("processResources") {
+        dependsOn(":portal:frontend:build")
+        doLast {
+            copy {
+                from(file("$rootDir/portal/frontend/build/distributions/frontend.js"))
+                into(file("$rootDir/portal/backend/build/resources/main/webroot"))
+            }
+            copy {
+                from(file("$rootDir/portal/frontend/build/distributions/frontend.js.map"))
+                into(file("$rootDir/portal/backend/build/resources/main/webroot"))
+            }
+        }
+    }
 }
