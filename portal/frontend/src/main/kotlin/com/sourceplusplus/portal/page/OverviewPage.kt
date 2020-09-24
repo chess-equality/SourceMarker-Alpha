@@ -3,7 +3,11 @@ package com.sourceplusplus.portal.page
 import com.sourceplusplus.portal.extensions.eb
 import com.sourceplusplus.portal.extensions.jq
 import com.sourceplusplus.portal.template.*
-import com.sourceplusplus.protocol.ProtocolAddress
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened
+import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetActiveChartMetric
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.ClearOverview
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplayCard
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.UpdateChart
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType.*
 import com.sourceplusplus.protocol.portal.ChartItemType.*
 import com.sourceplusplus.protocol.portal.MetricType
@@ -36,13 +40,13 @@ class OverviewPage {
             js("portalConnected()")
             clickedViewAverageResponseTimeChart() //default = avg resp time
 
-            eb.registerHandler(ProtocolAddress.Portal.ClearOverview(portalUuid)) { error: String, message: Any ->
+            eb.registerHandler(ClearOverview(portalUuid)) { error: String, message: Any ->
                 js("clearOverview();")
             }
-            eb.registerHandler(ProtocolAddress.Portal.DisplayCard(portalUuid)) { error: String, message: Any ->
+            eb.registerHandler(DisplayCard(portalUuid)) { error: String, message: Any ->
                 js("displayCard(message.body);")
             }
-            eb.registerHandler(ProtocolAddress.Portal.UpdateChart(portalUuid)) { error: String, message: Any ->
+            eb.registerHandler(UpdateChart(portalUuid)) { error: String, message: Any ->
                 js("updateChart(message.body);")
             }
 
@@ -54,7 +58,7 @@ class OverviewPage {
             updateTime(QueryTimeFrame.valueOf(timeFrame.toUpperCase()))
             js("portalLog('Set initial time frame to: ' + timeFrame);")
 
-            eb.publish(ProtocolAddress.Global.OverviewTabOpened, "{'portal_uuid': '$portalUuid'}")
+            eb.publish(OverviewTabOpened, "{'portal_uuid': '$portalUuid'}")
         }
     }
 
@@ -117,7 +121,7 @@ class OverviewPage {
         console.log("Clicked view average throughput")
         currentMetricType = MetricType.Throughput_Average
         eb.send(
-            "SetActiveChartMetric",
+            SetActiveChartMetric,
             JsonObject(
                 mapOf(
                     "portal_uuid" to JsonPrimitive(portalUuid),
@@ -131,7 +135,7 @@ class OverviewPage {
         console.log("Clicked view average response time")
         currentMetricType = MetricType.ResponseTime_Average
         eb.send(
-            "SetActiveChartMetric",
+            SetActiveChartMetric,
             JsonObject(
                 mapOf(
                     "portal_uuid" to JsonPrimitive(portalUuid),
@@ -145,7 +149,7 @@ class OverviewPage {
         console.log("Clicked view average SLA")
         currentMetricType = MetricType.ServiceLevelAgreement_Average
         eb.send(
-            "SetActiveChartMetric",
+            SetActiveChartMetric,
             JsonObject(
                 mapOf(
                     "portal_uuid" to JsonPrimitive(portalUuid),
