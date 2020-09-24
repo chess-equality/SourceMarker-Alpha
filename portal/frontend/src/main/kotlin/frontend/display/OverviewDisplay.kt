@@ -1,10 +1,12 @@
 package frontend.display
 
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.ClearOverview
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplayCard
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.UpdateChart
 import extensions.eb
 import frontend.display.views.OverviewView
 import kotlinx.browser.localStorage
-
 
 class OverviewDisplay {
     val view = OverviewView()
@@ -16,15 +18,13 @@ class OverviewDisplay {
             js("portalConnected()")
             js("clickedViewAverageResponseTimeChart();") //default = avg resp time
 
-            eb.registerHandler("$portalUuid-ClearOverview") { error: String, message: Any ->
+            eb.registerHandler(ClearOverview(portalUuid)) { error: String, message: Any ->
                 js("clearOverview();")
             }
-
-            eb.registerHandler("$portalUuid-DisplayCard") { error: String, message: Any ->
+            eb.registerHandler(DisplayCard(portalUuid)) { error: String, message: Any ->
                 js("displayCard(message.body);")
             }
-
-            eb.registerHandler("$portalUuid-UpdateChart") { error: String, message: Any ->
+            eb.registerHandler(UpdateChart(portalUuid)) { error: String, message: Any ->
                 js("updateChart(message.body);")
             }
 
