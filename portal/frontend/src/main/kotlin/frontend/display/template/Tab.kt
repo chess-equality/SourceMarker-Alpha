@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.backend.template
+package frontend.display.template
 
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType
 import com.sourceplusplus.protocol.portal.PageType

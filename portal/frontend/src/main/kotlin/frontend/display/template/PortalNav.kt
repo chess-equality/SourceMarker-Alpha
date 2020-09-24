@@ -1,10 +1,12 @@
-package com.sourceplusplus.portal.backend.template
+package frontend.display.template
 
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType
 import com.sourceplusplus.protocol.portal.PageType
 import kotlinx.html.FlowContent
+import kotlinx.html.TagConsumer
 import kotlinx.html.div
 import kotlinx.html.style
+import org.w3c.dom.HTMLElement
 
 class PortalNavigationConfiguration(private val flowContent: FlowContent) {
 
@@ -42,7 +44,7 @@ class PortalNavigationConfiguration(private val flowContent: FlowContent) {
     }
 }
 
-fun FlowContent.portalNav(block: PortalNavigationConfiguration.() -> Unit) {
+fun TagConsumer<HTMLElement>.portalNav(block: PortalNavigationConfiguration.() -> Unit) {
     div("ui sidebar vertical left menu overlay visible very thin icon spp_blue webkit_transition") {
         style = "overflow: visible !important;"
         val portalNavigation = PortalNavigationConfiguration(this).apply(block)

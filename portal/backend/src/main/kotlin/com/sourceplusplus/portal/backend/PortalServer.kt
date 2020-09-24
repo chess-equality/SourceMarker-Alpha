@@ -1,8 +1,6 @@
 package com.sourceplusplus.portal.backend
 
-import com.sourceplusplus.portal.backend.page.ConfigurationPage
-import com.sourceplusplus.portal.backend.page.OverviewPage
-import com.sourceplusplus.portal.backend.page.TracesPage
+import com.sourceplusplus.portal.backend.template.overviewHead
 import com.sourceplusplus.portal.frontend.PortalViewTracker
 import com.sourceplusplus.portal.frontend.display.ConfigurationDisplay
 import com.sourceplusplus.portal.frontend.display.OverviewDisplay
@@ -22,9 +20,8 @@ import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlinx.html.HTML
-import kotlinx.html.TagConsumer
-import kotlinx.html.visitAndFinalize
+import kotlinx.html.*
+import kotlinx.html.stream.appendHTML
 
 /**
  * todo: description.
@@ -76,19 +73,70 @@ class PortalServer : CoroutineVerticle() {
 
     private suspend fun getOverview(ctx: RoutingContext) {
         withContext(Dispatchers.Default) {
-            ctx.respond(OverviewPage().renderPage())
+            ctx.respond(buildString {
+                appendLine("<!DOCTYPE html>")
+                appendHTML().html {
+                    head {
+                        overviewHead("tester")
+                        script {
+                            src = "js/overview.js"
+                        }
+                        script {
+                            src = "js/views/overview_view.js"
+                        }
+                    }
+                    body("overflow_y_hidden") {
+                        id = "body"
+                    }
+                }
+            })
         }
     }
 
     private suspend fun getTraces(ctx: RoutingContext) {
         withContext(Dispatchers.Default) {
-            ctx.respond(TracesPage().renderPage())
+            ctx.respond(buildString {
+                appendLine("<!DOCTYPE html>")
+                appendHTML().html {
+                    head {
+                        overviewHead("tester")
+                        script {
+                            src = "js/traces.js"
+                        }
+                        script {
+                            src = "js/views/traces_view.js"
+                        }
+                        script {
+                            src = "themes/default/assets/all.min.js"
+                        }
+                    }
+                    body {
+                        id = "body"
+                    }
+                }
+            })
         }
     }
 
     private suspend fun getConfiguration(ctx: RoutingContext) {
         withContext(Dispatchers.Default) {
-            ctx.respond(ConfigurationPage().renderPage())
+            ctx.respond(buildString {
+                appendLine("<!DOCTYPE html>")
+                appendHTML().html {
+                    head {
+                        overviewHead("tester")
+                        script {
+                            src = "js/configuration.js"
+                        }
+                        script {
+                            src = "js/views/configuration_view.js"
+                        }
+                    }
+                    body {
+                        id = "body"
+                    }
+                }
+            })
         }
     }
 
@@ -111,6 +159,3 @@ class PortalServer : CoroutineVerticle() {
         }
     }
 }
-
-fun <T, C : TagConsumer<T>> C.portal(namespace: String? = null, block: HTML.() -> Unit = {}):
-        T = HTML(kotlinx.html.emptyMap, this, namespace).visitAndFinalize(this, block)

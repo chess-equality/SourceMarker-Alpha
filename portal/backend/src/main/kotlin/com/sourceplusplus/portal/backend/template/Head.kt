@@ -17,6 +17,24 @@ private fun HEAD.commonHead(title: String) {
     script {
         src = "portal_theme.js"
     }
+    script {
+        src = "semantic.min.js"
+    }
+    script {
+        src = "moment.min.js"
+    }
+    script {
+        src = "sockjs.min.js"
+    }
+    script {
+        src = "vertx-eventbus.min.js"
+    }
+    script {
+        src = "source_eventbus_bridge.js"
+    }
+    script {
+        src = "frontend.js"
+    }
 }
 
 fun HEAD.overviewHead(title: String, block: (HEAD.() -> Unit)? = null) {

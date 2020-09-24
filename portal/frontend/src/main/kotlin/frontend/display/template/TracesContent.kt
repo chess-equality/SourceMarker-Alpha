@@ -1,22 +1,23 @@
-package com.sourceplusplus.portal.backend.template
+package frontend.display.template
 
 import com.sourceplusplus.protocol.artifact.trace.TraceSpanInfoType
 import com.sourceplusplus.protocol.artifact.trace.TraceTableType
 import kotlinx.html.*
+import org.w3c.dom.HTMLElement
 
-fun FlowContent.tracesContent(block: FlowContent.() -> Unit) {
+fun TagConsumer<HTMLElement>.tracesContent(block: FlowContent.() -> Unit) {
     div("pusher background_color") {
         block()
     }
 }
 
-fun FlowContent.tracesTable(block: FlowContent.() -> Unit) {
+fun TagConsumer<HTMLElement>.tracesTable(block: FlowContent.() -> Unit) {
     div("wide column marginlefting") {
         block()
     }
 }
 
-fun FlowContent.topTraceTable(vararg traceTableTypes: TraceTableType = arrayOf()) {
+fun TagConsumer<HTMLElement>.topTraceTable(vararg traceTableTypes: TraceTableType = arrayOf()) {
     table("ui celled striped table unstackable secondary_background_color no_top_margin") {
         id = "top_trace_table"
         thead {
@@ -34,7 +35,7 @@ fun FlowContent.topTraceTable(vararg traceTableTypes: TraceTableType = arrayOf()
     }
 }
 
-fun FlowContent.traceStackTable(vararg traceTableTypes: TraceTableType = arrayOf()) {
+fun TagConsumer<HTMLElement>.traceStackTable(vararg traceTableTypes: TraceTableType = arrayOf()) {
     table("ui celled striped table unstackable trace_stack_table hidden_full_height") {
         id = "trace_stack_table"
         thead("secondary_background_color") {
@@ -52,7 +53,7 @@ fun FlowContent.traceStackTable(vararg traceTableTypes: TraceTableType = arrayOf
     }
 }
 
-fun FlowContent.spanInfoPanel(vararg traceSpanInfoTypes: TraceSpanInfoType = arrayOf()) {
+fun TagConsumer<HTMLElement>.spanInfoPanel(vararg traceSpanInfoTypes: TraceSpanInfoType = arrayOf()) {
     div("visibility_hidden") {
         id = "span_info_panel"
         div("ui segments") {

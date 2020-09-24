@@ -1,16 +1,17 @@
-package com.sourceplusplus.portal.backend.template
+package frontend.display.template
 
 import com.sourceplusplus.protocol.artifact.trace.TraceStackHeaderType
 import com.sourceplusplus.protocol.portal.TimeIntervalType
 import kotlinx.html.*
+import org.w3c.dom.HTMLElement
 
-fun FlowContent.navBar(attached: Boolean = true, block: FlowContent.() -> Unit) {
+fun TagConsumer<HTMLElement>.navBar(attached: Boolean = true, block: FlowContent.() -> Unit) {
     div("ui menu top ${if (attached) "attached" else ""} background_color") {
         block()
     }
 }
 
-fun FlowContent.timeDropdown(vararg timeIntervalTypes: TimeIntervalType = arrayOf()) {
+fun TagConsumer<HTMLElement>.timeDropdown(vararg timeIntervalTypes: TimeIntervalType = arrayOf()) {
     div("first_menu_button_margin align_content_center") {
         div("ui icon basic button top left pointing dropdown") {
             i("clock outline icon spp_red_color")
@@ -27,7 +28,7 @@ fun FlowContent.timeDropdown(vararg timeIntervalTypes: TimeIntervalType = arrayO
     }
 }
 
-fun FlowContent.calendar() {
+fun TagConsumer<HTMLElement>.calendar() {
     div("ui calendar align_content_center") {
         id = "button_calendar"
         button(classes = "ui icon basic button spp_blue_color") {
@@ -36,7 +37,7 @@ fun FlowContent.calendar() {
     }
 }
 
-fun FlowContent.tracesHeader(vararg traceStackHeaderTypes: TraceStackHeaderType = arrayOf()) {
+fun TagConsumer<HTMLElement>.tracesHeader(vararg traceStackHeaderTypes: TraceStackHeaderType = arrayOf()) {
     a(classes = "marginlefting ui item dropdown active_sub_tab") {
         id = "latest_traces_header"
         onClick = "clickedBackToTraces()"
@@ -76,7 +77,7 @@ fun FlowContent.tracesHeader(vararg traceStackHeaderTypes: TraceStackHeaderType 
     }
 }
 
-fun FlowContent.externalPortalButton() {
+fun TagConsumer<HTMLElement>.externalPortalButton() {
     div("first_menu_button_margin align_content_center") {
         div("ui icon basic button") {
             onClick = "clickedViewAsExternalPortal()"
@@ -85,7 +86,7 @@ fun FlowContent.externalPortalButton() {
     }
 }
 
-fun FlowContent.rightAlign(block: FlowContent.() -> Unit) {
+fun TagConsumer<HTMLElement>.rightAlign(block: FlowContent.() -> Unit) {
     div("right menu align_content_center") {
         block()
     }

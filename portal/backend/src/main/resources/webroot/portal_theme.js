@@ -1,4 +1,4 @@
-$(document).ready(function () {
+function loadTheme() {
     $('.ui.calendar').calendar();
     $('.ui.dropdown').dropdown();
     $('.ui.sidebar').sidebar('setting', 'transition', 'overlay');
@@ -39,7 +39,7 @@ $(document).ready(function () {
 
     $('#configuration_link').attr('href', "configuration" + mainGetQuery);
     $('#sidebar_configuration_link').attr('href', "configuration" + mainGetQuery);
-});
+}
 
 function loadCSS(filename) {
     let linkRef = document.createElement("link");

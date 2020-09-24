@@ -1,22 +1,23 @@
-package com.sourceplusplus.portal.backend.template
+package frontend.display.template
 
 import com.sourceplusplus.protocol.artifact.ArtifactConfigType
 import com.sourceplusplus.protocol.artifact.ArtifactInfoType
 import kotlinx.html.*
+import org.w3c.dom.HTMLElement
 
-fun FlowContent.configurationContent(block: FlowContent.() -> Unit) {
+fun TagConsumer<HTMLElement>.configurationContent(block: FlowContent.() -> Unit) {
     div("pusher background_color") {
         block()
     }
 }
 
-fun FlowContent.configurationTable(block: FlowContent.() -> Unit) {
+fun TagConsumer<HTMLElement>.configurationTable(block: FlowContent.() -> Unit) {
     div("ui grid marginlefting min_height") {
         block()
     }
 }
 
-fun FlowContent.artifactConfiguration(vararg artifactConfigTypes: ArtifactConfigType = arrayOf()) {
+fun TagConsumer<HTMLElement>.artifactConfiguration(vararg artifactConfigTypes: ArtifactConfigType = arrayOf()) {
     div("six wide column min_height") {
         div("ui form") {
             div("ui segment secondary_background_color") {
@@ -37,7 +38,7 @@ fun FlowContent.artifactConfiguration(vararg artifactConfigTypes: ArtifactConfig
     }
 }
 
-fun FlowContent.artifactInformation(vararg artifactInfoTypes: ArtifactInfoType = arrayOf()) {
+fun TagConsumer<HTMLElement>.artifactInformation(vararg artifactInfoTypes: ArtifactInfoType = arrayOf()) {
     div("ten wide column min_height") {
         div("ui segments secondary_background_color margin_right_white") {
             table("ui small very compact very basic collapsing celled table margin_left_no_padding") {

@@ -1,4 +1,4 @@
-package com.sourceplusplus.portal.backend.template
+package frontend.display.template
 
 import kotlinx.html.DIV
 import kotlinx.html.FlowContent

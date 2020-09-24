@@ -1,5 +1,7 @@
 package extensions
 
+import kotlinx.serialization.json.JsonObject
+
 val vertx: Vertx = Vertx()
 val eb: Vertx.EventBus = vertx.eventBus.init()
 
@@ -24,8 +26,13 @@ class Vertx {
             return this
         }
 
+        @Deprecated("Use jsonObject")
         fun send(address: String, json: String) {
             js("eb.send(address, (0, eval)('(' + json + ')'));")
+        }
+
+        fun send(address: String, jsonObject: JsonObject) {
+            send(address, jsonObject.toString().replace("\"", "'"))
         }
 
         fun publish(address: String, json: String) {

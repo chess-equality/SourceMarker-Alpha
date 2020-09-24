@@ -1,15 +1,16 @@
-package com.sourceplusplus.portal.backend.template
+package frontend.display.template
 
 import com.sourceplusplus.protocol.portal.ChartItemType
 import kotlinx.html.*
+import org.w3c.dom.HTMLElement
 
-fun FlowContent.overviewContent(block: FlowContent.() -> Unit) {
+fun TagConsumer<HTMLElement>.overviewContent(block: FlowContent.() -> Unit) {
     div("pusher") {
         block()
     }
 }
 
-fun FlowContent.areaChart(block: (FlowContent.() -> Unit)? = null) {
+fun TagConsumer<HTMLElement>.areaChart(block: (FlowContent.() -> Unit)? = null) {
     div("ui padded equal height grid background_color") {
         style = "min-height: calc(100vh - 47px); margin-left: 60px !important" //todo: has to be better way to do this
         div("twelve wide stretched column") {
