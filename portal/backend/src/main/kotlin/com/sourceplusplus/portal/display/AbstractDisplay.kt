@@ -1,6 +1,6 @@
-package com.sourceplusplus.portal.frontend.display
+package com.sourceplusplus.portal.display
 
-import com.sourceplusplus.portal.frontend.SourcePortal
+import com.sourceplusplus.portal.SourcePortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OpenedPortal
 import com.sourceplusplus.protocol.portal.PageType
 import io.vertx.core.json.JsonObject

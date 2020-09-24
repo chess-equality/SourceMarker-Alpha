@@ -1,10 +1,9 @@
 package com.sourceplusplus.portal.backend
 
-import com.sourceplusplus.portal.backend.template.overviewHead
-import com.sourceplusplus.portal.frontend.PortalViewTracker
-import com.sourceplusplus.portal.frontend.display.ConfigurationDisplay
-import com.sourceplusplus.portal.frontend.display.OverviewDisplay
-import com.sourceplusplus.portal.frontend.display.TracesDisplay
+import com.sourceplusplus.portal.PortalViewTracker
+import com.sourceplusplus.portal.display.ConfigurationDisplay
+import com.sourceplusplus.portal.display.OverviewDisplay
+import com.sourceplusplus.portal.display.TracesDisplay
 import io.netty.buffer.Unpooled
 import io.vertx.core.Vertx
 import io.vertx.core.buffer.Buffer
@@ -52,6 +51,7 @@ class PortalServer : CoroutineVerticle() {
 
 //        // Static handler
 //        router.route("/*").handler(StaticHandler.create())
+
         // Routes
         router.get("/").coroutineHandler { ctx -> getOverview(ctx) } //todo: could make whole application overview
         router.get("/overview").coroutineHandler { ctx -> getOverview(ctx) }
@@ -77,7 +77,7 @@ class PortalServer : CoroutineVerticle() {
                 appendLine("<!DOCTYPE html>")
                 appendHTML().html {
                     head {
-                        overviewHead("tester")
+                        overviewHead("Overview - SourceMarker")
                         script {
                             src = "js/overview.js"
                         }
@@ -99,7 +99,7 @@ class PortalServer : CoroutineVerticle() {
                 appendLine("<!DOCTYPE html>")
                 appendHTML().html {
                     head {
-                        overviewHead("tester")
+                        overviewHead("Traces - SourceMarker")
                         script {
                             src = "js/traces.js"
                         }
@@ -124,7 +124,7 @@ class PortalServer : CoroutineVerticle() {
                 appendLine("<!DOCTYPE html>")
                 appendHTML().html {
                     head {
-                        overviewHead("tester")
+                        overviewHead("Configuration - SourceMarker")
                         script {
                             src = "js/configuration.js"
                         }
@@ -157,5 +157,58 @@ class PortalServer : CoroutineVerticle() {
                 }
             }
         }
+    }
+
+    private fun HEAD.commonHead(title: String) {
+        meta {
+            charset = "UTF-8"
+        }
+        title { +title }
+        link {
+            rel = "stylesheet"
+            href = "semantic.min.css"
+        }
+        script {
+            src = "jquery-3.5.1.min.js"
+        }
+        script {
+            src = "portal_theme.js"
+        }
+        script {
+            src = "semantic.min.js"
+        }
+        script {
+            src = "moment.min.js"
+        }
+        script {
+            src = "sockjs.min.js"
+        }
+        script {
+            src = "vertx-eventbus.min.js"
+        }
+        script {
+            src = "source_eventbus_bridge.js"
+        }
+        script {
+            src = "frontend.js"
+        }
+    }
+
+    private fun HEAD.overviewHead(title: String, block: (HEAD.() -> Unit)? = null) {
+        commonHead(title)
+        script {
+            src = "echarts.min.js"
+        }
+        block?.let { it() }
+    }
+
+    private fun HEAD.tracesHead(title: String, block: (HEAD.() -> Unit)? = null) {
+        commonHead(title)
+        block?.let { it() }
+    }
+
+    private fun HEAD.configurationHead(title: String, block: (HEAD.() -> Unit)? = null) {
+        commonHead(title)
+        block?.let { it() }
     }
 }

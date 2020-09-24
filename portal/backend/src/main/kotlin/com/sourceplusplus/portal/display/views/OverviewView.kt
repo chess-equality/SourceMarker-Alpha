@@ -1,6 +1,6 @@
-package com.sourceplusplus.portal.frontend.display.views
+package com.sourceplusplus.portal.display.views
 
-import com.sourceplusplus.portal.frontend.SourcePortal
+import com.sourceplusplus.portal.SourcePortal
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.portal.MetricType
 import com.sourceplusplus.protocol.portal.QueryTimeFrame

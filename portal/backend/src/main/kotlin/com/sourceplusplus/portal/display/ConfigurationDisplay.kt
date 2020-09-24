@@ -1,6 +1,6 @@
-package com.sourceplusplus.portal.frontend.display
+package com.sourceplusplus.portal.display
 
-import com.sourceplusplus.portal.frontend.SourcePortal
+import com.sourceplusplus.portal.SourcePortal
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ConfigurationTabOpened
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.UpdateArtifactAutoSubscribe
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.UpdateArtifactEntryMethod

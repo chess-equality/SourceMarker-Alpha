@@ -6,10 +6,7 @@ import com.sourceplusplus.protocol.portal.PageType.*
 import com.sourceplusplus.protocol.portal.TimeIntervalType.*
 import frontend.display.template.*
 import kotlinx.browser.document
-import kotlinx.html.HTML
-import kotlinx.html.TagConsumer
 import kotlinx.html.dom.append
-import kotlinx.html.visitAndFinalize
 import org.w3c.dom.Element
 
 /**
@@ -51,7 +48,3 @@ class OverviewPage {
         js("loadChart();")
     }
 }
-
-
-fun <T, C : TagConsumer<T>> C.portal(namespace: String? = null, block: HTML.() -> Unit = {}):
-        T = HTML(kotlinx.html.emptyMap, this, namespace).visitAndFinalize(this, block)
