@@ -4,9 +4,7 @@ import frontend.display.page.TracesPage
 import kotlinx.browser.window
 
 fun main() {
-    println("calling overview display")
     println("path: " + window.location.pathname)
-    println("the path: " + window.location.pathname)
 
     jq().ready {
         when (window.location.pathname) {

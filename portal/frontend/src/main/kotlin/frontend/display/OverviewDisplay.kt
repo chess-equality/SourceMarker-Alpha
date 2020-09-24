@@ -8,15 +8,15 @@ import com.sourceplusplus.protocol.portal.MetricType
 import com.sourceplusplus.protocol.portal.QueryTimeFrame
 import extensions.eb
 import frontend.display.page.OverviewPage
-import frontend.display.views.OverviewView
 import jq
 import kotlinx.browser.localStorage
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 
 class OverviewDisplay {
-    val view = OverviewView()
     val portalUuid = "null"
+    var currentMetricType: MetricType = MetricType.Throughput_Average
+    var currentTimeFrame = QueryTimeFrame.LAST_5_MINUTES
 
     init {
         println("init overview display")
@@ -40,7 +40,7 @@ class OverviewDisplay {
 
             var timeFrame = localStorage.getItem("spp.metric_time_frame")
             if (timeFrame == null) {
-                timeFrame = view.currentTimeFrame.name
+                timeFrame = currentTimeFrame.name
                 localStorage.setItem("spp.metric_time_frame", timeFrame)
             }
             updateTime(QueryTimeFrame.valueOf(timeFrame.toUpperCase()))
@@ -52,7 +52,7 @@ class OverviewDisplay {
 
     fun updateTime(interval: QueryTimeFrame) {
         console.log("Update time: $interval")
-        view.currentTimeFrame = interval
+        currentTimeFrame = interval
         localStorage.setItem("spp.metric_time_frame", interval.name)
         eb.send(
             "SetMetricTimeFrame",
@@ -75,13 +75,13 @@ class OverviewDisplay {
 
     fun clickedViewAverageThroughputChart() {
         console.log("Clicked view average throughput")
-        view.currentMetricType = MetricType.valueOf("Throughput_Average")
+        currentMetricType = MetricType.valueOf("Throughput_Average")
         eb.send(
             "SetActiveChartMetric",
             JsonObject(
                 mapOf(
                     "portal_uuid" to JsonPrimitive(portalUuid),
-                    "metric_type" to JsonPrimitive(view.currentMetricType.name)
+                    "metric_type" to JsonPrimitive(currentMetricType.name)
                 )
             )
         )
@@ -89,13 +89,13 @@ class OverviewDisplay {
 
     fun clickedViewAverageResponseTimeChart() {
         console.log("Clicked view average response time")
-        view.currentMetricType = MetricType.valueOf("ResponseTime_Average")
+        currentMetricType = MetricType.valueOf("ResponseTime_Average")
         eb.send(
             "SetActiveChartMetric",
             JsonObject(
                 mapOf(
                     "portal_uuid" to JsonPrimitive(portalUuid),
-                    "metric_type" to JsonPrimitive(view.currentMetricType.name)
+                    "metric_type" to JsonPrimitive(currentMetricType.name)
                 )
             )
         )
@@ -103,13 +103,13 @@ class OverviewDisplay {
 
     fun clickedViewAverageSLAChart() {
         console.log("Clicked view average SLA")
-        view.currentMetricType = MetricType.valueOf("ServiceLevelAgreement_Average")
+        currentMetricType = MetricType.valueOf("ServiceLevelAgreement_Average")
         eb.send(
             "SetActiveChartMetric",
             JsonObject(
                 mapOf(
                     "portal_uuid" to JsonPrimitive(portalUuid),
-                    "metric_type" to JsonPrimitive(view.currentMetricType.name)
+                    "metric_type" to JsonPrimitive(currentMetricType.name)
                 )
             )
         )
