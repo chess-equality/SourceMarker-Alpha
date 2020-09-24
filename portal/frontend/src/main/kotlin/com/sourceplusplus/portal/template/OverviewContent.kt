@@ -1,4 +1,4 @@
-package frontend.display.template
+package com.sourceplusplus.portal.template
 
 import com.sourceplusplus.protocol.portal.ChartItemType
 import kotlinx.html.*

@@ -1,40 +1,48 @@
-package frontend.display
+package com.sourceplusplus.portal.page
 
-import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened
-import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.ClearOverview
-import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.DisplayCard
-import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.UpdateChart
+import com.sourceplusplus.portal.extensions.eb
+import com.sourceplusplus.portal.extensions.jq
+import com.sourceplusplus.portal.template.*
+import com.sourceplusplus.protocol.ProtocolAddress
+import com.sourceplusplus.protocol.artifact.trace.TraceOrderType.*
+import com.sourceplusplus.protocol.portal.ChartItemType.*
 import com.sourceplusplus.protocol.portal.MetricType
+import com.sourceplusplus.protocol.portal.PageType.*
 import com.sourceplusplus.protocol.portal.QueryTimeFrame
-import extensions.eb
-import frontend.display.page.OverviewPage
-import jq
+import com.sourceplusplus.protocol.portal.TimeIntervalType.*
+import kotlinx.browser.document
 import kotlinx.browser.localStorage
+import kotlinx.html.dom.append
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import org.w3c.dom.Element
 
-class OverviewDisplay {
+/**
+ * todo: description.
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
+class OverviewPage {
+
     val portalUuid = "null"
     var currentMetricType: MetricType = MetricType.Throughput_Average
     var currentTimeFrame = QueryTimeFrame.LAST_5_MINUTES
 
     init {
-        println("init overview display")
-        OverviewPage().renderPage()
-
         console.log("Overview tab started")
         console.log("Connecting portal")
         eb.onopen = {
             js("portalConnected()")
             clickedViewAverageResponseTimeChart() //default = avg resp time
 
-            eb.registerHandler(ClearOverview(portalUuid)) { error: String, message: Any ->
+            eb.registerHandler(ProtocolAddress.Portal.ClearOverview(portalUuid)) { error: String, message: Any ->
                 js("clearOverview();")
             }
-            eb.registerHandler(DisplayCard(portalUuid)) { error: String, message: Any ->
+            eb.registerHandler(ProtocolAddress.Portal.DisplayCard(portalUuid)) { error: String, message: Any ->
                 js("displayCard(message.body);")
             }
-            eb.registerHandler(UpdateChart(portalUuid)) { error: String, message: Any ->
+            eb.registerHandler(ProtocolAddress.Portal.UpdateChart(portalUuid)) { error: String, message: Any ->
                 js("updateChart(message.body);")
             }
 
@@ -46,8 +54,40 @@ class OverviewDisplay {
             updateTime(QueryTimeFrame.valueOf(timeFrame.toUpperCase()))
             js("portalLog('Set initial time frame to: ' + timeFrame);")
 
-            eb.publish(OverviewTabOpened, "{'portal_uuid': '$portalUuid'}")
+            eb.publish(ProtocolAddress.Global.OverviewTabOpened, "{'portal_uuid': '$portalUuid'}")
         }
+    }
+
+    fun renderPage() {
+        println("rending overview")
+        val root: Element = document.getElementById("body")!!
+        root.innerHTML = ""
+        root.append {
+            portalNav {
+                navItem(OVERVIEW, isActive = true)
+                navItem(TRACES) {
+                    navSubItem(LATEST_TRACES, SLOWEST_TRACES, FAILED_TRACES)
+                }
+                navItem(CONFIGURATION)
+            }
+            overviewContent {
+                navBar {
+                    timeDropdown(FIVE_MINUTES, FIFTEEN_MINUTES, THIRTY_MINUTES, ONE_HOUR, THREE_HOURS)
+                    calendar()
+
+                    rightAlign {
+                        externalPortalButton()
+                    }
+                }
+                areaChart {
+                    chartItem(AVG_THROUGHPUT)
+                    chartItem(AVG_RESPONSE_TIME, isActive = true)
+                    chartItem(AVG_SLA)
+                }
+            }
+        }
+
+        js("loadChart();")
     }
 
     fun updateTime(interval: QueryTimeFrame) {

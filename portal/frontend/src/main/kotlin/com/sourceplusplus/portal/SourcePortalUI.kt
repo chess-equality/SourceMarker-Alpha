@@ -1,6 +1,9 @@
-import frontend.display.OverviewDisplay
-import frontend.display.page.ConfigurationPage
-import frontend.display.page.TracesPage
+package com.sourceplusplus.portal
+
+import com.sourceplusplus.portal.extensions.jq
+import com.sourceplusplus.portal.page.ConfigurationPage
+import com.sourceplusplus.portal.page.OverviewPage
+import com.sourceplusplus.portal.page.TracesPage
 import kotlinx.browser.window
 
 fun main() {
@@ -10,7 +13,7 @@ fun main() {
         when (window.location.pathname) {
             "/traces" -> TracesPage().renderPage()
             "/configuration" -> ConfigurationPage().renderPage()
-            else -> OverviewDisplay()
+            else -> OverviewPage().renderPage()
         }
 
         js("loadTheme();")

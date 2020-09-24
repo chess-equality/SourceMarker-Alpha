@@ -1,11 +1,11 @@
-package frontend.display.page
+package com.sourceplusplus.portal.page
 
+import com.sourceplusplus.portal.template.*
 import com.sourceplusplus.protocol.artifact.ArtifactConfigType.AUTO_SUBSCRIBE
 import com.sourceplusplus.protocol.artifact.ArtifactConfigType.ENTRY_METHOD
 import com.sourceplusplus.protocol.artifact.ArtifactInfoType.*
 import com.sourceplusplus.protocol.artifact.trace.TraceOrderType.*
 import com.sourceplusplus.protocol.portal.PageType.*
-import frontend.display.template.*
 import kotlinx.browser.document
 import kotlinx.html.dom.append
 import org.w3c.dom.Element

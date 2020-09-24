@@ -1,4 +1,4 @@
-package frontend.display.template
+package com.sourceplusplus.portal.template
 
 import com.sourceplusplus.protocol.artifact.trace.TraceSpanInfoType
 import com.sourceplusplus.protocol.artifact.trace.TraceTableType

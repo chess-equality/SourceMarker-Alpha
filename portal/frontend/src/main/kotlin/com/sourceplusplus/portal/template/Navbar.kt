@@ -1,4 +1,4 @@
-package frontend.display.template
+package com.sourceplusplus.portal.template
 
 import com.sourceplusplus.protocol.artifact.trace.TraceStackHeaderType
 import com.sourceplusplus.protocol.portal.TimeIntervalType

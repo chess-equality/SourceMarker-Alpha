@@ -1,4 +1,4 @@
-package extensions
+package com.sourceplusplus.portal.extensions
 
 import kotlinx.serialization.json.JsonObject
 
@@ -22,7 +22,13 @@ class Vertx {
         var onopen: () -> Unit = { }
 
         fun init(): EventBus {
-            js("eb.onopen = function () { frontend.extensions.Vertx.EventBus.Companion.callKotlinOnOpen(); }")
+            js(
+                """
+                    eb.onopen = function () { 
+                        frontend.com.sourceplusplus.portal.extensions.Vertx.EventBus.Companion.callKotlinOnOpen(); 
+                    }
+                """
+            )
             return this
         }
 
