@@ -79,9 +79,6 @@ class PortalServer : CoroutineVerticle() {
                     head {
                         overviewHead("Overview - SourceMarker")
                         script {
-                            src = "js/overview.js"
-                        }
-                        script {
                             src = "js/views/overview_view.js"
                         }
                     }
