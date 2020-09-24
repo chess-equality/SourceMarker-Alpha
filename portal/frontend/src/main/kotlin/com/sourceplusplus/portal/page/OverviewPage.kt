@@ -63,9 +63,10 @@ class OverviewPage {
     }
 
     fun renderPage() {
-        println("rending overview")
-        val root: Element = document.getElementById("body")!!
+        println("Rending Overview page")
+        val root: Element = document.getElementById("root")!!
         root.innerHTML = ""
+
         root.append {
             portalNav {
                 navItem(OVERVIEW, isActive = true)

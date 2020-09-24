@@ -7,8 +7,6 @@ import com.sourceplusplus.portal.page.TracesPage
 import kotlinx.browser.window
 
 fun main() {
-    println("path: " + window.location.pathname)
-
     jq().ready {
         when (window.location.pathname) {
             "/traces" -> TracesPage().renderPage()

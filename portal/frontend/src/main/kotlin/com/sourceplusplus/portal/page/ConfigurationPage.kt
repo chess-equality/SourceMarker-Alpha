@@ -18,9 +18,10 @@ import org.w3c.dom.Element
  */
 class ConfigurationPage {
     fun renderPage() {
-        println("rendering configuration")
-        val root: Element = document.getElementById("body")!!
+        console.log("Rendering Configuration page")
+        val root: Element = document.getElementById("root")!!
         root.innerHTML = ""
+
         root.append {
             portalNav {
                 navItem(OVERVIEW)

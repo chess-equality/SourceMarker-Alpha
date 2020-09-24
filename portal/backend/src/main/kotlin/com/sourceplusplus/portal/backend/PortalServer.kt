@@ -61,7 +61,11 @@ class PortalServer : CoroutineVerticle() {
         // Static handler
         router.get("/*").handler {
             val fileStream = PortalServer::class.java.classLoader.getResourceAsStream("webroot" + it.request().path())
-            it.response().setStatusCode(200).end(Buffer.buffer(Unpooled.copiedBuffer(fileStream!!.readAllBytes())))
+            val response = it.response().setStatusCode(200)
+            if (it.request().path().endsWith(".js")) {
+                response.putHeader("Content-Type", "text/javascript")
+            }
+            response.end(Buffer.buffer(Unpooled.copiedBuffer(fileStream!!.readAllBytes())))
             //todo: add cache headers
         }
 
@@ -74,17 +78,13 @@ class PortalServer : CoroutineVerticle() {
     private suspend fun getOverview(ctx: RoutingContext) {
         withContext(Dispatchers.Default) {
             ctx.respond(buildString {
-                appendLine("<!DOCTYPE html>")
                 appendHTML().html {
                     head {
-                        overviewHead("Overview - SourceMarker")
-                        script {
-                            src = "js/views/overview_view.js"
-                        }
+                        commonHead("Overview - SourceMarker")
+                        script { src = "echarts.min.js" }
+                        script { src = "js/views/overview_view.js" }
                     }
-                    body("overflow_y_hidden") {
-                        id = "body"
-                    }
+                    body("overflow_y_hidden") { id = "root" }
                 }
             })
         }
@@ -93,23 +93,14 @@ class PortalServer : CoroutineVerticle() {
     private suspend fun getTraces(ctx: RoutingContext) {
         withContext(Dispatchers.Default) {
             ctx.respond(buildString {
-                appendLine("<!DOCTYPE html>")
                 appendHTML().html {
                     head {
-                        overviewHead("Traces - SourceMarker")
-                        script {
-                            src = "js/traces.js"
-                        }
-                        script {
-                            src = "js/views/traces_view.js"
-                        }
-                        script {
-                            src = "themes/default/assets/all.min.js"
-                        }
+                        commonHead("Traces - SourceMarker")
+                        script { src = "js/traces.js" }
+                        script { src = "js/views/traces_view.js" }
+                        script { src = "themes/default/assets/all.min.js" }
                     }
-                    body {
-                        id = "body"
-                    }
+                    body { id = "root" }
                 }
             })
         }
@@ -118,20 +109,13 @@ class PortalServer : CoroutineVerticle() {
     private suspend fun getConfiguration(ctx: RoutingContext) {
         withContext(Dispatchers.Default) {
             ctx.respond(buildString {
-                appendLine("<!DOCTYPE html>")
                 appendHTML().html {
                     head {
-                        overviewHead("Configuration - SourceMarker")
-                        script {
-                            src = "js/configuration.js"
-                        }
-                        script {
-                            src = "js/views/configuration_view.js"
-                        }
+                        commonHead("Configuration - SourceMarker")
+                        script { src = "js/configuration.js" }
+                        script { src = "js/views/configuration_view.js" }
                     }
-                    body {
-                        id = "body"
-                    }
+                    body { id = "root" }
                 }
             })
         }
@@ -141,7 +125,10 @@ class PortalServer : CoroutineVerticle() {
         response()
             .putHeader("content-type", "text/html")
             .setStatusCode(status)
-            .end(respondBody)
+            .end(buildString {
+                appendLine("<!DOCTYPE html>")
+                append(respondBody)
+            })
     }
 
     private fun Route.coroutineHandler(fn: suspend (RoutingContext) -> Unit) {
@@ -189,23 +176,5 @@ class PortalServer : CoroutineVerticle() {
         script {
             src = "frontend.js"
         }
-    }
-
-    private fun HEAD.overviewHead(title: String, block: (HEAD.() -> Unit)? = null) {
-        commonHead(title)
-        script {
-            src = "echarts.min.js"
-        }
-        block?.let { it() }
-    }
-
-    private fun HEAD.tracesHead(title: String, block: (HEAD.() -> Unit)? = null) {
-        commonHead(title)
-        block?.let { it() }
-    }
-
-    private fun HEAD.configurationHead(title: String, block: (HEAD.() -> Unit)? = null) {
-        commonHead(title)
-        block?.let { it() }
     }
 }

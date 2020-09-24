@@ -20,9 +20,10 @@ import org.w3c.dom.Element
  */
 class TracesPage {
     fun renderPage() {
-        println("rending traces")
-        val root: Element = document.getElementById("body")!!
+        println("Rending Traces page")
+        val root: Element = document.getElementById("root")!!
         root.innerHTML = ""
+
         root.append {
             portalNav {
                 navItem(OVERVIEW)
