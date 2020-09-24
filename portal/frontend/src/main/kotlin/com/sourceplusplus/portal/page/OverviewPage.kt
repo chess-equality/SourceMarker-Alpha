@@ -80,9 +80,9 @@ class OverviewPage {
                     }
                 }
                 areaChart {
-                    chartItem(AVG_THROUGHPUT)
-                    chartItem(AVG_RESPONSE_TIME, isActive = true)
-                    chartItem(AVG_SLA)
+                    chartItem(AVG_THROUGHPUT) { clickedViewAverageThroughputChart() }
+                    chartItem(AVG_RESPONSE_TIME, isActive = true) { clickedViewAverageResponseTimeChart() }
+                    chartItem(AVG_SLA) { clickedViewAverageSLAChart() }
                 }
             }
         }
@@ -113,7 +113,7 @@ class OverviewPage {
         jq("#" + interval.name.toLowerCase() + "_time").addClass("active")
     }
 
-    fun clickedViewAverageThroughputChart() {
+    private fun clickedViewAverageThroughputChart() {
         console.log("Clicked view average throughput")
         currentMetricType = MetricType.valueOf("Throughput_Average")
         eb.send(
@@ -127,7 +127,7 @@ class OverviewPage {
         )
     }
 
-    fun clickedViewAverageResponseTimeChart() {
+    private fun clickedViewAverageResponseTimeChart() {
         console.log("Clicked view average response time")
         currentMetricType = MetricType.valueOf("ResponseTime_Average")
         eb.send(
@@ -141,7 +141,7 @@ class OverviewPage {
         )
     }
 
-    fun clickedViewAverageSLAChart() {
+    private fun clickedViewAverageSLAChart() {
         console.log("Clicked view average SLA")
         currentMetricType = MetricType.valueOf("ServiceLevelAgreement_Average")
         eb.send(

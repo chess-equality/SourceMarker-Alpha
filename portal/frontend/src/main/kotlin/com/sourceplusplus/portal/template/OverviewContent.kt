@@ -2,7 +2,9 @@ package com.sourceplusplus.portal.template
 
 import com.sourceplusplus.protocol.portal.ChartItemType
 import kotlinx.html.*
+import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.events.Event
 
 fun TagConsumer<HTMLElement>.overviewContent(block: FlowContent.() -> Unit) {
     div("pusher") {
@@ -32,11 +34,11 @@ fun TagConsumer<HTMLElement>.areaChart(block: (FlowContent.() -> Unit)? = null) 
     }
 }
 
-fun FlowContent.chartItem(chartItemType: ChartItemType, isActive: Boolean = false) {
+fun FlowContent.chartItem(chartItemType: ChartItemType, isActive: Boolean = false, onClick: (Event) -> Unit) {
     val isActiveClass = if (isActive) "spp_red_color" else ""
     div("item") {
         div("ui mini statistic") {
-            onClick = "clickedView${chartItemType.type.capitalize() + chartItemType.description}Chart()"
+            onClickFunction = onClick
             div("value align_left $isActiveClass".trim()) {
                 id = "card_${chartItemType.id}_${chartItemType.type}_header"
                 +"n/a"
