@@ -46,11 +46,15 @@ let series4 = {
     data: []
 };
 
-let overviewChart = echarts.init(document.getElementById('overview_chart'));
-window.onresize = function () {
-    console.log("Resizing overview chart");
-    overviewChart.resize();
-};
+var overviewChart = null;
+function loadChart() {
+    overviewChart = echarts.init(document.getElementById('overview_chart'));
+    window.onresize = function () {
+        console.log("Resizing overview chart");
+        overviewChart.resize();
+    };
+    overviewChart.setOption(overviewChartOptions);
+}
 
 var tooltipMeasurement = "ms";
 var labelColor = (darkMode) ? "grey" : "black";
@@ -95,7 +99,6 @@ var overviewChartOptions = {
     },
     series: [series0, series1, series2, series3, series4]
 };
-overviewChart.setOption(overviewChartOptions);
 
 function clearOverview() {
     console.log("Clearing overview");
