@@ -32,7 +32,7 @@ class Vertx {
             js("eb.publish(address, (0, eval)('(' + json + ')'));")
         }
 
-        fun registerHandler(address: String, handler: (error: String, message: String) -> Unit) {
+        fun registerHandler(address: String, handler: (error: String, message: Any) -> Unit) {
             js("eb.registerHandler(address, handler);")
         }
     }

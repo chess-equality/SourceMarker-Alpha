@@ -16,16 +16,16 @@ class OverviewDisplay {
             js("portalConnected()")
             js("clickedViewAverageResponseTimeChart();") //default = avg resp time
 
-            eb.registerHandler("$portalUuid-ClearOverview") { error: String, message: String ->
-                js("clearOverview();") as Unit
+            eb.registerHandler("$portalUuid-ClearOverview") { error: String, message: Any ->
+                js("clearOverview();")
             }
 
-            eb.registerHandler("$portalUuid-DisplayCard") { error: String, message: String ->
-                js("displayCard(message.body);") as Unit
+            eb.registerHandler("$portalUuid-DisplayCard") { error: String, message: Any ->
+                js("displayCard(message.body);")
             }
 
-            eb.registerHandler("$portalUuid-UpdateChart") { error: String, message: String ->
-                js("updateChart(message.body);") as Unit
+            eb.registerHandler("$portalUuid-UpdateChart") { error: String, message: Any ->
+                js("updateChart(message.body);")
             }
 
             var timeFrame = localStorage.getItem("spp.metric_time_frame");
@@ -34,7 +34,7 @@ class OverviewDisplay {
                 localStorage.setItem("spp.metric_time_frame", timeFrame)
             }
             js("updateTime(timeFrame);")
-            //portalLog('Set initial time frame to: ' + timeFrame);
+            js("portalLog('Set initial time frame to: ' + timeFrame);")
 
             eb.publish(OverviewTabOpened, "{'portal_uuid': '$portalUuid'}")
         }
