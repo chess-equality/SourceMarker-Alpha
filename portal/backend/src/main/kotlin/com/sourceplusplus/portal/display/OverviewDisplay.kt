@@ -3,6 +3,8 @@ package com.sourceplusplus.portal.display
 import com.codahale.metrics.Histogram
 import com.codahale.metrics.UniformReservoir
 import com.sourceplusplus.portal.SourcePortal
+import com.sourceplusplus.portal.extensions.displayCard
+import com.sourceplusplus.portal.extensions.updateChart
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ArtifactMetricUpdated
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened
@@ -10,12 +12,10 @@ import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.RefreshOverv
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetActiveChartMetric
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetMetricTimeFrame
 import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.ClearOverview
-import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.UpdateChart
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.ArtifactMetrics
 import com.sourceplusplus.protocol.portal.*
 import com.sourceplusplus.protocol.portal.MetricType.*
-import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toJavaInstant
@@ -165,8 +165,7 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
             timeFrame = metricResult.timeFrame,
             seriesData = Collections.singletonList(seriesData)
         )
-        val portalUuid = portal.portalUuid
-        vertx.eventBus().publish(UpdateChart(portalUuid), JsonObject(Json.encode(splineChart)))
+        vertx.eventBus().updateChart(portal.portalUuid, splineChart)
     }
 
     fun updateCard(portal: SourcePortal, metricResult: ArtifactMetricResult, artifactMetrics: ArtifactMetrics) {
@@ -181,8 +180,7 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
                     meta = artifactMetrics.metricType.toString().toLowerCase(),
                     barGraphData = percents
                 )
-                val portalUuid = portal.portalUuid
-                vertx.eventBus().publish("$portalUuid-DisplayCard", JsonObject(Json.encode(barTrendCard)))
+                vertx.eventBus().displayCard(portal.portalUuid, barTrendCard)
             }
             ResponseTime_Average -> {
                 val barTrendCard = BarTrendCard(
@@ -191,8 +189,7 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
                     meta = artifactMetrics.metricType.toString().toLowerCase(),
                     barGraphData = percents
                 )
-                val portalUuid = portal.portalUuid
-                vertx.eventBus().publish("$portalUuid-DisplayCard", JsonObject(Json.encode(barTrendCard)))
+                vertx.eventBus().displayCard(portal.portalUuid, barTrendCard)
             }
             ServiceLevelAgreement_Average -> {
                 val barTrendCard = BarTrendCard(
@@ -205,8 +202,7 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
                     meta = artifactMetrics.metricType.toString().toLowerCase(),
                     barGraphData = percents
                 )
-                val portalUuid = portal.portalUuid
-                vertx.eventBus().publish("$portalUuid-DisplayCard", JsonObject(Json.encode(barTrendCard)))
+                vertx.eventBus().displayCard(portal.portalUuid, barTrendCard)
             }
         }
     }
