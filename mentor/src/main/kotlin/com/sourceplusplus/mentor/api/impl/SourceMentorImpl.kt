@@ -17,9 +17,7 @@ class SourceMentorImpl : SourceMentor {
         private val log = LoggerFactory.getLogger(SourceMentorImpl::class.java)
     }
 
-    private var timezone: Int = 0
-
     override fun getAllMethodAdvice(methodQualifiedName: ArtifactQualifiedName): List<MethodAdvice> {
-        return listOf()
+        TODO()
     }
 }

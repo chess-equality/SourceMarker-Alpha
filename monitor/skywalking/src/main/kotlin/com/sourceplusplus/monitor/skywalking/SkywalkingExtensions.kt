@@ -55,8 +55,7 @@ fun QueryBasicTracesQuery.Trace.toProtocol(): Trace {
         duration = duration,
         start = start.toLong(),
         error = isError,
-        traceIds = traceIds,
-        prettyDuration = "10s" //todo: generated from duration
+        traceIds = traceIds
     )
 }
 
