@@ -1,8 +1,14 @@
-package com.sourceplusplus.mentor.api.advice.informative
+package com.sourceplusplus.mentor.advice.informative
 
 import com.sourceplusplus.protocol.advice.AdviceType
 import com.sourceplusplus.protocol.advice.ArtifactAdvice
 
+/**
+ * todo: description.
+ *
+ * @since 0.0.1
+ * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
+ */
 class ActiveExceptionAdvice : ArtifactAdvice {
 
     //todo: get active service instance
