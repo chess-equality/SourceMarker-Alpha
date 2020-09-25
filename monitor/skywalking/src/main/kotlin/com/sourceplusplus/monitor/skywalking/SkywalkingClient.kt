@@ -7,6 +7,8 @@ import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
 import com.sourceplusplus.monitor.skywalking.model.GetEndpointTraces
 import com.sourceplusplus.monitor.skywalking.model.GetMultipleEndpointMetrics
 import io.vertx.core.Vertx
+import io.vertx.core.buffer.Buffer
+import io.vertx.core.eventbus.MessageCodec
 import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
 import monitor.skywalking.protocol.metadata.SearchEndpointQuery
@@ -160,5 +162,23 @@ class SkywalkingClient(
         HOUR(DateTimeFormatter.ofPattern("yyyy-MM-dd HH")),
         MINUTE(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm")),
         SECOND(DateTimeFormatter.ofPattern("yyyy-MM-dd HHmmss"))
+    }
+
+    /**
+     * todo: description.
+     *
+     * @since 0.0.1
+     */
+    class LocalMessageCodec<T> internal constructor(private val type: Class<T>) : MessageCodec<T, T> {
+        override fun encodeToWire(buffer: Buffer, o: T): Unit =
+            throw UnsupportedOperationException("Not supported yet.")
+
+        override fun decodeFromWire(pos: Int, buffer: Buffer): T =
+            throw UnsupportedOperationException("Not supported yet.")
+
+        override fun transform(o: T): T = o
+        override fun name(): String = UUID.randomUUID().toString()
+        override fun systemCodecID(): Byte = -1
+        fun type(): Class<T> = type
     }
 }
