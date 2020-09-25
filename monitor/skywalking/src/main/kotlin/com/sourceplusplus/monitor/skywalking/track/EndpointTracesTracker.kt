@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class EndpointTracesTracker(private val skywalkingClient: SkywalkingClient) : CoroutineVerticle() {
 
     override suspend fun start() {
-        vertx.eventBus().localConsumer<GetEndpointTraces>("$address.getTraces") {
+        vertx.eventBus().localConsumer<GetEndpointTraces>(getTracesAddress) {
             launch(vertx.dispatcher()) {
                 val request = it.body()
 
@@ -30,29 +30,6 @@ class EndpointTracesTracker(private val skywalkingClient: SkywalkingClient) : Co
                     request.endpointId,
                     duration = request.zonedDuration.toDuration(skywalkingClient)
                 )
-
-//                val traceStack = mutableListOf<Trace>()
-//                if (traces != null) {
-//                    traces.traces.forEach {
-//                        val trace = Trace(
-//                            segmentId = it.segmentId,
-//                            operationNames = it.endpointNames,
-//                            duration = it.duration,
-//                            start = it.start.toLong(),
-//                            error = it.isError,
-//                            traceIds = it.traceIds,
-//                            prettyDuration = "10s" //todo: generated from duration
-//                        )
-//
-//                        trace.traceIds.forEach { traceId ->
-//                            val traceResult = skywalkingClient.queryTraceStack(traceId = traceId)
-//                            if (traceResult != null) {
-//                                val spanStack = traceResult.toProtocol()
-//                                //traceResult.traceStack.add(traceResult.)
-//                            }
-//                        }
-//                    }
-//                }
 
                 val traceStack = mutableListOf<Trace>()
                 if (traces != null) {
@@ -71,7 +48,7 @@ class EndpointTracesTracker(private val skywalkingClient: SkywalkingClient) : Co
                 )
             }
         }
-        vertx.eventBus().localConsumer<String>("$address.getTraceStack") {
+        vertx.eventBus().localConsumer<String>(getTraceStackAddress) {
             launch(vertx.dispatcher()) {
                 val traceStack = skywalkingClient.queryTraceStack(it.body())
                 if (traceStack != null) {
@@ -89,17 +66,19 @@ class EndpointTracesTracker(private val skywalkingClient: SkywalkingClient) : Co
     }
 
     companion object {
-        private const val address = "monitor.skywalking.endpoint.traces"
+        private const val rootAddress = "monitor.skywalking.endpoint.traces"
+        private const val getTracesAddress = "$rootAddress.getTraces"
+        private const val getTraceStackAddress = "$rootAddress.getTraceStack"
 
         suspend fun getTraces(request: GetEndpointTraces, vertx: Vertx): TraceResult {
             return vertx.eventBus()
-                .requestAwait<TraceResult>("$address.getTraces", request)
+                .requestAwait<TraceResult>(getTracesAddress, request)
                 .body()
         }
 
         suspend fun getTraceStack(traceId: String, vertx: Vertx): TraceSpanStackQueryResult {
             return vertx.eventBus()
-                .requestAwait<TraceSpanStackQueryResult>("$address.getTraceStack", traceId)
+                .requestAwait<TraceSpanStackQueryResult>(getTraceStackAddress, traceId)
                 .body()
         }
     }

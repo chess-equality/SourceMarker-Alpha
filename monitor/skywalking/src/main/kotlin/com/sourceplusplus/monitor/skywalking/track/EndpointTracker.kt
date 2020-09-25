@@ -17,7 +17,7 @@ import monitor.skywalking.protocol.metadata.SearchEndpointQuery
 class EndpointTracker(private val skywalkingClient: SkywalkingClient) : CoroutineVerticle() {
 
     override suspend fun start() {
-        vertx.eventBus().localConsumer<String>("$address.searchExactEndpoint") {
+        vertx.eventBus().localConsumer<String>(searchExactEndpointAddress) {
             launch(vertx.dispatcher()) {
                 val service = ServiceTracker.getCurrentService(vertx)
                 if (service != null) {
@@ -41,11 +41,12 @@ class EndpointTracker(private val skywalkingClient: SkywalkingClient) : Coroutin
     }
 
     companion object {
-        private const val address = "monitor.skywalking.endpoint"
+        private const val rootAddress = "monitor.skywalking.endpoint"
+        private const val searchExactEndpointAddress = "$rootAddress.searchExactEndpoint"
 
         suspend fun searchExactEndpoint(keyword: String, vertx: Vertx): SearchEndpointQuery.Result? {
             return vertx.eventBus()
-                .requestAwait<SearchEndpointQuery.Result?>("$address.searchExactEndpoint", keyword)
+                .requestAwait<SearchEndpointQuery.Result?>(searchExactEndpointAddress, keyword)
                 .body()
         }
     }

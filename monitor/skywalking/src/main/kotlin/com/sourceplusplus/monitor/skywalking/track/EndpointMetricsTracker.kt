@@ -18,7 +18,7 @@ import monitor.skywalking.protocol.metrics.GetLinearIntValuesQuery
 class EndpointMetricsTracker(private val skywalkingClient: SkywalkingClient) : CoroutineVerticle() {
 
     override suspend fun start() {
-        vertx.eventBus().localConsumer<GetEndpointMetrics>("$address.getMetrics") {
+        vertx.eventBus().localConsumer<GetEndpointMetrics>(getMetricsAddress) {
             launch(vertx.dispatcher()) {
                 val request = it.body()
                 val response: MutableList<GetLinearIntValuesQuery.Result> = ArrayList()
@@ -37,11 +37,12 @@ class EndpointMetricsTracker(private val skywalkingClient: SkywalkingClient) : C
     }
 
     companion object {
-        private const val address = "monitor.skywalking.endpoint.metrics"
+        private const val rootAddress = "monitor.skywalking.endpoint.metrics"
+        private const val getMetricsAddress = "$rootAddress.getMetrics"
 
         suspend fun getMetrics(request: GetEndpointMetrics, vertx: Vertx): List<GetLinearIntValuesQuery.Result> {
             return vertx.eventBus()
-                .requestAwait<List<GetLinearIntValuesQuery.Result>>("$address.getMetrics", request)
+                .requestAwait<List<GetLinearIntValuesQuery.Result>>(getMetricsAddress, request)
                 .body()
         }
     }
