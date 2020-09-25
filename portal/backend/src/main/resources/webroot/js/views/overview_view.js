@@ -103,9 +103,14 @@ var overviewChartOptions = {
 function clearOverview() {
     console.log("Clearing overview");
 
+    series0.data = [];
+    series1.data = [];
+    series2.data = [];
+    series3.data = [];
+    series4.data = [];
     overviewChart.setOption({
         series: []
-    })
+    });
     overviewChart.resize();
 }
 
