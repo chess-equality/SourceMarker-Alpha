@@ -10,6 +10,7 @@ import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.RefreshOverv
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetActiveChartMetric
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetMetricTimeFrame
 import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.ClearOverview
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.UpdateChart
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.ArtifactMetrics
 import com.sourceplusplus.protocol.portal.*
@@ -81,6 +82,7 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
             val view = portal.overviewView
             view.timeFrame = QueryTimeFrame.valueOf(request.getString("metric_time_frame").toUpperCase())
             log.info("Overview time frame set to: " + view.timeFrame)
+            updateUI(portal)
 
             vertx.eventBus().send(RefreshOverview, portal)
         }
@@ -88,6 +90,7 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
             val request = JsonObject.mapFrom(it.body())
             val portal = SourcePortal.getPortal(request.getString("portal_uuid"))!!
             portal.overviewView.activeChartMetric = valueOf(request.getString("metric_type"))
+            updateUI(portal)
 
             vertx.eventBus().send(ClearOverview(portal.portalUuid), null)
             vertx.eventBus().send(RefreshOverview, portal)
@@ -154,16 +157,16 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
             }
         val seriesData = SplineSeriesData(
             seriesIndex = seriesIndex,
-            times = times.map { it.toEpochMilliseconds() }, //todo: no toEpochMilliseconds
+            times = times.map { it.epochSeconds }, //todo: no epochSeconds
             values = finalArtifactMetrics.values.map { it.toDouble() }.toDoubleArray() //todo: or this
         )
-        val splintChart = SplineChart(
+        val splineChart = SplineChart(
             metricType = finalArtifactMetrics.metricType,
             timeFrame = metricResult.timeFrame,
             seriesData = Collections.singletonList(seriesData)
         )
         val portalUuid = portal.portalUuid
-        vertx.eventBus().publish("$portalUuid-UpdateChart", JsonObject(Json.encode(splintChart)))
+        vertx.eventBus().publish(UpdateChart(portalUuid), JsonObject(Json.encode(splineChart)))
     }
 
     fun updateCard(portal: SourcePortal, metricResult: ArtifactMetricResult, artifactMetrics: ArtifactMetrics) {
