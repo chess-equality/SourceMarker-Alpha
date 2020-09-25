@@ -3,16 +3,15 @@ package com.sourceplusplus.monitor.skywalking
 import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.ArtifactMetrics
-import com.sourceplusplus.protocol.artifact.trace.Trace
-import com.sourceplusplus.protocol.artifact.trace.TraceSpan
-import com.sourceplusplus.protocol.artifact.trace.TraceSpanLogEntry
-import com.sourceplusplus.protocol.artifact.trace.TraceSpanRef
+import com.sourceplusplus.protocol.artifact.trace.*
 import com.sourceplusplus.protocol.portal.MetricType
 import com.sourceplusplus.protocol.portal.QueryTimeFrame
 import kotlinx.datetime.Instant
 import monitor.skywalking.protocol.metrics.GetLinearIntValuesQuery
 import monitor.skywalking.protocol.trace.QueryBasicTracesQuery
 import monitor.skywalking.protocol.trace.QueryTraceQuery
+import monitor.skywalking.protocol.type.QueryOrder
+import monitor.skywalking.protocol.type.TraceState
 import java.math.BigDecimal
 
 fun toProtocol(
@@ -98,4 +97,18 @@ fun QueryTraceQuery.Span.toProtocol(): TraceSpan {
         tags = tags.map { it.key to it.value!! }.toMap(),
         logs = logs.map { it.toProtocol() }
     )
+}
+
+fun TraceOrderType.toQueryOrder(): QueryOrder {
+    return when (this) {
+        TraceOrderType.SLOWEST_TRACES -> QueryOrder.BY_DURATION
+        else -> QueryOrder.BY_START_TIME
+    }
+}
+
+fun TraceOrderType.toTraceState(): TraceState {
+    return when (this) {
+        TraceOrderType.FAILED_TRACES -> TraceState.ERROR
+        else -> TraceState.ALL
+    }
 }

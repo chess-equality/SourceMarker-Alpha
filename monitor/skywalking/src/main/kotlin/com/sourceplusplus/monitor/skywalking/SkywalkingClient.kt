@@ -63,18 +63,15 @@ class SkywalkingClient(
         return response.data!!.result
     }
 
-    suspend fun queryBasicTraces(
-        endpointId: String,
-        duration: Duration,
-    ): QueryBasicTracesQuery.Result? {
+    suspend fun queryBasicTraces(request: GetEndpointTraces): QueryBasicTracesQuery.Result? {
         val response = apolloClient.query(
             QueryBasicTracesQuery(
                 TraceQueryCondition(
-                    endpointId = Input.optional(endpointId),
-                    queryDuration = Input.optional(duration),
-                    queryOrder = QueryOrder.BY_START_TIME, //todo: move to request
-                    traceState = TraceState.ALL, //todo: move to request
-                    paging = Pagination(pageSize = 10) //todo: move to request
+                    endpointId = Input.optional(request.endpointId),
+                    queryDuration = Input.optional(request.zonedDuration.toDuration(this)),
+                    queryOrder = request.orderType.toQueryOrder(),
+                    traceState = request.orderType.toTraceState(),
+                    paging = Pagination(Input.optional(request.pageNumber), request.pageSize)
                 )
             )
         ).toDeferred().await()

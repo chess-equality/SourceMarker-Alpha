@@ -60,7 +60,8 @@ class PortalEventListener : CoroutineVerticle() {
                             ZonedDateTime.now().minusMinutes(15),
                             ZonedDateTime.now(),
                             SkywalkingClient.DurationStep.MINUTE
-                        )
+                        ),
+                        orderType = portal.tracesView.orderType
                     ), vertx
                 )
                 vertx.eventBus().send(ArtifactTraceUpdated, traceResult)

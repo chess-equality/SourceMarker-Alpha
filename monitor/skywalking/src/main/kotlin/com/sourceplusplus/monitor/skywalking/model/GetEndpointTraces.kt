@@ -1,8 +1,6 @@
 package com.sourceplusplus.monitor.skywalking.model
 
-import monitor.skywalking.protocol.type.Pagination
-import monitor.skywalking.protocol.type.QueryOrder
-import monitor.skywalking.protocol.type.TraceState
+import com.sourceplusplus.protocol.artifact.trace.TraceOrderType
 
 /**
  * todo: description.
@@ -15,7 +13,7 @@ class GetEndpointTraces(
     val artifactQualifiedName: String,
     val endpointId: String,
     val zonedDuration: ZonedDuration,
-    val queryOrder: QueryOrder = QueryOrder.BY_START_TIME,
-    val traceState: TraceState = TraceState.ALL,
-    val paging: Pagination = Pagination(pageSize = 10)
+    val orderType: TraceOrderType = TraceOrderType.LATEST_TRACES,
+    val pageNumber: Int = 1,
+    val pageSize: Int = 10
 )

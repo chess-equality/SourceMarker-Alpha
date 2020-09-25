@@ -39,8 +39,8 @@ class PluginSourceMarkPopupAction : SourceMarkPopupAction() {
         //register source portal (if necessary)
         if (sourceMark.getUserData(SOURCE_PORTAL) == null) {
             val sourcePortal = SourcePortal.getPortal(
-                //todo: appUuid
-                SourcePortal.register("null", sourceMark.artifactQualifiedName, false)
+                //todo: appUuid/portalUuid
+                SourcePortal.register("null", "null", sourceMark.artifactQualifiedName, false)
             )
             sourceMark.putUserData(SOURCE_PORTAL, sourcePortal)
 
