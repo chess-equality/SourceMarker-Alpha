@@ -16,6 +16,13 @@ enum class MetricType {
     ResponseTime_75Percentile,
     ResponseTime_50Percentile;
 
+    val responseTimePercentile: Boolean
+        get() = this == ResponseTime_99Percentile
+                || this == ResponseTime_95Percentile
+                || this == ResponseTime_90Percentile
+                || this == ResponseTime_75Percentile
+                || this == ResponseTime_50Percentile
+
     companion object {
         //todo: remove
         fun realValueOf(name: String): MetricType {

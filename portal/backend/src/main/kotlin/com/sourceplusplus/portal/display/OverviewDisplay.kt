@@ -9,6 +9,7 @@ import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabO
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.RefreshOverview
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetActiveChartMetric
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetMetricTimeFrame
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.ClearOverview
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.ArtifactMetrics
 import com.sourceplusplus.protocol.portal.*
@@ -80,7 +81,6 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
             val view = portal.overviewView
             view.timeFrame = QueryTimeFrame.valueOf(request.getString("metric_time_frame").toUpperCase())
             log.info("Overview time frame set to: " + view.timeFrame)
-            updateUI(portal)
 
             vertx.eventBus().send(RefreshOverview, portal)
         }
@@ -88,8 +88,8 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
             val request = JsonObject.mapFrom(it.body())
             val portal = SourcePortal.getPortal(request.getString("portal_uuid"))!!
             portal.overviewView.activeChartMetric = valueOf(request.getString("metric_type"))
-            updateUI(portal)
 
+            vertx.eventBus().send(ClearOverview(portal.portalUuid), null)
             vertx.eventBus().send(RefreshOverview, portal)
         }
         log.info("{} started", javaClass.simpleName)
@@ -113,7 +113,10 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
 
         artifactMetricResult.artifactMetrics.forEach {
             updateCard(portal, artifactMetricResult, it)
-            if (it.metricType == portal.overviewView.activeChartMetric) {
+            if ((it.metricType.responseTimePercentile
+                        && portal.overviewView.activeChartMetric == ResponseTime_Average)
+                || it.metricType == portal.overviewView.activeChartMetric
+            ) {
                 updateSplineGraph(portal, artifactMetricResult, it)
             }
         }
@@ -125,8 +128,9 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
         times.add(current)
         while (current.toJavaInstant().isBefore(metricResult.stop.toJavaInstant())) {
             if (metricResult.step == "MINUTE") {
-                current = Instant.fromEpochMilliseconds(current.toJavaInstant()
-                    .plus(1, ChronoUnit.MINUTES).toEpochMilli())
+                current = Instant.fromEpochMilliseconds(
+                    current.toJavaInstant().plus(1, ChronoUnit.MINUTES).toEpochMilli()
+                )
                 times.add(current)
             } else {
                 throw UnsupportedOperationException("Invalid step: " + metricResult.step)

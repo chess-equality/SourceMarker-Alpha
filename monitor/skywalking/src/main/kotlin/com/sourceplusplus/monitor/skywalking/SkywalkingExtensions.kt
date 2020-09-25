@@ -8,6 +8,7 @@ import com.sourceplusplus.protocol.portal.MetricType
 import com.sourceplusplus.protocol.portal.QueryTimeFrame
 import kotlinx.datetime.Instant
 import monitor.skywalking.protocol.metrics.GetLinearIntValuesQuery
+import monitor.skywalking.protocol.metrics.GetMultipleLinearIntValuesQuery
 import monitor.skywalking.protocol.trace.QueryBasicTracesQuery
 import monitor.skywalking.protocol.trace.QueryTraceQuery
 import monitor.skywalking.protocol.type.QueryOrder
@@ -37,6 +38,10 @@ fun GetLinearIntValuesQuery.Result.toProtocol(metricType: String): ArtifactMetri
         metricType = MetricType.realValueOf(metricType),
         values = values.map { (it.value as BigDecimal).toInt() }
     )
+}
+
+fun GetMultipleLinearIntValuesQuery.Value.toProtocol(): Int {
+    return (value as BigDecimal).toInt()
 }
 
 fun GetLinearIntValuesQuery.Result.toDoubleArray(): DoubleArray {

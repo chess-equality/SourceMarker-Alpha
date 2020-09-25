@@ -5,11 +5,13 @@ import com.apollographql.apollo.api.Input
 import com.apollographql.apollo.coroutines.toDeferred
 import com.sourceplusplus.monitor.skywalking.model.GetEndpointMetrics
 import com.sourceplusplus.monitor.skywalking.model.GetEndpointTraces
+import com.sourceplusplus.monitor.skywalking.model.GetMultipleEndpointMetrics
 import io.vertx.core.Vertx
 import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
 import monitor.skywalking.protocol.metadata.SearchEndpointQuery
 import monitor.skywalking.protocol.metrics.GetLinearIntValuesQuery
+import monitor.skywalking.protocol.metrics.GetMultipleLinearIntValuesQuery
 import monitor.skywalking.protocol.trace.QueryBasicTracesQuery
 import monitor.skywalking.protocol.trace.QueryTraceQuery
 import monitor.skywalking.protocol.type.*
@@ -36,6 +38,7 @@ class SkywalkingClient(
 
         fun registerCodecs(vertx: Vertx) {
             log.info("Registering Apache SkyWalking codecs")
+            registerCodec(vertx, GetMultipleEndpointMetrics::class.java)
             registerCodec(vertx, GetEndpointTraces::class.java)
             registerCodec(vertx, GetEndpointMetrics::class.java)
             registerCodec(vertx, GetAllServicesQuery.Result::class.java)
@@ -87,6 +90,24 @@ class SkywalkingClient(
     ): GetLinearIntValuesQuery.Result? {
         val response = apolloClient.query(
             GetLinearIntValuesQuery(MetricCondition(metricName, Input.optional(endpointId)), duration)
+        ).toDeferred().await()
+
+        //todo: throw error if failed
+        return response.data!!.result
+    }
+
+    suspend fun getMultipleEndpointMetrics(
+        metricName: String,
+        endpointId: String,
+        numOfLinear: Int,
+        duration: Duration
+    ): List<GetMultipleLinearIntValuesQuery.Result> {
+        val response = apolloClient.query(
+            GetMultipleLinearIntValuesQuery(
+                MetricCondition(metricName, Input.optional(endpointId)),
+                numOfLinear,
+                duration
+            )
         ).toDeferred().await()
 
         //todo: throw error if failed
