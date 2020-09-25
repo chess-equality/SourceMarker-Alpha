@@ -10,7 +10,7 @@ import kotlinx.datetime.Instant
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 data class ArtifactMetricResult(
-    val appUuid: String?,
+    val appUuid: String,
     val artifactQualifiedName: String,
     val timeFrame: QueryTimeFrame,
     val start: Instant,

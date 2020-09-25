@@ -6,7 +6,6 @@ package com.sourceplusplus.protocol.artifact.trace
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-//todo: remove ?s
 data class TraceSpanInfo(
     val span: TraceSpan,
     val timeTook: String,
