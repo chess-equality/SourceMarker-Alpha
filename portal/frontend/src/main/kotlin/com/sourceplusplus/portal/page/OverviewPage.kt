@@ -13,7 +13,6 @@ import com.sourceplusplus.protocol.portal.ChartItemType.*
 import com.sourceplusplus.protocol.portal.MetricType
 import com.sourceplusplus.protocol.portal.PageType.*
 import com.sourceplusplus.protocol.portal.QueryTimeFrame
-import com.sourceplusplus.protocol.portal.TimeIntervalType.*
 import kotlinx.browser.document
 import kotlinx.browser.localStorage
 import kotlinx.html.dom.append
@@ -76,7 +75,7 @@ class OverviewPage {
             }
             overviewContent {
                 navBar {
-                    timeDropdown(FIVE_MINUTES, FIFTEEN_MINUTES, THIRTY_MINUTES, ONE_HOUR, THREE_HOURS)
+                    timeDropdown(*QueryTimeFrame.values()) { updateTime(it) }
                     calendar()
 
                     rightAlign {
@@ -94,7 +93,7 @@ class OverviewPage {
         js("loadChart();")
     }
 
-    fun updateTime(interval: QueryTimeFrame) {
+    private fun updateTime(interval: QueryTimeFrame) {
         console.log("Update time: $interval")
         currentTimeFrame = interval
         localStorage.setItem("spp.metric_time_frame", interval.name)

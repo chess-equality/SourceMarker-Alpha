@@ -1,8 +1,9 @@
 package com.sourceplusplus.portal.template
 
 import com.sourceplusplus.protocol.artifact.trace.TraceStackHeaderType
-import com.sourceplusplus.protocol.portal.TimeIntervalType
+import com.sourceplusplus.protocol.portal.QueryTimeFrame
 import kotlinx.html.*
+import kotlinx.html.js.onClickFunction
 import org.w3c.dom.HTMLElement
 
 fun TagConsumer<HTMLElement>.navBar(attached: Boolean = true, block: FlowContent.() -> Unit) {
@@ -11,16 +12,19 @@ fun TagConsumer<HTMLElement>.navBar(attached: Boolean = true, block: FlowContent
     }
 }
 
-fun TagConsumer<HTMLElement>.timeDropdown(vararg timeIntervalTypes: TimeIntervalType = arrayOf()) {
+fun TagConsumer<HTMLElement>.timeDropdown(
+    vararg timeFrames: QueryTimeFrame = arrayOf(),
+    updateTimeFrame: (QueryTimeFrame) -> Unit
+) {
     div("first_menu_button_margin align_content_center") {
         div("ui icon basic button top left pointing dropdown") {
             i("clock outline icon spp_red_color")
             div("menu secondary_background_color no_top_margin") {
-                for (timeIntervalType in timeIntervalTypes) {
+                for (timeFrame in timeFrames) {
                     div("item") {
-                        id = "last_${timeIntervalType.id}_time"
-                        onClick = "updateTime('last_${timeIntervalType.id}')"
-                        span("menu_tooltip_text") { +"LAST ${timeIntervalType.description}" }
+                        id = "last_${timeFrame.id}_time"
+                        onClickFunction = { updateTimeFrame(timeFrame) }
+                        span("menu_tooltip_text") { +"LAST ${timeFrame.description}" }
                     }
                 }
             }
