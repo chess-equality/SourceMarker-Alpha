@@ -5,6 +5,7 @@ import com.sourceplusplus.mentor.MentorJobConfig
 import com.sourceplusplus.mentor.MentorTask
 import com.sourceplusplus.mentor.job.task.GetService
 import com.sourceplusplus.mentor.job.task.GetServiceInstance
+import io.vertx.core.Vertx
 
 /**
  * todo: description.
@@ -13,6 +14,7 @@ import com.sourceplusplus.mentor.job.task.GetServiceInstance
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class ActiveExceptionMentor(
+    override val vertx: Vertx,
     override val config: MentorJobConfig = MentorJobConfig()
 ) : MentorJob() {
 

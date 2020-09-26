@@ -102,9 +102,7 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
     private fun initMentor(): SourceMentor {
         val mentor = SourceMentor()
         mentor.addJob(
-            ActiveExceptionMentor(
-                MentorJobConfig()
-            )
+            ActiveExceptionMentor(vertx, MentorJobConfig())
         )
         return mentor
     }

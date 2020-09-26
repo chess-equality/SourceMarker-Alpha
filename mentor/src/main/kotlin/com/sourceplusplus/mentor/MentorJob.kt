@@ -1,5 +1,7 @@
 package com.sourceplusplus.mentor
 
+import io.vertx.core.Vertx
+
 /**
  * todo: description.
  *
@@ -8,6 +10,7 @@ package com.sourceplusplus.mentor
  */
 abstract class MentorJob {
 
+    abstract val vertx: Vertx
     open val config: MentorJobConfig = MentorJobConfig()
     abstract val tasks: List<MentorTask>
     val context = HashMap<String, Any>()

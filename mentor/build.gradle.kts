@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation(project(":protocol"))
+    implementation(project(":monitor:skywalking")) //todo: impl monitor common lib
     implementation("org.slf4j:slf4j-api:1.7.30")
 
     val vertxVersion = "3.9.2"

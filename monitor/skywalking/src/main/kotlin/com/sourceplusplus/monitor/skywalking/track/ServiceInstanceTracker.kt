@@ -8,7 +8,6 @@ import io.vertx.kotlin.core.eventbus.requestAwait
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.launch
-import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
 import java.time.ZonedDateTime
 
@@ -62,15 +61,29 @@ class ServiceInstanceTracker(private val skywalkingClient: SkywalkingClient) : C
             return vertx.eventBus().localConsumer(activeServiceInstancesUpdatedAddress)
         }
 
-        suspend fun getCurrentService(vertx: Vertx): GetAllServicesQuery.Result? {
+        suspend fun getCurrentServiceInstance(vertx: Vertx): GetServiceInstancesQuery.Result? {
             return vertx.eventBus()
-                .requestAwait<GetAllServicesQuery.Result?>(getCurrentServiceInstanceAddress, null)
+                .requestAwait<GetServiceInstancesQuery.Result?>(getCurrentServiceInstanceAddress, null)
                 .body()
         }
 
-        suspend fun getActiveServices(vertx: Vertx): List<GetServiceInstancesQuery.Result> {
+        suspend fun getCurrentServiceInstance(serviceId: String, vertx: Vertx): GetServiceInstancesQuery.Result? {
+            TODO()
+            return vertx.eventBus()
+                .requestAwait<GetServiceInstancesQuery.Result?>(getCurrentServiceInstanceAddress, serviceId)
+                .body()
+        }
+
+        suspend fun getActiveServiceInstances(vertx: Vertx): List<GetServiceInstancesQuery.Result> {
             return vertx.eventBus()
                 .requestAwait<List<GetServiceInstancesQuery.Result>>(getActiveServiceInstancesAddress, null)
+                .body()
+        }
+
+        suspend fun getActiveServiceInstances(serviceId: String, vertx: Vertx): List<GetServiceInstancesQuery.Result> {
+            TODO()
+            return vertx.eventBus()
+                .requestAwait<List<GetServiceInstancesQuery.Result>>(getActiveServiceInstancesAddress, serviceId)
                 .body()
         }
     }

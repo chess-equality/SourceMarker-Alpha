@@ -14,11 +14,26 @@ abstract class MentorTask : Comparable<MentorTask> {
             //todo: remove/add to queue
         }
 
-    abstract fun executeTask(job: MentorJob, context: TaskContext)
+    abstract suspend fun executeTask(job: MentorJob, context: TaskContext)
 
     override operator fun compareTo(other: MentorTask): Int = priority.compareTo(other.priority)
 
-    interface TaskContext {
+    class TaskContext {
+        private val cache: HashMap<ContextKey<*>, Any> = HashMap()
 
+        fun <T> put(key: ContextKey<T>, value: T) {
+            cache[key] = value!!
+        }
+
+        fun <T> get(key: ContextKey<T>): T {
+            return cache[key] as T
+        }
+
+        fun containsKey(key: ContextKey<*>): Boolean {
+            return cache.containsKey(key)
+        }
     }
+
+    @Suppress("unused")
+    class ContextKey<T>
 }
