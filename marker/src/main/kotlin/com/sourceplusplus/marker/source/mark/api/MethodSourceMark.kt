@@ -5,7 +5,6 @@ import com.intellij.openapi.editor.Editor
 import com.intellij.openapi.roots.ProjectRootManager
 import com.intellij.psi.PsiInvalidElementAccessException
 import com.intellij.psi.PsiMethod
-import com.intellij.psi.PsiNameIdentifierOwner
 import com.sourceplusplus.marker.MarkerUtils
 import com.sourceplusplus.marker.source.SourceFileMarker
 import com.sourceplusplus.marker.source.mark.api.component.api.SourceMarkComponent
@@ -79,9 +78,8 @@ abstract class MethodSourceMark(
     }
 
     override fun dispose(removeFromMarker: Boolean) {
-        val nameIdentifierOwner = MarkerUtils.getNameIdentifier(psiMethod.sourcePsi as PsiNameIdentifierOwner)!!
-        nameIdentifierOwner.putUserData(SourceKey.GutterMark, null)
-        nameIdentifierOwner.putUserData(SourceKey.InlayMark, null)
+        psiMethod.nameIdentifier?.putUserData(SourceKey.GutterMark, null)
+        psiMethod.nameIdentifier?.putUserData(SourceKey.InlayMark, null)
         super.dispose(removeFromMarker)
     }
 

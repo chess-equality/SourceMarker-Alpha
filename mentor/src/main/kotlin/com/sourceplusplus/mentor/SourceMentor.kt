@@ -36,6 +36,6 @@ class SourceMentor : CoroutineVerticle() {
     }
 
     fun getAllMethodAdvice(methodQualifiedName: ArtifactQualifiedName): List<ArtifactAdvice> {
-        TODO()
+        return emptyList() //todo: this
     }
 }
