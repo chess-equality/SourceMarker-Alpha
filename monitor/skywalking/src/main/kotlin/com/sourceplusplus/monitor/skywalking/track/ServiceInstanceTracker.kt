@@ -29,6 +29,24 @@ class ServiceInstanceTracker(private val skywalkingClient: SkywalkingClient) : C
                 activeServicesInstances = skywalkingClient.run {
                     getServiceInstances(
                         it.body().id,
+                        //todo: dynamic duration
+                        getDuration(ZonedDateTime.now().minusMinutes(15), DurationStep.MINUTE)
+                    )
+                }
+                vertx.eventBus().publish(activeServiceInstancesUpdatedAddress, activeServicesInstances)
+
+                if (activeServicesInstances.isNotEmpty()) {
+                    currentServiceInstance = activeServicesInstances[0]
+                    vertx.eventBus().publish(currentServiceInstanceUpdatedAddress, currentServiceInstance)
+                }
+            }
+        }
+        vertx.eventBus().localConsumer<String>(getServiceInstances) {
+            launch(vertx.dispatcher()) {
+                activeServicesInstances = skywalkingClient.run {
+                    getServiceInstances(
+                        it.body(),
+                        //todo: dynamic duration
                         getDuration(ZonedDateTime.now().minusMinutes(15), DurationStep.MINUTE)
                     )
                 }
@@ -48,6 +66,7 @@ class ServiceInstanceTracker(private val skywalkingClient: SkywalkingClient) : C
 
     companion object {
         private const val rootAddress = "monitor.skywalking.service.instance"
+        private const val getServiceInstances = "monitor.skywalking.service.instance-serviceInstances"
         private const val getCurrentServiceInstanceAddress = "$rootAddress.currentServiceInstance"
         private const val getActiveServiceInstancesAddress = "$rootAddress.activeServiceInstances"
         private const val currentServiceInstanceUpdatedAddress = "$rootAddress.currentServiceInstance-Updated"
@@ -67,23 +86,15 @@ class ServiceInstanceTracker(private val skywalkingClient: SkywalkingClient) : C
                 .body()
         }
 
-        suspend fun getCurrentServiceInstance(serviceId: String, vertx: Vertx): GetServiceInstancesQuery.Result? {
-            TODO()
-            return vertx.eventBus()
-                .requestAwait<GetServiceInstancesQuery.Result?>(getCurrentServiceInstanceAddress, serviceId)
-                .body()
-        }
-
         suspend fun getActiveServiceInstances(vertx: Vertx): List<GetServiceInstancesQuery.Result> {
             return vertx.eventBus()
                 .requestAwait<List<GetServiceInstancesQuery.Result>>(getActiveServiceInstancesAddress, null)
                 .body()
         }
 
-        suspend fun getActiveServiceInstances(serviceId: String, vertx: Vertx): List<GetServiceInstancesQuery.Result> {
-            TODO()
+        suspend fun getServiceInstances(serviceId: String, vertx: Vertx): List<GetServiceInstancesQuery.Result> {
             return vertx.eventBus()
-                .requestAwait<List<GetServiceInstancesQuery.Result>>(getActiveServiceInstancesAddress, serviceId)
+                .requestAwait<List<GetServiceInstancesQuery.Result>>(getServiceInstances, serviceId)
                 .body()
         }
     }

@@ -1,5 +1,7 @@
 package com.sourceplusplus.mentor
 
+import java.util.*
+
 /**
  * todo: description.
  *
@@ -19,7 +21,7 @@ abstract class MentorTask : Comparable<MentorTask> {
     override operator fun compareTo(other: MentorTask): Int = priority.compareTo(other.priority)
 
     class TaskContext {
-        private val cache: HashMap<ContextKey<*>, Any> = HashMap()
+        private val cache: IdentityHashMap<ContextKey<*>, Any> = IdentityHashMap()
 
         fun <T> put(key: ContextKey<T>, value: T) {
             cache[key] = value!!

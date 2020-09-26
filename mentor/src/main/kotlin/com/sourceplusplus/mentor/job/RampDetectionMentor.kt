@@ -1,8 +1,9 @@
 package com.sourceplusplus.mentor.job
 
 import com.sourceplusplus.mentor.MentorJob
-import com.sourceplusplus.mentor.MentorJobConfig
 import com.sourceplusplus.mentor.MentorTask
+import com.sourceplusplus.mentor.job.task.GetService
+import com.sourceplusplus.mentor.job.task.GetServiceInstance
 import io.vertx.core.Vertx
 
 /**
@@ -12,14 +13,17 @@ import io.vertx.core.Vertx
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class RampDetectionMentor(
-    override val vertx: Vertx,
-    override val config: MentorJobConfig = MentorJobConfig()
+    override val vertx: Vertx
 ) : MentorJob() {
 
-    //todo: get active service instance
-    //todo: find endpoints with consistently increasing response time of a certain threshold
-    //todo: search source code of endpoint for culprits
+    override val tasks: List<MentorTask> = listOf(
+        //get active service instance
+        GetService(),
+        GetServiceInstance(
+            GetService.SERVICE
+        )
 
-    override val tasks: List<MentorTask>
-        get() = TODO("Not yet implemented")
+        //todo: find endpoints with consistently increasing response time of a certain threshold
+        //todo: search source code of endpoint for culprits
+    )
 }

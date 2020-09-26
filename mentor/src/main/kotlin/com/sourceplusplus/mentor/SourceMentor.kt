@@ -4,7 +4,7 @@ import com.sourceplusplus.protocol.advice.ArtifactAdvice
 import com.sourceplusplus.protocol.artifact.ArtifactQualifiedName
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import org.slf4j.LoggerFactory
-import java.util.*
+import java.util.concurrent.PriorityBlockingQueue
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
@@ -21,7 +21,7 @@ class SourceMentor : CoroutineVerticle() {
 
     private val setupLock = AtomicBoolean()
     private val jobList = mutableListOf<MentorJob>()
-    private val taskQueue = PriorityQueue<MentorTask>()
+    private val taskQueue = PriorityBlockingQueue<MentorTask>()
 
     fun setup() {
         if (!setupLock.compareAndSet(false, true)) {
@@ -31,8 +31,17 @@ class SourceMentor : CoroutineVerticle() {
         }
     }
 
-    fun addJob(job: MentorJob) {
+    fun executeJob(job: MentorJob) {
+        if (job.tasks.isEmpty()) {
+            throw IllegalArgumentException("Job contains no tasks")
+        }
+
         jobList.add(job)
+        taskQueue.add(job.nextTask())
+    }
+
+    fun executeJobs(vararg jobs: MentorJob) {
+        jobs.forEach(this@SourceMentor::executeJob)
     }
 
     fun getAllMethodAdvice(methodQualifiedName: ArtifactQualifiedName): List<ArtifactAdvice> {

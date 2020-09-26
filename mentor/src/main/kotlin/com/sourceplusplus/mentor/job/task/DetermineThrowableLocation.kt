@@ -2,8 +2,7 @@ package com.sourceplusplus.mentor.job.task
 
 import com.sourceplusplus.mentor.MentorJob
 import com.sourceplusplus.mentor.MentorTask
-import com.sourceplusplus.protocol.artifact.trace.TraceOrderType
-import com.sourceplusplus.protocol.portal.QueryTimeFrame
+import com.sourceplusplus.protocol.artifact.ArtifactLocation
 
 /**
  * todo: description.
@@ -11,14 +10,12 @@ import com.sourceplusplus.protocol.portal.QueryTimeFrame
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-class GetTraces(
-    orderType: TraceOrderType,
-    timeFrame: QueryTimeFrame, //todo: impl start/end in QueryTimeFrame
-    haltOnEmptyTraces: Boolean = true
+class DetermineThrowableLocation(
+    private val byTracesContext: ContextKey<Nothing>
 ) : MentorTask() {
 
     companion object {
-        val TRACES: ContextKey<Nothing> = ContextKey()
+        val ARTIFACT_LOCATION: ContextKey<ArtifactLocation> = ContextKey()
     }
 
     override suspend fun executeTask(job: MentorJob, context: TaskContext) {

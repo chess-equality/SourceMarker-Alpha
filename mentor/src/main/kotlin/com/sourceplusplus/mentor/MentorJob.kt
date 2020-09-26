@@ -11,12 +11,27 @@ import io.vertx.core.Vertx
 abstract class MentorJob {
 
     abstract val vertx: Vertx
-    open val config: MentorJobConfig = MentorJobConfig()
+    var config: MentorJobConfig = MentorJobConfig()
+        private set
     abstract val tasks: List<MentorTask>
     val context = HashMap<String, Any>()
+    private var currentTask = -1
 
     fun log(msg: String) {
         println(msg)
+    }
+
+    fun nextTask(): MentorTask = tasks[++currentTask]
+    fun hasMoreTasks(): Boolean = currentTask < (tasks.size - 1)
+
+    fun resetJob() {
+        currentTask = -1
+        context.clear()
+    }
+
+    fun withConfig(config: MentorJobConfig): MentorJob {
+        this.config = config
+        return this
     }
 
     //todo: if jobs share functionality then they should share tasks

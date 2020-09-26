@@ -21,6 +21,7 @@ import com.sourceplusplus.marker.source.mark.gutter.config.GutterMarkConfigurati
 import com.sourceplusplus.mentor.MentorJobConfig
 import com.sourceplusplus.mentor.SourceMentor
 import com.sourceplusplus.mentor.job.ActiveExceptionMentor
+import com.sourceplusplus.mentor.job.RampDetectionMentor
 import com.sourceplusplus.monitor.skywalking.SkywalkingMonitor
 import com.sourceplusplus.portal.SourcePortal
 import com.sourceplusplus.portal.backend.PortalServer
@@ -101,8 +102,17 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
 
     private fun initMentor(): SourceMentor {
         val mentor = SourceMentor()
-        mentor.addJob(
-            ActiveExceptionMentor(vertx, MentorJobConfig())
+        mentor.executeJobs(
+            ActiveExceptionMentor(vertx).withConfig(
+                MentorJobConfig(
+                    //todo: configurable schedule
+                )
+            ),
+            RampDetectionMentor(vertx).withConfig(
+                MentorJobConfig(
+                    //todo: configurable schedule
+                )
+            )
         )
         return mentor
     }

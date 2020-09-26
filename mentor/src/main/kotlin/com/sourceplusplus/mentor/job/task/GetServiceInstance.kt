@@ -2,9 +2,10 @@ package com.sourceplusplus.mentor.job.task
 
 import com.sourceplusplus.mentor.MentorJob
 import com.sourceplusplus.mentor.MentorTask
-import com.sourceplusplus.monitor.skywalking.track.ServiceInstanceTracker.Companion.getActiveServiceInstances
-import com.sourceplusplus.monitor.skywalking.track.ServiceInstanceTracker.Companion.getCurrentServiceInstance
+import com.sourceplusplus.monitor.skywalking.track.ServiceInstanceTracker.Companion.getServiceInstances
+import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
+import java.util.*
 
 /**
  * todo: description.
@@ -13,9 +14,9 @@ import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
 class GetServiceInstance(
+    private val byContext: ContextKey<GetAllServicesQuery.Result>? = null,
     private val byId: String? = null,
-    private val byName: String? = null,
-    private val current: Boolean = true
+    private val byName: String? = null
 ) : MentorTask() {
 
     companion object {
@@ -23,18 +24,16 @@ class GetServiceInstance(
     }
 
     override suspend fun executeTask(job: MentorJob, context: TaskContext) {
-        val service = context.get(GetService.SERVICE)
-        if (current) {
-            val serviceInstance = getCurrentServiceInstance(service.id, job.vertx)
-            if (serviceInstance != null && isMatch(serviceInstance)) {
-                context.put(SERVICE_INSTANCE, serviceInstance)
-            }
+        val serviceId = if (byContext != null) {
+            context.get(byContext).id
         } else {
-            for (serviceInstance in getActiveServiceInstances(service.id, job.vertx)) {
-                if (isMatch(serviceInstance)) {
-                    context.put(SERVICE_INSTANCE, serviceInstance)
-                    break
-                }
+            byId
+        }!!
+
+        for (serviceInstance in getServiceInstances(serviceId, job.vertx)) {
+            if (isMatch(serviceInstance)) {
+                context.put(SERVICE_INSTANCE, serviceInstance)
+                break
             }
         }
     }
@@ -46,5 +45,18 @@ class GetServiceInstance(
             byName != null && byName == result.name -> true
             else -> false
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is GetServiceInstance) return false
+        if (byContext != other.byContext) return false
+        if (byId != other.byId) return false
+        if (byName != other.byName) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(byContext, byId, byName)
     }
 }

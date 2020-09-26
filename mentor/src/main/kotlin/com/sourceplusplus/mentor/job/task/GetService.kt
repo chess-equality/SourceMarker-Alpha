@@ -5,6 +5,7 @@ import com.sourceplusplus.mentor.MentorTask
 import com.sourceplusplus.monitor.skywalking.track.ServiceTracker.Companion.getActiveServices
 import com.sourceplusplus.monitor.skywalking.track.ServiceTracker.Companion.getCurrentService
 import monitor.skywalking.protocol.metadata.GetAllServicesQuery
+import java.util.*
 
 /**
  * todo: description.
@@ -45,5 +46,18 @@ class GetService(
             byName != null && byName == result.name -> true
             else -> false
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is GetService) return false
+        if (byId != other.byId) return false
+        if (byName != other.byName) return false
+        if (current != other.current) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(byId, byName, current)
     }
 }
