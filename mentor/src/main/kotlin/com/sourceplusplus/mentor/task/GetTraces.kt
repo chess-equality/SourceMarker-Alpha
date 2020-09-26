@@ -32,6 +32,7 @@ class GetTraces(
         val traces = EndpointTracesTracker.getTraces(
             GetEndpointTraces(
                 appUuid = "null", //todo: likely not necessary
+                artifactQualifiedName = "null", //todo: likely not necessary
                 orderType = orderType,
                 zonedDuration = ZonedDuration( //todo: use timeFrame
                     ZonedDateTime.now().minusMinutes(15),

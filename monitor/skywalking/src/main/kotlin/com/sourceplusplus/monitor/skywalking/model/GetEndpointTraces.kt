@@ -10,7 +10,7 @@ import com.sourceplusplus.protocol.artifact.trace.TraceOrderType
  */
 data class GetEndpointTraces(
     val appUuid: String,
-    val artifactQualifiedName: String? = null,
+    val artifactQualifiedName: String,
     val serviceId: String? = null,
     val serviceInstanceId: String? = null,
     val endpointId: String? = null,
