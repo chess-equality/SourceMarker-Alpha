@@ -10,7 +10,7 @@ import org.jetbrains.uast.UFile
 import org.jetbrains.uast.toUElement
 import org.junit.Test
 
-class EndpointNameDetectorTest : LightPlatformCodeInsightFixture4TestCase() {
+class JavaEndpointNameDetectorTest : LightPlatformCodeInsightFixture4TestCase() {
 
     @Test
     fun `SpringMVC RequestMapping method`() {
