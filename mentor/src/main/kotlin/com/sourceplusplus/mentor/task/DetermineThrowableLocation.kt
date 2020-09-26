@@ -1,4 +1,4 @@
-package com.sourceplusplus.mentor.job.task
+package com.sourceplusplus.mentor.task
 
 import com.sourceplusplus.mentor.MentorJob
 import com.sourceplusplus.mentor.MentorTask

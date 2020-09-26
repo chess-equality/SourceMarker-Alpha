@@ -2,8 +2,8 @@ package com.sourceplusplus.mentor.job
 
 import com.sourceplusplus.mentor.MentorJob
 import com.sourceplusplus.mentor.MentorTask
-import com.sourceplusplus.mentor.job.task.GetService
-import com.sourceplusplus.mentor.job.task.GetServiceInstance
+import com.sourceplusplus.mentor.task.GetService
+import com.sourceplusplus.mentor.task.GetServiceInstance
 import io.vertx.core.Vertx
 
 /**

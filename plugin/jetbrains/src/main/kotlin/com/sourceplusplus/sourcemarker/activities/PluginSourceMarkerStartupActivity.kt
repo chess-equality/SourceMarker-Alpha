@@ -100,16 +100,22 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         //todo: this
     }
 
+    /**
+     * Schedules long running, generic, and low-priority mentor jobs.
+     * High-priority, specific, and short running mentor jobs are executed during source code navigation.
+     */
     private fun initMentor(): SourceMentor {
         val mentor = SourceMentor()
         mentor.executeJobs(
             ActiveExceptionMentor(vertx).withConfig(
                 MentorJobConfig(
+                    repeatForever = true
                     //todo: configurable schedule
                 )
             ),
             RampDetectionMentor(vertx).withConfig(
                 MentorJobConfig(
+                    repeatForever = true
                     //todo: configurable schedule
                 )
             )
