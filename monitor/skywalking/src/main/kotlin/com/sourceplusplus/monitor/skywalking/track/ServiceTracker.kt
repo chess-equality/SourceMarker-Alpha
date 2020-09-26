@@ -27,38 +27,44 @@ class ServiceTracker(private val skywalkingClient: SkywalkingClient) : Coroutine
             activeServices = skywalkingClient.run {
                 getServices(getDuration(ZonedDateTime.now().minusMinutes(15), DurationStep.MINUTE))
             }
-            vertx.eventBus().publish("$address.activeServices-Updated", activeServices)
+            vertx.eventBus().publish(activeServicesUpdatedAddress, activeServices)
 
             if (activeServices.isNotEmpty()) {
                 currentService = activeServices[0]
-                vertx.eventBus().publish("$address.currentService-Updated", currentService)
+                vertx.eventBus().publish(currentServiceUpdatedAddress, currentService)
             }
         }
 
-        vertx.eventBus().localConsumer<Void>("$address.currentService") {
-            it.reply(currentService)
-        }
+        //async accessors
+        vertx.eventBus().localConsumer<Nothing>(getCurrentServiceAddress) { it.reply(currentService) }
+        vertx.eventBus().localConsumer<Nothing>(getActiveServicesAddress) { it.reply(activeServices) }
     }
 
     companion object {
-        private const val address = "monitor.skywalking.service"
+        private const val rootAddress = "monitor.skywalking.service"
+        private const val getCurrentServiceAddress = "$rootAddress.currentService"
+        private const val getActiveServicesAddress = "$rootAddress.activeServices"
+        private const val currentServiceUpdatedAddress = "$rootAddress.currentService-Updated"
+        private const val activeServicesUpdatedAddress = "$rootAddress.activeServices-Updated"
 
         fun currentServiceConsumer(vertx: Vertx): MessageConsumer<GetAllServicesQuery.Result> {
-            return vertx.eventBus().localConsumer("$address.currentService-Updated")
+            return vertx.eventBus().localConsumer(currentServiceUpdatedAddress)
         }
 
         fun activeServicesConsumer(vertx: Vertx): MessageConsumer<List<GetAllServicesQuery.Result>> {
-            return vertx.eventBus().localConsumer("$address.activeServices-Updated")
+            return vertx.eventBus().localConsumer(activeServicesUpdatedAddress)
         }
 
         suspend fun getCurrentService(vertx: Vertx): GetAllServicesQuery.Result? {
             return vertx.eventBus()
-                .requestAwait<GetAllServicesQuery.Result?>("$address.currentService", null)
+                .requestAwait<GetAllServicesQuery.Result?>(getCurrentServiceAddress, null)
                 .body()
         }
 
-        suspend fun getActiveServices(vertx: Vertx): GetAllServicesQuery.Result? {
-            TODO("this")
+        suspend fun getActiveServices(vertx: Vertx): List<GetAllServicesQuery.Result> {
+            return vertx.eventBus()
+                .requestAwait<List<GetAllServicesQuery.Result>>(getActiveServicesAddress, null)
+                .body()
         }
     }
 }

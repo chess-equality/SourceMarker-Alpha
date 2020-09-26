@@ -3,17 +3,19 @@ package com.sourceplusplus.portal.display
 import com.codahale.metrics.Histogram
 import com.codahale.metrics.UniformReservoir
 import com.sourceplusplus.portal.SourcePortal
+import com.sourceplusplus.portal.extensions.displayCard
+import com.sourceplusplus.portal.extensions.updateChart
 import com.sourceplusplus.protocol.ArtifactNameUtils.getShortQualifiedFunctionName
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.ArtifactMetricUpdated
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.OverviewTabOpened
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.RefreshOverview
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetActiveChartMetric
 import com.sourceplusplus.protocol.ProtocolAddress.Global.Companion.SetMetricTimeFrame
+import com.sourceplusplus.protocol.ProtocolAddress.Portal.Companion.ClearOverview
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.ArtifactMetrics
 import com.sourceplusplus.protocol.portal.*
 import com.sourceplusplus.protocol.portal.MetricType.*
-import io.vertx.core.json.Json
 import io.vertx.core.json.JsonObject
 import kotlinx.datetime.Instant
 import kotlinx.datetime.toJavaInstant
@@ -90,6 +92,7 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
             portal.overviewView.activeChartMetric = valueOf(request.getString("metric_type"))
             updateUI(portal)
 
+            vertx.eventBus().send(ClearOverview(portal.portalUuid), null)
             vertx.eventBus().send(RefreshOverview, portal)
         }
         log.info("{} started", javaClass.simpleName)
@@ -113,7 +116,10 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
 
         artifactMetricResult.artifactMetrics.forEach {
             updateCard(portal, artifactMetricResult, it)
-            if (it.metricType == portal.overviewView.activeChartMetric) {
+            if ((it.metricType.responseTimePercentile
+                        && portal.overviewView.activeChartMetric == ResponseTime_Average)
+                || it.metricType == portal.overviewView.activeChartMetric
+            ) {
                 updateSplineGraph(portal, artifactMetricResult, it)
             }
         }
@@ -125,8 +131,9 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
         times.add(current)
         while (current.toJavaInstant().isBefore(metricResult.stop.toJavaInstant())) {
             if (metricResult.step == "MINUTE") {
-                current = Instant.fromEpochMilliseconds(current.toJavaInstant()
-                    .plus(1, ChronoUnit.MINUTES).toEpochMilli())
+                current = Instant.fromEpochMilliseconds(
+                    current.toJavaInstant().plus(1, ChronoUnit.MINUTES).toEpochMilli()
+                )
                 times.add(current)
             } else {
                 throw UnsupportedOperationException("Invalid step: " + metricResult.step)
@@ -150,16 +157,15 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
             }
         val seriesData = SplineSeriesData(
             seriesIndex = seriesIndex,
-            times = times.map { it.toEpochMilliseconds() }, //todo: no toEpochMilliseconds
+            times = times.map { it.epochSeconds }, //todo: no epochSeconds
             values = finalArtifactMetrics.values.map { it.toDouble() }.toDoubleArray() //todo: or this
         )
-        val splintChart = SplineChart(
+        val splineChart = SplineChart(
             metricType = finalArtifactMetrics.metricType,
             timeFrame = metricResult.timeFrame,
             seriesData = Collections.singletonList(seriesData)
         )
-        val portalUuid = portal.portalUuid
-        vertx.eventBus().publish("$portalUuid-UpdateChart", JsonObject(Json.encode(splintChart)))
+        vertx.eventBus().updateChart(portal.portalUuid, splineChart)
     }
 
     fun updateCard(portal: SourcePortal, metricResult: ArtifactMetricResult, artifactMetrics: ArtifactMetrics) {
@@ -174,8 +180,7 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
                     meta = artifactMetrics.metricType.toString().toLowerCase(),
                     barGraphData = percents
                 )
-                val portalUuid = portal.portalUuid
-                vertx.eventBus().publish("$portalUuid-DisplayCard", JsonObject(Json.encode(barTrendCard)))
+                vertx.eventBus().displayCard(portal.portalUuid, barTrendCard)
             }
             ResponseTime_Average -> {
                 val barTrendCard = BarTrendCard(
@@ -184,8 +189,7 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
                     meta = artifactMetrics.metricType.toString().toLowerCase(),
                     barGraphData = percents
                 )
-                val portalUuid = portal.portalUuid
-                vertx.eventBus().publish("$portalUuid-DisplayCard", JsonObject(Json.encode(barTrendCard)))
+                vertx.eventBus().displayCard(portal.portalUuid, barTrendCard)
             }
             ServiceLevelAgreement_Average -> {
                 val barTrendCard = BarTrendCard(
@@ -198,8 +202,7 @@ class OverviewDisplay : AbstractDisplay(PageType.OVERVIEW) {
                     meta = artifactMetrics.metricType.toString().toLowerCase(),
                     barGraphData = percents
                 )
-                val portalUuid = portal.portalUuid
-                vertx.eventBus().publish("$portalUuid-DisplayCard", JsonObject(Json.encode(barTrendCard)))
+                vertx.eventBus().displayCard(portal.portalUuid, barTrendCard)
             }
         }
     }

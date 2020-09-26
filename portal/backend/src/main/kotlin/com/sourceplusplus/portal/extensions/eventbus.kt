@@ -15,6 +15,8 @@ import io.vertx.core.json.Json
 import io.vertx.core.json.JsonArray
 import io.vertx.core.json.JsonObject
 
+//todo: everything requiring portalUuid could probably be moved to SourcePortal
+
 fun EventBus.updateChart(portalUuid: String, splineChart: SplineChart) {
     send(UpdateChart(portalUuid), JsonObject(Json.encode(splineChart)))
 }

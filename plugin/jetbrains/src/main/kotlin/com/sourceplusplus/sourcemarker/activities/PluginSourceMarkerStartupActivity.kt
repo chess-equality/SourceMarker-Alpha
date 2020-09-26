@@ -19,8 +19,8 @@ import com.sourceplusplus.marker.source.mark.api.component.jcef.config.BrowserLo
 import com.sourceplusplus.marker.source.mark.api.component.jcef.config.SourceMarkJcefComponentConfiguration
 import com.sourceplusplus.marker.source.mark.gutter.config.GutterMarkConfiguration
 import com.sourceplusplus.monitor.skywalking.SkywalkingMonitor
-import com.sourceplusplus.portal.backend.PortalServer
 import com.sourceplusplus.portal.SourcePortal
+import com.sourceplusplus.portal.backend.PortalServer
 import com.sourceplusplus.protocol.artifact.ArtifactMetricResult
 import com.sourceplusplus.protocol.artifact.trace.TraceResult
 import com.sourceplusplus.protocol.artifact.trace.TraceSpanStackQueryResult
@@ -28,6 +28,8 @@ import com.sourceplusplus.sourcemarker.listeners.PluginSourceMarkEventListener
 import com.sourceplusplus.sourcemarker.listeners.PortalEventListener
 import io.vertx.core.DeploymentOptions
 import io.vertx.core.Vertx
+import io.vertx.core.buffer.Buffer
+import io.vertx.core.eventbus.MessageCodec
 import io.vertx.core.json.JsonObject
 import io.vertx.core.json.jackson.DatabindCodec
 import io.vertx.ext.bridge.PermittedOptions
@@ -36,6 +38,7 @@ import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions
 import io.vertx.ext.web.handler.sockjs.SockJSHandler
 import org.slf4j.LoggerFactory
 import java.awt.Dimension
+import java.util.*
 
 /**
  * todo: description.
@@ -156,5 +159,23 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
             SourceMarkerPlugin.clearAvailableSourceFileMarkers()
         }
         vertx.close()
+    }
+
+    /**
+     * todo: description.
+     *
+     * @since 0.0.1
+     */
+    class LocalMessageCodec<T> internal constructor(private val type: Class<T>) : MessageCodec<T, T> {
+        override fun encodeToWire(buffer: Buffer, o: T): Unit =
+            throw UnsupportedOperationException("Not supported yet.")
+
+        override fun decodeFromWire(pos: Int, buffer: Buffer): T =
+            throw UnsupportedOperationException("Not supported yet.")
+
+        override fun transform(o: T): T = o
+        override fun name(): String = UUID.randomUUID().toString()
+        override fun systemCodecID(): Byte = -1
+        fun type(): Class<T> = type
     }
 }

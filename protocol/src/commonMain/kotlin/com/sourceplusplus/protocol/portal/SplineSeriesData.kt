@@ -8,7 +8,7 @@ package com.sourceplusplus.protocol.portal
  */
 data class SplineSeriesData(
     val seriesIndex: Int,
-    val times: List<Long>, //todo: Instant
+    val times: List<Long>, //todo: List<Instant>
     val values: DoubleArray
 ) {
     override fun equals(other: Any?): Boolean {
