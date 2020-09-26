@@ -6,7 +6,7 @@ package com.sourceplusplus.mentor
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-open class MentorTask : Comparable<MentorTask> {
+abstract class MentorTask : Comparable<MentorTask> {
 
     var priority: Int = 0
         set(value) {
@@ -14,5 +14,11 @@ open class MentorTask : Comparable<MentorTask> {
             //todo: remove/add to queue
         }
 
-    override fun compareTo(other: MentorTask): Int = priority.compareTo(other.priority)
+    abstract fun executeTask(job: MentorJob, context: TaskContext)
+
+    override operator fun compareTo(other: MentorTask): Int = priority.compareTo(other.priority)
+
+    interface TaskContext {
+
+    }
 }

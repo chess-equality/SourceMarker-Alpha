@@ -5,6 +5,12 @@ plugins {
 dependencies {
     implementation(project(":protocol"))
     implementation("org.slf4j:slf4j-api:1.7.30")
+
+    val vertxVersion = "3.9.2"
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.9")
+    implementation("io.vertx:vertx-core:$vertxVersion")
+    implementation("io.vertx:vertx-lang-kotlin:$vertxVersion")
+    implementation("io.vertx:vertx-lang-kotlin-coroutines:$vertxVersion")
 }
 
 //todo: should be able to move to root project

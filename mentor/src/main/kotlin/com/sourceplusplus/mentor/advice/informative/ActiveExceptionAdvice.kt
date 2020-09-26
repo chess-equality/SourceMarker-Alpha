@@ -1,6 +1,7 @@
 package com.sourceplusplus.mentor.advice.informative
 
-import com.sourceplusplus.protocol.advice.AdviceType
+import com.sourceplusplus.protocol.advice.AdviceCategory
+import com.sourceplusplus.protocol.advice.AdviceMarkType
 import com.sourceplusplus.protocol.advice.ArtifactAdvice
 
 /**
@@ -17,5 +18,6 @@ class ActiveExceptionAdvice : ArtifactAdvice {
     //todo: create advice
     //todo: maintain created advice status (remove on new instances, etc)
 
-    override val type: AdviceType = AdviceType.INFORMATIVE
+    override val category: AdviceCategory = AdviceCategory.INFORMATIVE
+    override val markType: AdviceMarkType = AdviceMarkType.GUTTER //todo: multiple marks per advice
 }

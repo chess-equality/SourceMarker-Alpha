@@ -1,13 +1,12 @@
 package com.sourceplusplus.protocol.advice
 
 /**
- * todo: description.
+ * Types of advice assignable to a source code artifact.
  *
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-interface ArtifactAdvice {
-
-    val category: AdviceCategory
-    val markType: AdviceMarkType
+enum class AdviceMarkType {
+    INLAY,
+    GUTTER
 }

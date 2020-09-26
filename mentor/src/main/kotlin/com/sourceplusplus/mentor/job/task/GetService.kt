@@ -9,7 +9,7 @@ import com.sourceplusplus.mentor.MentorTask
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-class GetServiceInstance(
+class GetService(
     active: Boolean = true
 ) : MentorTask() {
 

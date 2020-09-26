@@ -8,6 +8,7 @@ package com.sourceplusplus.mentor
  */
 abstract class MentorJob {
 
+    open val config: MentorJobConfig = MentorJobConfig()
     abstract val tasks: List<MentorTask>
     val context = HashMap<String, Any>()
 
