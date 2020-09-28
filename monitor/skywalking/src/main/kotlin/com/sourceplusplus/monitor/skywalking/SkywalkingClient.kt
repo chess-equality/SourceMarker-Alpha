@@ -40,18 +40,16 @@ class SkywalkingClient(
 
         fun registerCodecs(vertx: Vertx) {
             log.info("Registering Apache SkyWalking codecs")
-            registerCodec(vertx, GetMultipleEndpointMetrics::class.java)
-            registerCodec(vertx, GetEndpointTraces::class.java)
-            registerCodec(vertx, GetEndpointMetrics::class.java)
-            registerCodec(vertx, GetAllServicesQuery.Result::class.java)
-            registerCodec(vertx, GetServiceInstancesQuery.Result::class.java)
-            registerCodec(vertx, SearchEndpointQuery.Result::class.java)
-            registerCodec(vertx, QueryBasicTracesQuery.Result::class.java)
-            registerCodec(vertx, ArrayList::class.java) //todo: should likely wrap in object
-        }
-
-        private fun <T> registerCodec(vertx: Vertx, type: Class<T>) {
-            vertx.eventBus().registerDefaultCodec(type, LocalMessageCodec(type))
+            vertx.eventBus().registerDefaultCodec(GetMultipleEndpointMetrics::class.java, LocalMessageCodec())
+            vertx.eventBus().registerDefaultCodec(GetEndpointTraces::class.java, LocalMessageCodec())
+            vertx.eventBus().registerDefaultCodec(GetEndpointMetrics::class.java, LocalMessageCodec())
+            vertx.eventBus().registerDefaultCodec(GetAllServicesQuery.Result::class.java, LocalMessageCodec())
+            vertx.eventBus().registerDefaultCodec(GetServiceInstancesQuery.Result::class.java, LocalMessageCodec())
+            vertx.eventBus().registerDefaultCodec(SearchEndpointQuery.Result::class.java, LocalMessageCodec())
+            vertx.eventBus().registerDefaultCodec(QueryBasicTracesQuery.Result::class.java, LocalMessageCodec())
+            vertx.eventBus().registerDefaultCodec(
+                ArrayList::class.java, LocalMessageCodec()
+            ) //todo: should likely wrap in object
         }
     }
 
@@ -169,7 +167,7 @@ class SkywalkingClient(
      *
      * @since 0.0.1
      */
-    class LocalMessageCodec<T> internal constructor(private val type: Class<T>) : MessageCodec<T, T> {
+    class LocalMessageCodec<T> internal constructor() : MessageCodec<T, T> {
         override fun encodeToWire(buffer: Buffer, o: T): Unit =
             throw UnsupportedOperationException("Not supported yet.")
 
@@ -179,6 +177,5 @@ class SkywalkingClient(
         override fun transform(o: T): T = o
         override fun name(): String = UUID.randomUUID().toString()
         override fun systemCodecID(): Byte = -1
-        fun type(): Class<T> = type
     }
 }

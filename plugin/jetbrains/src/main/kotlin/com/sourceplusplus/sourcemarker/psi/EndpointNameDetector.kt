@@ -1,11 +1,16 @@
 package com.sourceplusplus.sourcemarker.psi
 
-import com.intellij.openapi.application.ApplicationManager
 import com.sourceplusplus.marker.source.mark.api.MethodSourceMark
+import com.sourceplusplus.sourcemarker.activities.PluginSourceMarkerStartupActivity.Companion.vertx
+import com.sourceplusplus.sourcemarker.psi.endpoint.SkywalkingTrace
+import com.sourceplusplus.sourcemarker.psi.endpoint.SpringMVC
 import io.vertx.core.Future
 import io.vertx.core.Promise
-import org.jetbrains.uast.expressions.UInjectionHost
-import org.jetbrains.uast.java.JavaUQualifiedReferenceExpression
+import io.vertx.kotlin.coroutines.await
+import io.vertx.kotlin.coroutines.dispatcher
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.jetbrains.uast.UMethod
 import java.util.*
 
 /**
@@ -16,22 +21,32 @@ import java.util.*
  */
 class EndpointNameDetector {
 
-    private val requestMappingAnnotation = "org.springframework.web.bind.annotation.RequestMapping"
+    private val detectorSet = setOf(
+        SkywalkingTrace(),
+        SpringMVC()
+    )
 
-    //todo: this code is specific to RequestMapping, also specific to Java
     fun determineEndpointName(sourceMark: MethodSourceMark): Future<Optional<String>> {
+        return determineEndpointName(sourceMark.getPsiMethod())
+    }
+
+    fun determineEndpointName(uMethod: UMethod): Future<Optional<String>> {
         val promise = Promise.promise<Optional<String>>()
-        ApplicationManager.getApplication().runReadAction {
-            val requestMappingAnnotation = sourceMark.getPsiMethod().findAnnotation(requestMappingAnnotation)
-            if (requestMappingAnnotation != null) {
-                val value = (requestMappingAnnotation.findAttributeValue("value") as UInjectionHost).evaluateToString()
-                val method = (requestMappingAnnotation.findAttributeValue("method")
-                        as JavaUQualifiedReferenceExpression).selector
-                promise.complete(Optional.of("{$method}$value"))
-            } else {
-                promise.complete(Optional.empty())
+        GlobalScope.launch(vertx.dispatcher()) {
+            detectorSet.forEach {
+                try {
+                    val endpointName = it.determineEndpointName(uMethod).await()
+                    if (endpointName.isPresent) promise.complete(endpointName)
+                } catch (throwable: Throwable) {
+                    promise.fail(throwable)
+                }
             }
+            promise.tryComplete(Optional.empty())
         }
         return promise.future()
+    }
+
+    interface EndpointNameDeterminer {
+        fun determineEndpointName(uMethod: UMethod): Future<Optional<String>>
     }
 }

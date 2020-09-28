@@ -1,6 +1,7 @@
 package com.sourceplusplus.mentor.advice.cautionary
 
-import com.sourceplusplus.protocol.advice.AdviceType
+import com.sourceplusplus.protocol.advice.AdviceCategory
+import com.sourceplusplus.protocol.advice.AdviceMarkType
 import com.sourceplusplus.protocol.advice.ArtifactAdvice
 
 /**
@@ -11,5 +12,6 @@ import com.sourceplusplus.protocol.advice.ArtifactAdvice
  */
 class RampDetectionAdvice : ArtifactAdvice {
 
-    override val type: AdviceType = AdviceType.CAUTIONARY
+    override val category: AdviceCategory = AdviceCategory.CAUTIONARY
+    override val markType: AdviceMarkType = AdviceMarkType.GUTTER
 }

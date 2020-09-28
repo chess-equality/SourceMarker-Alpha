@@ -6,7 +6,7 @@ package com.sourceplusplus.protocol.advice
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-enum class AdviceType {
+enum class AdviceCategory {
 
     /**
      * Advice which is useful or interesting.

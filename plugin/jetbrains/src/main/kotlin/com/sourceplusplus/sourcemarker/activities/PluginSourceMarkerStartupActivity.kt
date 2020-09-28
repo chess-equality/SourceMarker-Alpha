@@ -18,6 +18,10 @@ import com.sourceplusplus.marker.source.mark.api.component.jcef.SourceMarkSingle
 import com.sourceplusplus.marker.source.mark.api.component.jcef.config.BrowserLoadingListener
 import com.sourceplusplus.marker.source.mark.api.component.jcef.config.SourceMarkJcefComponentConfiguration
 import com.sourceplusplus.marker.source.mark.gutter.config.GutterMarkConfiguration
+import com.sourceplusplus.mentor.MentorJobConfig
+import com.sourceplusplus.mentor.SourceMentor
+import com.sourceplusplus.mentor.job.ActiveExceptionMentor
+import com.sourceplusplus.mentor.job.RampDetectionMentor
 import com.sourceplusplus.monitor.skywalking.SkywalkingMonitor
 import com.sourceplusplus.portal.SourcePortal
 import com.sourceplusplus.portal.backend.PortalServer
@@ -54,10 +58,10 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
 
         fun registerCodecs(vertx: Vertx) {
             log.debug("Registering SourceMarker Protocol codecs")
-            registerCodec(vertx, SourcePortal::class.java)
-            registerCodec(vertx, ArtifactMetricResult::class.java)
-            registerCodec(vertx, TraceResult::class.java)
-            registerCodec(vertx, TraceSpanStackQueryResult::class.java)
+            vertx.eventBus().registerDefaultCodec(SourcePortal::class.java, LocalMessageCodec())
+            vertx.eventBus().registerDefaultCodec(ArtifactMetricResult::class.java, LocalMessageCodec())
+            vertx.eventBus().registerDefaultCodec(TraceResult::class.java, LocalMessageCodec())
+            vertx.eventBus().registerDefaultCodec(TraceSpanStackQueryResult::class.java, LocalMessageCodec())
 
             DatabindCodec.mapper().registerModule(GuavaModule())
             DatabindCodec.mapper().registerModule(Jdk8Module())
@@ -65,10 +69,6 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
             DatabindCodec.mapper().propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
             DatabindCodec.mapper().enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
             DatabindCodec.mapper().enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
-        }
-
-        private fun <T> registerCodec(vertx: Vertx, type: Class<T>) {
-            vertx.eventBus().registerDefaultCodec(type, LocalMessageCodec(type))
         }
     }
 
@@ -82,10 +82,9 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         }
 
         initPortal()
-        initMarker()
+        initMarker(initMentor())
         initMapper()
         initMonitor()
-        initMentor()
         super.runActivity(project)
     }
 
@@ -101,8 +100,27 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         //todo: this
     }
 
-    private fun initMentor() {
-        //todo: this
+    /**
+     * Schedules long running, generic, and low-priority mentor jobs.
+     * High-priority, specific, and short running mentor jobs are executed during source code navigation.
+     */
+    private fun initMentor(): SourceMentor {
+        val mentor = SourceMentor()
+        mentor.executeJobs(
+            ActiveExceptionMentor(vertx).withConfig(
+                MentorJobConfig(
+                    repeatForever = true
+                    //todo: configurable schedule
+                )
+            ),
+            RampDetectionMentor(vertx).withConfig(
+                MentorJobConfig(
+                    repeatForever = true
+                    //todo: configurable schedule
+                )
+            )
+        )
+        return mentor
     }
 
     private fun initPortal() {
@@ -122,8 +140,8 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         vertx.createHttpServer().requestHandler(router).listen(8888, "localhost")
     }
 
-    private fun initMarker() {
-        SourceMarkerPlugin.addGlobalSourceMarkEventListener(PluginSourceMarkEventListener())
+    private fun initMarker(sourceMentor: SourceMentor) {
+        SourceMarkerPlugin.addGlobalSourceMarkEventListener(PluginSourceMarkEventListener(sourceMentor))
 
         val configuration = GutterMarkConfiguration()
         configuration.activateOnMouseHover = false
@@ -166,7 +184,7 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
      *
      * @since 0.0.1
      */
-    class LocalMessageCodec<T> internal constructor(private val type: Class<T>) : MessageCodec<T, T> {
+    class LocalMessageCodec<T> internal constructor() : MessageCodec<T, T> {
         override fun encodeToWire(buffer: Buffer, o: T): Unit =
             throw UnsupportedOperationException("Not supported yet.")
 
@@ -176,6 +194,5 @@ class PluginSourceMarkerStartupActivity : SourceMarkerStartupActivity(), Disposa
         override fun transform(o: T): T = o
         override fun name(): String = UUID.randomUUID().toString()
         override fun systemCodecID(): Byte = -1
-        fun type(): Class<T> = type
     }
 }

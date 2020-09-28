@@ -8,7 +8,6 @@ import io.vertx.kotlin.core.eventbus.requestAwait
 import io.vertx.kotlin.coroutines.CoroutineVerticle
 import io.vertx.kotlin.coroutines.dispatcher
 import kotlinx.coroutines.launch
-import monitor.skywalking.protocol.metadata.GetAllServicesQuery
 import monitor.skywalking.protocol.metadata.GetServiceInstancesQuery
 import java.time.ZonedDateTime
 
@@ -30,6 +29,24 @@ class ServiceInstanceTracker(private val skywalkingClient: SkywalkingClient) : C
                 activeServicesInstances = skywalkingClient.run {
                     getServiceInstances(
                         it.body().id,
+                        //todo: dynamic duration
+                        getDuration(ZonedDateTime.now().minusMinutes(15), DurationStep.MINUTE)
+                    )
+                }
+                vertx.eventBus().publish(activeServiceInstancesUpdatedAddress, activeServicesInstances)
+
+                if (activeServicesInstances.isNotEmpty()) {
+                    currentServiceInstance = activeServicesInstances[0]
+                    vertx.eventBus().publish(currentServiceInstanceUpdatedAddress, currentServiceInstance)
+                }
+            }
+        }
+        vertx.eventBus().localConsumer<String>(getServiceInstances) {
+            launch(vertx.dispatcher()) {
+                activeServicesInstances = skywalkingClient.run {
+                    getServiceInstances(
+                        it.body(),
+                        //todo: dynamic duration
                         getDuration(ZonedDateTime.now().minusMinutes(15), DurationStep.MINUTE)
                     )
                 }
@@ -49,6 +66,7 @@ class ServiceInstanceTracker(private val skywalkingClient: SkywalkingClient) : C
 
     companion object {
         private const val rootAddress = "monitor.skywalking.service.instance"
+        private const val getServiceInstances = "monitor.skywalking.service.instance-serviceInstances"
         private const val getCurrentServiceInstanceAddress = "$rootAddress.currentServiceInstance"
         private const val getActiveServiceInstancesAddress = "$rootAddress.activeServiceInstances"
         private const val currentServiceInstanceUpdatedAddress = "$rootAddress.currentServiceInstance-Updated"
@@ -62,15 +80,21 @@ class ServiceInstanceTracker(private val skywalkingClient: SkywalkingClient) : C
             return vertx.eventBus().localConsumer(activeServiceInstancesUpdatedAddress)
         }
 
-        suspend fun getCurrentService(vertx: Vertx): GetAllServicesQuery.Result? {
+        suspend fun getCurrentServiceInstance(vertx: Vertx): GetServiceInstancesQuery.Result? {
             return vertx.eventBus()
-                .requestAwait<GetAllServicesQuery.Result?>(getCurrentServiceInstanceAddress, null)
+                .requestAwait<GetServiceInstancesQuery.Result?>(getCurrentServiceInstanceAddress, null)
                 .body()
         }
 
-        suspend fun getActiveServices(vertx: Vertx): List<GetServiceInstancesQuery.Result> {
+        suspend fun getActiveServiceInstances(vertx: Vertx): List<GetServiceInstancesQuery.Result> {
             return vertx.eventBus()
                 .requestAwait<List<GetServiceInstancesQuery.Result>>(getActiveServiceInstancesAddress, null)
+                .body()
+        }
+
+        suspend fun getServiceInstances(serviceId: String, vertx: Vertx): List<GetServiceInstancesQuery.Result> {
+            return vertx.eventBus()
+                .requestAwait<List<GetServiceInstancesQuery.Result>>(getServiceInstances, serviceId)
                 .body()
         }
     }

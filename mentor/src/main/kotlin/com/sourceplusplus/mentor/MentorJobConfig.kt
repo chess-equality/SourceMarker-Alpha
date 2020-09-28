@@ -1,4 +1,4 @@
-package com.sourceplusplus.mentor.job.task
+package com.sourceplusplus.mentor
 
 /**
  * todo: description.
@@ -6,5 +6,6 @@ package com.sourceplusplus.mentor.job.task
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-class GetTraces {
-}
+data class MentorJobConfig(
+    val repeatForever: Boolean = false
+)

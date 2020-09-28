@@ -8,10 +8,12 @@ import com.sourceplusplus.protocol.artifact.trace.TraceOrderType
  * @since 0.0.1
  * @author [Brandon Fergerson](mailto:bfergerson@apache.org)
  */
-class GetEndpointTraces(
+data class GetEndpointTraces(
     val appUuid: String,
     val artifactQualifiedName: String,
-    val endpointId: String,
+    val serviceId: String? = null,
+    val serviceInstanceId: String? = null,
+    val endpointId: String? = null,
     val zonedDuration: ZonedDuration,
     val orderType: TraceOrderType = TraceOrderType.LATEST_TRACES,
     val pageNumber: Int = 1,
